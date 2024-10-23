@@ -1,0 +1,44 @@
+<div class="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
+  <!-- Contenido inicial -->
+  <div *ngIf="mostrarContenidoInicial">
+    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
+      <div class="p-4 text-right">
+        <p class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Today's Money</p>
+        <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">$53k</h4>
+      </div>
+      <div class="border-t border-blue-gray-50 p-4">
+        <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+          <strong class="text-green-500">+55%</strong>&nbsp;than last week
+        </p>
+      </div>
+    </div>
+    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
+      <div class="p-4 text-right">
+        <p class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Today's Users</p>
+        <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">2,300</h4>
+      </div>
+      <div class="border-t border-blue-gray-50 p-4">
+        <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+          <strong class="text-green-500">+3%</strong>&nbsp;than last month
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones para Asignar y Desasignar -->
+  <div class="flex justify-between mt-6">
+    <button (click)="asignarElemento()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">Asignar Elemento</button>
+    <button (click)="desasignarElemento()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">Desasignar Elemento</button>
+  </div>
+
+ 
+</div>
+ <!-- Componente de Asignador y Desasignador -->
+ <div class="flex justify-between mt-4">
+  <div *ngIf="mostrarAsignador" class="w-full">
+    <app-asignador></app-asignador>
+  </div>
+  <div *ngIf="mostrarDesasignador" class="w-full">
+    <app-desasignador></app-desasignador>
+  </div>
+</div>
