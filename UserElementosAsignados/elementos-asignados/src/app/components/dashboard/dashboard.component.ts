@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { InicioComponent } from "../components/inicio/inicio.component";
+import { InicioComponent } from '../inicio/inicio.component';
+
 
 @Component({
   selector: 'app-dashboard',

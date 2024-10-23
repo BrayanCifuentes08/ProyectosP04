@@ -7,7 +7,7 @@ export const routes: Routes = [
         children: [
             {
                 path: 'dashboard',
-                loadComponent: ()  => import('./dashboard/dashboard.component'),
+                loadComponent: ()  => import('./components/dashboard/dashboard.component'),
             },
             {
                 path: '',
