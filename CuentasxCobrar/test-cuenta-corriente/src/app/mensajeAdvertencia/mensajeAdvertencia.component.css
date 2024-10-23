@@ -1,0 +1,8 @@
+.no-bg-opacity {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  margin-top: 20vh; /* Asegura que el mensaje se centre en la pantalla */
+}

@@ -1,0 +1,101 @@
+export interface PaTblCargoAbonoM{
+    tAccion?:               number | null;
+    cargo_Abono:            number;
+    empresa:                number;
+    localizacion:           number;
+    estacion_Trabajo:       number;
+    fecha_Reg:              number;
+    tipo_Cargo_Abono:       number;
+    estado:                 number;
+    fecha_Hora:             Date;
+    userName:               string;
+    m_Fecha_Hora?:          Date | null;
+    m_UserName?:            string | null;
+    monto:                  number;
+    tipo_Cambio:            number;
+    moneda:                 number;
+    monto_Moneda:           number;
+    referencia?:            string | null;
+    autorizacion?:          string | null;
+    banco:                  number;
+    observacion_1?:         string | null;
+    razon?:                 number | null;
+    d_Documento?:           number | null;
+    d_Tipo_Documento:       number;
+    d_Serie_Documento:      string;
+    d_Empresa:              number;
+    d_Localizacion:         number;
+    d_Estacion_Trabajo:     number;
+    d_Fecha_Reg:            number;
+    propina?:               number | null;
+    propina_Moneda?:        number | null;
+    monto_O?:               number | null;
+    monto_O_Moneda?:        number | null;
+    f_Cuenta_Corriente_Padre?: number | null;
+    f_Cobrar_Pagar_Padre?:  number | null;
+    f_Empresa_Padre?:       number | null;
+    f_Localizacion_Padre?:  number | null;
+    f_Estacion_Trabajo_Padre?: number | null;
+    f_Fecha_Reg_Padre?:     number | null;
+    ref_Documento?:         string | null;
+    cuenta_Bancaria?:       number | null;
+    propina_Monto?:         number | null;
+    propina_Monto_Moneda?:  number | null;
+    cuenta_PIN?:            number | null;
+    tOpcion?:                number | null;
+    fecha_Ref?:             Date | null;
+    consecutivo_Interno_Ref?:  number | null;
+    recaptchaToken:     string,
+    isMobile:           boolean
+}
+
+export interface ParametrosCargoAbono{
+    TAccion:                number;
+    Cargo_Abono:            number;
+    Empresa:                number;
+    Localizacion:           number;
+    Estacion_Trabajo:       number;
+    Fecha_Reg:              number;
+    Tipo_Cargo_Abono:       number;
+    Estado:                 number;
+    Fecha_Hora:             Date;
+    UserName:               string;
+    M_Fecha_Hora?:          Date | null;
+    M_UserName?:            string | null;
+    Monto:                  number;
+    Tipo_Cambio:            number;
+    Moneda:                 number;
+    Monto_Moneda:           number;
+    Referencia?:            string | null;
+    Autorizacion?:          string | null;
+    Banco:                  number;
+    Observacion_1?:         string | null;
+    Razon:                  number;
+    D_Documento:            number;
+    D_Tipo_Documento:       number;
+    D_Serie_Documento:      string;
+    D_Empresa:              number;
+    D_Localizacion:         number;
+    D_Estacion_Trabajo:     number;
+    D_Fecha_Reg:            number;
+    Propina?:               number | null;
+    Propina_Moneda?:        number | null;
+    Monto_O?:               number | null;
+    Monto_O_Moneda?:        number | null;
+    F_Cuenta_Corriente_Padre?: number | null;
+    F_Cobrar_Pagar_Padre?:  number | null;
+    F_Empresa_Padre?:       number | null;
+    F_Localizacion_Padre?:  number | null;
+    F_Estacion_Trabajo_Padre?: number | null;
+    F_Fecha_Reg_Padre?:     number | null;
+    Ref_Documento?:         string | null;
+    Cuenta_Bancaria?:       number | null;
+    Propina_Monto?:         number | null;
+    Propina_Monto_Moneda?:  number | null;
+    Cuenta_PIN?:            number | null;
+    TOpcion:                number;
+    Fecha_Ref?:             Date | null;
+    Consecutivo_Interno_Ref?:  number | null;
+    recaptchaToken:     string,
+    isMobile:           boolean
+}

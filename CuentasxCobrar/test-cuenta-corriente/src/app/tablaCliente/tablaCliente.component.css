@@ -1,0 +1,87 @@
+.scrollable-container {
+    max-height: 80vh; 
+    overflow-y: auto; 
+    overflow-x: auto; 
+    scrollbar-width: thin; 
+    scrollbar-color: #ddcbb6 #ffff ; 
+}
+
+  
+/* Estilos del botón de borrado */
+.animate-clear-button {
+    border-radius: 50%; 
+    padding: 0.5rem; 
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    transform: scale(0); 
+  }
+  
+  /* Animación de rebote */
+  @keyframes bounce {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Mostrar el botón de borrado */
+  input:focus ~ .animate-clear-button,
+  input:not(:placeholder-shown) ~ .animate-clear-button {
+    transform: scale(1); /* Mostrar el botón */
+    animation: bounce 0.5s ease; /* Aplicar animación de rebote */
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Aplica la animación al contenedor de la tabla */
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  /* Definir la animación de fade-in-up */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Clase para aplicar la animación */
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.95); /* Empieza ligeramente más pequeño */
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1); /* Un pequeño agrandamiento para darle dinamismo */
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1); /* Volver a su tamaño normal */
+  }
+}
+
+.creative-fade-in {
+  animation: fadeInZoom 0.8s ease-out; /* Duración y suavidad de la animación */
+}

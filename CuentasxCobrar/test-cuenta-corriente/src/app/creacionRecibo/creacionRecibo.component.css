@@ -1,0 +1,116 @@
+.selected {
+    background-color: #f0f0f0; 
+    color: #333; 
+}
+
+.selected:hover {
+    background-color: #e5e5e5; 
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+input[type=number] { -moz-appearance:textfield; }
+
+.enfocado {
+    outline: 2px solid #155e75; /* Ejemplo: borde cyan */
+    box-shadow: 0 0 5px #155e75; /* Ejemplo: sombra cyan */
+  }
+
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+
+
+.scrollable-container {
+  max-height: 80vh; 
+  overflow-y: auto;
+  overflow-x: auto; 
+  scrollbar-width: thin; 
+  scrollbar-color: #ddcbb6 #ffffff ;
+}
+
+@keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.95); /* Empieza ligeramente más pequeño */
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.02); /* Un pequeño agrandamiento para darle dinamismo */
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1); /* Volver a su tamaño normal */
+  }
+}
+
+.creative-fade-in {
+  animation: fadeInZoom 0.6s ease-out; /* Duración y suavidad de la animación */
+}
+
+/* Animación de entrada más fluida */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10%); /* Movimiento sutil hacia arriba */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* Posición final */
+  }
+}
+
+/* Animación de salida más fluida */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0); /* Empieza desde la posición final */
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10%); /* Movimiento sutil hacia arriba */
+  }
+}
+
+/* Clases de animación para el modal */
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+.animate-fadeOut {
+  animation: fadeOut 0.4s ease-in-out forwards;
+}

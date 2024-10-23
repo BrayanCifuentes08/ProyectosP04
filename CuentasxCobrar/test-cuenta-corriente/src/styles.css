@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss/tailwind.css';
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+@import '@fortawesome/fontawesome-free/css/regular.css';
+@import '@fortawesome/fontawesome-free/css/brands.css';
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #e2e8f0;
+    min-height: 100vh; 
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.dark body {
+    background-color: #1e293b; /* Color de fondo para el modo oscuro */
+}

@@ -1,0 +1,675 @@
+<div *ngIf="errorMessage" class="fixed top-4 right-4 w-96 h-16 bg-yellow-100 rounded-lg p-2 text-sm text-yellow-700 flex items-center z-50" role="alert">
+    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+    </svg>
+    <div>
+      <span class="font-medium">{{ 'messages.advertencia' | translate }}:</span> {{ errorMessage }}
+    </div>
+</div>
+  
+
+<div *ngIf="cargando " class="flex items-center justify-center h-full">
+    <app-loading></app-loading>
+</div> 
+
+<div class="sticky left-0 right-0 mx-4 bg-white py-2 rounded-lg dark:bg-gray-700 fade-in-up mb-4 " style="border-radius: 20px;"> 
+    <div class="container mx-auto px-4">
+        <div *ngIf="mostrarMensajeImprimir" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-xs">
+            <div class="flex justify-center" *ngFor="let mensaje of mensajeValidar">
+                <div class="bg-gray-200 border border-gray-300 rounded-lg shadow-xl p-8 relative max-w-md">
+                    <button (click)="cerrarMensaje()" class="absolute top-0 right-0 mt-4 mr-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-triangle-exclamation text-orange-300 text-2xl mr-4"></i>
+                        <h2 class="text-xl font-semibold text-gray-800">{{'messages.advertencia' | translate}}</h2>
+                    </div>
+                    <p class="text-base text-gray-700 leading-relaxed mt-2">{{mensaje.mensaje}}</p>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="mostrarMensajeAdvertenciaCargoAbono && mensajeValidarCargoAbono[1] && mensajeValidarCargoAbono.length > 0" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-xs">
+            <div class="flex justify-center">
+                <div class="bg-gray-200 border border-gray-300 rounded-lg shadow-xl p-8 relative max-w-md">
+                    <button (click)="cerrarMensajeValidacion()" class="absolute top-0 right-0 mt-4 mr-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-triangle-exclamation text-red-300 text-2xl mr-4"></i>
+                        <h2 class="text-xl font-semibold text-gray-800">{{'messages.advertencia' | translate}}</h2>
+                    </div>
+                    <p *ngIf="mensajeValidarCargoAbono[1]" class="text-base text-gray-700 leading-relaxed mt-2">{{mensajeValidarCargoAbono[1].mensaje}}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!--Mensaje de confirmarcion de encabezado-->
+        <div *ngIf="mostrarMensajeConfirmacion" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-xs">
+            <div class="flex justify-center">
+              <div class="bg-white rounded-lg shadow-xl p-8 relative max-w-md">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-orange-300 text-2xl mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                  </svg>                   
+                  <h2 class="text-xl font-semibold text-gray-800">{{'messages.confirmarCreacion' | translate}}</h2>
+                </div>
+                <p class="text-base text-gray-700 leading-relaxed mt-2">{{'messages.preguntaCreacionDocumento' | translate}}</p>
+                <div class="flex justify-between mt-4">
+                    <button #botonConfirmar (click)="confirmarCreacion()"
+                    class="group enfocado text-cyan-700 hover:text-white border border-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-cyan-700 dark:text-cyan-700 dark:hover:text-white dark:hover:bg-cyan-800 ease-in duration-300 dark:focus:ring-cyan-800 flex items-center">
+                    {{ 'labels.confirmarBtns' | translate }}
+                    <kbd
+                        class="ml-2 px-1.5 py-0.5 text-xs font-semibold text-cyan-700 bg-white border border-cyan-700 rounded-lg align-middle group-hover:text-white group-hover:bg-cyan-800 group-hover:border-white ease-in duration-300">
+                        Enter
+                    </kbd>
+                </button>
+                    <button (click)="cerrarMensaje()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 ease-in duration-300 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 
+                    dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">{{'labels.cancelarBtns' | translate}}</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div *ngIf="mostrarMensajeConfirmarOtroCAA" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-xs">
+            <div class="flex justify-center">
+              <div class="bg-white border border-gray-300 rounded-lg shadow-xl p-8 relative max-w-md">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-orange-300 text-2xl mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                  </svg>                   
+                  <h2 class="text-xl font-semibold text-gray-800">{{'messages.confirmarCreacion' | translate}}</h2>
+                </div>
+                <p class="text-base text-gray-700 leading-relaxed mt-2">{{'messages.preguntaAplicarOtroCA' | translate}}</p>
+                <div class="flex justify-between mt-4">
+                    <button #botonConfirmar (click)="validarCargoAbono(this.encabezado)" class="group enfocado text-cyan-700 hover:text-white border border-cyan-700 hover:bg-cyan-800 ease-in duration-300 focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 
+                    dark:border-cyan-700 dark:text-cyan-700 dark:hover:text-white dark:hover:bg-cyan-800 dark:focus:ring-cyan-800">{{'labels.confirmarBtns' | translate}}
+                    <kbd
+                        class="ml-2 px-1.5 py-0.5 text-xs font-semibold text-cyan-700 bg-white border border-cyan-700 rounded-lg align-middle group-hover:text-white group-hover:bg-cyan-800 group-hover:border-white ease-in duration-300">
+                        Enter
+                    </kbd>
+                    </button>
+                    
+                    <button (click)="cerrarMensaje()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 ease-in duration-300 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 
+                    dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">{{'labels.cancelarBtns' | translate}}</button>
+                </div>
+              </div>
+            </div>
+        </div> 
+
+        <div *ngIf="mostrarMensajeImpresion" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-xs">
+            <div class="flex justify-center">
+              <div class="bg-white border rounded-lg shadow-xl p-8 relative max-w-md">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-orange-300 text-2xl mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                  </svg>                   
+                  <h2 class="text-xl font-semibold text-gray-800">{{'messages.confirmacionImpresionRecibo' | translate}}</h2>
+                </div>
+                <p class="text-base text-gray-700 leading-relaxed mt-2">{{'messages.preguntaImpresionRecibo' | translate}}</p>
+                <div class="flex justify-between mt-4">
+                    <button (click)="confirmarImpresion()"
+                    class="group enfocado text-cyan-700 hover:text-white border border-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-cyan-700 dark:text-cyan-700 dark:hover:text-white dark:hover:bg-cyan-800 ease-in duration-300 dark:focus:ring-cyan-800 flex items-center">
+                    {{ 'labels.confirmarYCrearRecibo' | translate }}
+                    <kbd
+                    class="ml-2 px-1.5 py-0.5 text-xs font-semibold text-cyan-700 bg-white border border-cyan-700 rounded-lg align-middle group-hover:text-white group-hover:bg-cyan-800 group-hover:border-white ease-in duration-300">
+                    Enter
+                    </kbd>
+                    </button>
+                  <button (click)="cerrarMensaje()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 ease-in duration-300 dark:focus:ring-red-900">{{'labels.cancelarBtns' | translate}}</button>
+                </div>
+              </div>
+            </div>
+        </div>
+          
+        <app-mensaje-advertencia 
+            [mostrar]="mostrarAdvertencia" 
+            titulo="{{'messages.advertencia' | translate}}"
+            mensaje="{{'messages.noSeleccionDocAfectar' | translate}}"
+            iconoClase="fa-solid fa-triangle-exclamation"
+            iconoColor="text-orange-300"
+            (cerrar)="cerrarMensaje()">
+        </app-mensaje-advertencia>
+          
+        <div class="flex justify-between items-center mb-2 ">
+            <div class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md">
+        
+                <div class="relative inline-block ml-4">
+                    <input 
+                        type="number" 
+                        required
+                        id="montoInput" 
+                        class="block px-5 pb-1.5 pt-3 w-full text-sm text-gray-900 dark:text-gray-100 bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-1 focus:border-blue-600 dark:focus:border-blue-400 peer" 
+                        placeholder=" " 
+                        [(ngModel)]="monto"
+                    />
+                    <label 
+                        for="montoInput" 
+                        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 start-1 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                    >{{'labels.monto' | translate}}</label>
+                    <span class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                        </svg>
+                    </span>
+                </div>
+                
+                <div class="relative inline-block ml-4" *ngIf="mostrarBloquearDoc">
+                    <input 
+                        type="checkbox" 
+                        id="bloquearDocCheckbox" 
+                        class="cursor-not-allowed" 
+                        checked = "mostrarBloquearDoc"
+                        disabled
+                    />
+                    <label 
+                        for="bloquearDocCheckbox" 
+                        class="ml-2 text-sm text-black-500 dark:text-gray-400"
+                    >{{'labels.bloquearDocumento' | translate}}</label>
+                </div>
+                                 
+                <div class="relative inline-block ml-4" *ngIf="referenciaHabilitada">
+                    <input 
+                        type="text" 
+                        id="referenciaInput" 
+                        #referenciaInput
+                        [(ngModel)]="referencia"
+                        class="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 dark:text-gray-100 bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-1 focus:border-blue-600 dark:focus:border-blue-400 peer" 
+                        placeholder=" " 
+                        required 
+                        min="0"
+                    />
+                    <label 
+                        for="referenciaInput" 
+                        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 start-1 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                    >{{'labels.referencia' | translate}}</label>
+                    <span class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+                        </svg>  
+                    </span>
+                </div>
+            
+                <div class="relative inline-block ml-4" *ngIf="mostrarAutorizacion">
+                    <input 
+                        type="text" 
+                        id="autorizacionInput" 
+                        id="autorizacionInput" 
+                        #autorizacionInput
+                        [(ngModel)]="autorizacion"
+                        class="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 dark:text-gray-100 bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-1 focus:border-blue-600 dark:focus:border-blue-400 peer" 
+                        placeholder=" " 
+                        required 
+                        min="0"
+                    />
+                    <label 
+                        for="autorizacionInput" 
+                        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 start-1 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                    >{{'labels.autorizacion' | translate}}</label>
+                    <span class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                        </svg>  
+                    </span>
+                </div>
+
+                <div class="relative inline-block ml-4" *ngIf="mostrarInputFecha">
+                    <input 
+                        #fechaInput 
+                        type="date" 
+                        id="fechaInput" 
+                        class="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 dark:text-gray-100 bg-transparent rounded-lg border border-gray-300 dark:border-gray-600 appearance-none focus:outline-none focus:ring-1 focus:border-blue-600 dark:focus:border-blue-400 peer" 
+                        placeholder=" " 
+                        required
+                    />
+                    <label 
+                        for="fechaInput" 
+                        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 start-1 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                    >{{'labels.fecha' | translate}}</label>
+                </div>                             
+            </div>
+        </div>
+          
+        <div class="grid grid-cols-3 gap-4 ">
+            <!-- Tarjeta para DOCUMENTO -->
+            <div class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md overflow-y-auto max-h-36" style="max-height: 150px;">
+                <h2 class="text-lg dark:text-gray-200 font-semibold mb-2 border-l-4 border-amber-500 dark:border-amber-500 pl-2">
+                    {{'labels.tipoDocumento' | translate}}
+                </h2>
+                <div class="mt-2">
+                    <div *ngIf="cargandoTiposDocumentos" class="text-center py-4 bg-white dark:bg-gray-800 bg-opacity-75 inset-0 flex items-center justify-center">
+                        <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-blue-200 dark:border-blue-600 rounded-full animate-spin"></div>
+                        <p class="ml-2 dark:text-gray-300">{{('messages.cargandoDatos' | translate) + '...'}}</p>
+                    </div>
+                    <ul class="border border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-md cursor-pointer">
+                        <li *ngFor="let tipoDocumento of tiposDocumentos"
+                            class="px-2 py-1 border-b last:border-none border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out text-sm"
+                            (click)="seleccionarTipoDocumento(tipoDocumento)"
+                            [ngClass]="{
+                              'bg-gray-200 text-gray-900 hover:bg-gray-300 hover:text-gray-800': opcionSeleccionadaDocumento === tipoDocumento,
+                              'dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaDocumento === tipoDocumento,
+                              'bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800': opcionSeleccionadaDocumento !== tipoDocumento,
+                              'dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaDocumento !== tipoDocumento
+                            }">
+                          {{ tipoDocumento.descripcion }}
+                        </li>
+                      </ul>                         
+                </div>
+            </div>
+ 
+            <!-- Tarjeta para SERIE -->
+            <div class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md overflow-y-auto max-h-36" style="max-height: 150px;">
+                <h2 class="text-lg font-semibold mb-2 dark:text-gray-200 border-l-4 border-amber-500 dark:border-amber-500 pl-2">
+                    {{'labels.series' | translate}}
+                </h2>
+                <div class="mt-2">
+                    <div *ngIf="cargandoSeriesDocumentos" class="text-center py-4 bg-white dark:bg-gray-800 bg-opacity-75 inset-0 flex items-center justify-center">
+                        <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-blue-200 dark:border-blue-600 rounded-full animate-spin"></div>
+                        <p class="ml-2 dark:text-gray-300">{{('messages.cargandoDatos' | translate) + '...'}}</p>
+                    </div>
+                    <ul class="border border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-md cursor-pointer">
+                        <li *ngFor="let serie of seriesDocumentos" 
+                            class="px-2 py-1 border-b last:border-none border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out text-sm"
+                            (click)="seleccionarSerie(serie)"
+                            [ngClass]="{
+                                'bg-gray-200 text-gray-900 hover:bg-gray-300 hover:text-gray-800': opcionSeleccionadaSerie === serie,
+                                'dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaSerie === serie,
+                                'bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800': opcionSeleccionadaSerie !== serie,
+                                'dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaSerie !== serie
+                            }">
+                            {{ serie.descripcion }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta para ESTADO -->
+            <div class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md overflow-y-auto max-h-36" style="max-height: 150px;">
+                <h2 class="text-lg font-semibold mb-2 dark:text-gray-200 border-l-4 border-amber-500 dark:border-amber-500 pl-2">
+                    {{'labels.estados' | translate}}
+                </h2>
+                <div class="mt-2">
+                    <ul class="border border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-md cursor-pointer">
+                        <li class="px-2 py-1 border-b last:border-none border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out text-sm"
+                            (click)="opcionSeleccionadaEstado = 'Activo'"
+                            [ngClass]="{
+                                'bg-gray-200 text-gray-900 hover:bg-gray-300 hover:text-gray-800': opcionSeleccionadaEstado === 'Activo',
+                                'dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaEstado === 'Activo',
+                                'bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800': opcionSeleccionadaEstado !== 'Activo',
+                                'dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaEstado !== 'Activo'
+                            }">Activo
+                        </li>
+                        <li class="px-2 py-1 border-b last:border-none border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out text-sm"
+                            (click)="opcionSeleccionadaEstado = 'Anulado'"
+                            [ngClass]="{
+                                'bg-gray-200 text-gray-900 hover:bg-gray-300 hover:text-gray-800': opcionSeleccionadaEstado === 'Anulado',
+                                'dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaEstado === 'Anulado',
+                                'bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800': opcionSeleccionadaEstado !== 'Anulado',
+                                'dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaEstado !== 'Anulado'
+                            }">Anulado
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta para TIPO DE PAGO -->
+            <div class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md overflow-y-auto max-h-36" style="max-height: 150px;">
+                <h2 class="text-lg font-semibold mb-2 dark:text-gray-200 border-l-4 border-amber-500 dark:border-amber-500 pl-2">
+                    {{'labels.tiposPago' | translate}}
+                </h2>
+                <div class="mt-2">
+                    <div *ngIf="cargandoTiposPago" class="text-center py-4 bg-white dark:bg-gray-800 bg-opacity-75 inset-0 flex items-center justify-center">
+                        <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-blue-200 dark:border-blue-600 rounded-full animate-spin"></div>
+                        <p class="ml-2 dark:text-gray-300">{{('messages.cargandoDatos' | translate) + '...'}}</p>
+                    </div>
+                    <ul class="border border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-md cursor-pointer">
+                        <li *ngFor="let tipoPago of tiposPago" 
+                        class="px-2 py-1 border-b last:border-none border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out text-sm"
+                        (click)="seleccionarTipoPago(tipoPago)"
+                        [ngClass]="{
+                            'bg-gray-200 text-gray-900 hover:bg-gray-300 hover:text-gray-800': opcionSeleccionadaTipoPago?.tipo_Cargo_Abono === tipoPago.tipo_Cargo_Abono,
+                            'dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaTipoPago?.tipo_Cargo_Abono === tipoPago.tipo_Cargo_Abono,
+                            'bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800': opcionSeleccionadaTipoPago?.tipo_Cargo_Abono !== tipoPago.tipo_Cargo_Abono,
+                            'dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300': opcionSeleccionadaTipoPago?.tipo_Cargo_Abono !== tipoPago.tipo_Cargo_Abono
+                        }">
+                        {{ tipoPago.descripcion }}
+                    </li>
+                    
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta para BANCOS -->
+            <div *ngIf="bancosHabilitados" class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md overflow-y-auto max-h-36" style="max-height: 150px;">
+                <h2 class="text-lg font-semibold mb-2 dark:text-gray-200 border-l-4 border-amber-500 dark:border-amber-500 pl-2">
+                    {{'labels.bancos' | translate}}
+                </h2>
+                <div class="mt-2">
+                    <div *ngIf="cargandoBanco" class="text-center py-4 bg-white dark:bg-gray-900 bg-opacity-75 inset-0 flex items-center justify-center">
+                        <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-blue-200 dark:border-blue-400 rounded-full animate-spin"></div>
+                        <p class="ml-2 text-gray-900 dark:text-gray-300">{{('messages.cargandoDatos' | translate) + '...'}}</p>
+                    </div>
+                    <ul class="border border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-md cursor-pointer">
+                        <li *ngFor="let banco of bancos" 
+                            class="px-2 py-1 border-b last:border-none border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out text-sm"
+                            (click)="seleccionarBanco(banco.banco)"
+                            [ngClass]="{
+                                'bg-gray-200 text-gray-900 hover:bg-gray-300 hover:text-gray-800': bancoSeleccionado === banco.banco,
+                                'dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300': bancoSeleccionado === banco.banco,
+                                'bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800': bancoSeleccionado !== banco.banco,
+                                'dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300': bancoSeleccionado !== banco.banco
+                            }">
+                            {{ banco.nombre }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Tarjeta para CUENTAS -->
+            <div *ngIf="opcionSeleccionadaTipoPago?.req_Cuenta_Bancaria == 1  && cuentasBancarias.length > 0" 
+                class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md overflow-y-auto max-h-36" 
+                style="max-height: 150px;">
+            <h2 class="text-lg font-semibold mb-2 dark:text-gray-200 border-l-4 border-amber-500 dark:border-amber-500 pl-2">
+                {{ 'labels.cuentasBancarias' | translate }}
+            </h2>
+            <div class="mt-2">
+                <ul class="border border-gray-200 dark:border-gray-700 rounded overflow-hidden shadow-md cursor-pointer">
+                    <li *ngFor="let cuenta of cuentasBancarias" 
+                        class="px-2 py-1 border-b last:border-none border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out text-sm"
+                        (click)="seleccionarCuenta(cuenta.cuenta)"
+                        [ngClass]="{
+                            'bg-gray-200 text-gray-900 hover:bg-gray-300 hover:text-gray-800': cuentaSeleccionada === cuenta.cuenta,
+                            'dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300': cuentaSeleccionada === cuenta.cuenta,
+                            'bg-white text-gray-900 hover:bg-gray-100 hover:text-gray-800': cuentaSeleccionada !== cuenta.cuenta,
+                            'dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300': cuentaSeleccionada !== cuenta.cuenta
+                        }">
+                        {{ cuenta.descripcion }}
+                    </li>
+                </ul>
+            </div>
+            </div>
+                   
+
+           <div class="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md overflow-y-auto max-h-36 col-span-3 md:col-span-2">
+                <h2 class="text-lg font-semibold mb-2 dark:text-gray-200 border-l-4 border-amber-500 dark:border-amber-500 pl-2">
+                    {{'labels.observaciones' | translate}}
+                </h2>
+                <form>
+                    <div class="mb-4 w-full bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-400">
+                        <div class="flex justify-between items-center py-1 px-2 border-b border-gray-200 dark:border-gray-600">
+                            <div class="flex flex-wrap items-center space-x-1">
+                                <button (click)="copiarTexto()" type="button" 
+                                        class="p-1 text-gray-400 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-600" 
+                                        title="Copiar">
+                                    <i class="fa-regular fa-copy text-lg"></i>
+                                </button>
+                                <button (click)="pegarTexto()" type="button" 
+                                        class="p-1 text-gray-400 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-600" 
+                                        title="Pegar">
+                                    <i class="fa-regular fa-paste text-lg"></i>
+                                </button>
+                            </div>
+                            <button type="button" data-tooltip-target="tooltip-fullscreen" 
+                                    class="p-1 text-gray-400 rounded cursor-pointer sm:ml-auto hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-600">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="py-2 px-4 bg-white dark:bg-gray-600 rounded-b-lg">
+                            <textarea   
+                                [(ngModel)]="observaciones" 
+                                [ngModelOptions]="{standalone: true}"
+                                id="editor" 
+                                rows="8" 
+                                class="block px-0 w-full text-sm text-gray-800 bg-white border-0 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 focus:ring-0" 
+                                placeholder="{{('labels.escribirObsevaciones' | translate) + '...'}}" 
+                                required>
+                            </textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+        </div>
+
+        <div class="flex justify-end space-x-2 mt-2">
+            <button 
+            *ngIf="mostrarBotonModal"
+            [ngClass]="{'creative-fade-in': mostrarBotonModal}"
+            class="bg-slate-400 hover:bg-slate-500 text-white py-1 px-2 rounded-lg flex items-center space-x-2" 
+            (click)="abrirModalInformacion()">
+              <!-- Botón con SVG y etiqueta -->
+              <i class="fa-solid fa-list-check mr-1"></i>
+              <span class="flex items-center">
+                  {{'labels.opcionesSeleccionadas' | translate}}
+                  <kbd class="text-xs font-semibold text-slate-800 bg-slate-100 border border-slate-300 rounded-lg px-1.5 py-0.5 ml-2">F4</kbd>
+              </span>
+          </button>
+          
+
+            <button *ngIf="mostrarBotonCxC"  [ngClass]="{'creative-fade-in': mostrarBotonCxC}" class="bg-sky-600 hover:bg-sky-700 text-white py-1 px-2 rounded-lg flex items-center space-x-2" (click)="ejecutarCxC()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m6.75 12-3-3m0 0-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+                <span class="flex items-center">
+                    {{'labels.afectarCxCBtn' | translate}}
+                    <kbd class="text-xs font-semibold text-sky-800 bg-sky-100 border border-sky-300 rounded-lg px-1.5 py-0.5 ml-2">F1</kbd>
+                </span>
+            </button>
+            
+            <button *ngIf="mostrarBotonHuerfano"  [ngClass]="{'creative-fade-in': mostrarBotonHuerfano}"  class="bg-green-600 hover:bg-green-700 text-white py-1 px-2 rounded-lg flex items-center space-x-2" (click)="ejecutarHuerfano()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9.0 0 0 0-9-9Z" />
+                </svg>
+                <span class="flex items-center">
+                    {{'labels.huefanoBtn' | translate}}
+                    <kbd class="text-xs font-semibold text-green-800 bg-green-100 border border-green-300 rounded-lg px-1.5 py-0.5 ml-2">F2</kbd>
+                </span>
+            </button>
+            
+            <button *ngIf="cargoAbono.length > 0"  [ngClass]="{'creative-fade-in': cargoAbono.length > 0}" class="bg-orange-600 hover:bg-orange-700 text-white py-1 px-2 rounded-lg flex items-center space-x-2" (click)="datosParaImprimir(encabezado, cargoAbono, clienteSeleccionado, montosAplicados)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
+                </svg>
+                <span class="flex items-center">
+                    {{'labels.imprimirBtn' | translate}}
+                    <kbd class="text-xs font-semibold text-orange-800 bg-orange-100 border border-orange-300 rounded-lg px-1.5 py-0.5 ml-2">F3</kbd>
+                </span>
+            </button>
+            
+            <button class="bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-2 rounded-lg flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 0 1-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 0 1-.837.552c-.676.328-1.028.774-1.028 1.152v.75a.75.75 0 0 1-1.5 0v-.75c0-1.279 1.06-2.107 1.875-2.502.182-.088.351-.199.503-.331.83-.727.83-1.857 0-2.584ZM12 18a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+                </svg>
+                <span>{{'labels.ayudaBtn' | translate}}</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar información adicional -->
+    <div *ngIf="mostrarModalInfo" class="fixed inset-0 w-full h-full z-50 bg-black bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-80 duration-300 overflow-y-auto modal-overlay backdrop-blur-xs"
+        (click)="cerrarModalInformacion()"
+        [ngClass]="{'modal-open': mostrarModalInfo}">
+
+        <div class="relative sm:w-3/4 md:w-1/2 lg:w-1/3 mx-2 sm:mx-auto my-10 opacity-100 modal-content"
+        [ngClass]="{'animate-fadeIn': mostrarModalInfo && !isExiting, 'animate-fadeOut': isExiting}">
+            <div class="relative bg-white dark:bg-gray-800 shadow-lg rounded-xl text-gray-900 dark:text-gray-300 z-20"
+                (click)="$event.stopPropagation()">
+
+                <!-- Header -->
+                <header class="flex items-center justify-between p-4 border-b dark:border-gray-700">
+                    <img src="assets/logoDmosoft.png" alt="Logo" class="h-10 mr-2 dark:hidden" /> <!-- Modo claro -->
+                    <img src="assets/logoDmosoftCarga.png" alt="Logo" class="h-10 mr-2 hidden dark:block" /> <!-- Modo oscuro -->
+                    <h2 class="font-semibold text-lg dark:text-gray-100">{{'labels.informacionSeleccionada' | translate}}</h2>
+                    <button class="focus:outline-none p-2" (click)="cerrarModalInformacion()">
+                        <svg class="fill-current text-gray-700 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+                        </svg>
+                    </button>
+                </header>
+
+                <!-- Main Content -->
+                <main class="p-6 dark:text-gray-200">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-alt text-blue-600 dark:text-blue-400 text-lg mr-2"></i>
+                        <p class="text-sm"><strong>{{'labels.tipoDocumento' | translate}}:</strong> {{ opcionSeleccionadaDocumento?.descripcion }}</p>
+                    </div>
+                    
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-file text-sky-600 dark:text-sky-400 text-lg mr-2"></i>
+                        <p class="text-sm"><strong>{{'labels.series' | translate}}:</strong> {{ opcionSeleccionadaSerie?.descripcion }}</p>
+                    </div>
+
+                    <div class="flex items-center mb-4">
+                        <i class="fa-duotone fa-solid fa-hand-holding-dollar text-green-700 dark:text-green-500 text-lg mr-2"></i>
+                        <p class="text-sm"><strong>{{'labels.tiposPago' | translate}}:</strong> {{ opcionSeleccionadaTipoPago?.descripcion }}</p>
+                    </div>
+
+                    <!-- Sección del banco solo si hay un banco seleccionado -->
+                    <div class="flex items-center mb-4" *ngIf="opcionSeleccionadaBanco">
+                        <i class="fas fa-university text-orange-500 dark:text-orange-400 text-lg mr-2"></i>
+                        <p class="text-sm"><strong>{{'labelsImpresion.banco' | translate}}:</strong> {{ opcionSeleccionadaBanco }}</p>
+                    </div>
+
+                    <!-- Sección de la cuenta bancaria solo si hay una cuenta seleccionada -->
+                    <div class="flex items-center" *ngIf="opcionSeleccionadaCuenta">
+                        <i class="fa-solid fa-credit-card text-violet-800 dark:text-violet-500 text-lg mr-2"></i>
+                        <p class="text-sm"><strong>{{'labelsImpresion.cuentaBancaria' | translate}}:</strong> {{ opcionSeleccionadaCuenta }}</p>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div *ngIf="mostrarTablaCargoAbono" class="flex flex-col justify-center h-full mt-16 mb-12 scrollable-container">
+    <!-- Table -->
+    <div class="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg border border-gray-200">
+        <header class="px-5 py-4 border-b border-gray-100 bg-gray-800 rounded-t-lg">
+            <h2 class="font-semibold text-white">{{'labels.detallesTablaCA' | translate}}</h2>
+            <h2 class="font-normal text-white">{{('messages.noRegistros' | translate) + ':'}} {{cargoAbono.length}}</h2>
+        </header>
+        <div class="p-3">
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                    <thead class="text-xs font-semibold uppercase text-gray-700 bg-gray-100">
+                        <tr>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-left">{{'fields.tipoDocDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-left">{{'fields.monedaDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-left">{{'fields.tipoCambioDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.pagoDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.pago$DatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.idReferenciaDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.idAutorizacionDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.bancoDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.cuentaBancariaDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.usuarioDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.fechaHoraDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.cuentaCorrientePadreDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.cobrarPagarPadreDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.empresaPadreDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.localizacionPadreDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.estacionTrabajoPadreDatosTabla' | translate}}</div>
+                            </th>
+                            <th class="p-2 whitespace-nowrap">
+                                <div class="font-semibold text-center">{{'fields.fechaRegPadreDatosTabla' | translate}}</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-gray-200 bg-gray-50" *ngFor="let datosCA of cargoAbono">
+                        <tr class="hover:bg-gray-100 transition duration-300">
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-left text-gray-800">{{opcionSeleccionadaTipoPago}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-left text-gray-800">{{datosCA.moneda}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.tipo_Cambio}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.monto}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.monto_Moneda}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800"></div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800"></div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{opcionSeleccionadaBanco}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{opcionSeleccionadaCuentaBancaria}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.userName}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.fecha_Hora | date: 'dd/MM/yyyy'}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.f_Cuenta_Corriente_Padre}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.f_Cobrar_Pagar_Padre}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.f_Empresa_Padre}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.f_Localizacion_Padre}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.f_Estacion_Trabajo_Padre}}</div>
+                            </td>
+                            <td class="p-2 whitespace-nowrap">
+                                <div class="text-center text-gray-800">{{datosCA.f_Fecha_Reg_Padre}}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

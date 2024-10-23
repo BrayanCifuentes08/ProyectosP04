@@ -1,0 +1,898 @@
+
+
+  <nav class="bg-transparent transition-colors duration-300 ease-in-out hover:bg-gray-100 dark:bg-transparent dark:hover:bg-gray-900 border-b border-gray-300 dark:border-gray-600">
+    <!-- Fondo del navbar en modo claro y oscuro -->
+    <div
+      class="max-w-screen-2xl mx-auto flex items-center justify-between p-4 h-24"
+    >
+      <!-- Contenedor del logo y botón de subir logo -->
+      <div class="flex items-center space-x-4 rtl:space-x-reverse">
+        <!-- Botón para subir el logo del usuario, oculto si ya se ha subido un logo -->
+        <div class="relative flex items-center" *ngIf="!logoSubido">
+          <input
+            type="file"
+            id="logo-upload"
+            accept="image/*"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+            (change)="manejarCargaLogo($event)"
+            #logoInput
+          />
+          <button
+            class="w-14 h-14 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-full flex flex-col items-center justify-center p-2 shadow-lg transition-transform transform hover:scale-105 relative"
+            title="Sube tu logo aquí"
+            (click)="logoInput.click()"
+          >
+            <span class="text-xs font-semibold text-center mt-0 flex items-center justify-center h-10"> <!-- Ajustado para centrar el texto verticalmente -->
+              {{'labels.subirLogo' | translate}}
+            </span>
+          </button>
+        </div>
+
+        <!-- Logo del usuario (si está presente) -->
+        <img
+          *ngIf="userLogo"
+          [src]="userLogo"
+          class="h-12 transition-opacity duration-300 ease-in-out cursor-pointer"
+          alt="User Logo"
+        />
+
+        <!-- Línea separadora -->
+        <div class="border-l border-gray-300 dark:border-gray-600 h-12 mx-4"></div>
+
+        <!-- Logo de la empresa (siempre visible) -->
+        <img
+          [src]="
+            esModoOscuro
+              ? 'assets/logoDmosoftCarga.png'
+              : 'assets/logoDmosoft.png'
+          "
+          class="h-12 transition-opacity duration-300 ease-in-out"
+          alt="DMOSOFT Logo"
+        />
+      </div>
+
+      <!-- Contenedor del menú principal -->
+      <div class="hidden md:flex flex-grow items-center justify-center">
+        <div class="w-full flex-grow flex justify-center" id="navbar-cta">
+          <ul class="flex flex-col md:flex-row font-medium p-4 md:p-0 mt-4 md:mt-0 rounded-lg transition-colors duration-300 ease-in-out bg-transparent hover:bg-gray-100 dark:bg-transparent dark:hover:bg-gray-900 space-y-2 md:space-y-0 md:space-x-4">
+            <li>
+              <a
+                href="#"
+                class="menu-item text-gray-800 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
+                routerLink="tabla"
+                routerLinkActive="active"
+                [ngClass]="{
+                  'text-orange-400': menuOpcion === 'tabla',
+                  'dark:text-orange-400': menuOpcion === 'tabla',
+                  'active': menuOpcion === 'tabla'
+                }"
+                (click)="onOption('tabla'); ocultarDocumentos()"
+              >
+                {{ "labels.busquedaDeCliente" | translate }}
+              </a>
+            </li>
+            <li *ngIf="receivedData && receivedData.length > 0"  [ngClass]="{'creative-fade-in': receivedData && receivedData.length > 0}">
+              <a
+                href="#"
+                class="menu-item text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
+                routerLink="documentospendientes"
+                routerLinkActive="active"
+                [ngClass]="{
+                  'text-orange-400': menuOpcion === 'documentospendientes',
+                  'dark:text-orange-400': menuOpcion === 'documentospendientes',
+                  'active': menuOpcion === 'documentospendientes'
+                }"
+                (click)="onOption('documentospendientes')"
+              >
+                {{ "labels.documentosPendientesDePago" | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Botón de idioma -->
+      <div class="flex items-center md:flex">
+        <div class="relative">
+          <button
+            (click)="toggleIdiomaMenu()"
+            class="flex items-center rounded-full p-2 px-4 text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 ease-in-out shadow-lg"
+          >
+            <div class="relative w-6 h-4">
+              <img
+                [src]="getFlagUrl(traduccionService.getIdiomaActual())"
+                alt="Current Language Flag"
+                class="absolute inset-0 object-cover"
+              />
+            </div>
+            <span class="text-sm font-medium ml-3">
+              {{
+                traduccionService.getIdiomaActual() === "en"
+                  ? "English"
+                  : traduccionService.getIdiomaActual() === "es"
+                  ? "Español"
+                  : traduccionService.getIdiomaActual() === "fr"
+                  ? "Frances"
+                  : "German"
+              }}
+            </span>
+          </button>
+
+          <!-- Menú de idiomas con animación -->
+          <div
+          *ngIf="isIdiomaMenuOpen"
+          [ngClass]="{
+            'animate-dropdown': isIdiomaMenuOpen
+          }"
+            class="absolute bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md mt-2 shadow-lg w-36 z-20 transition-all duration-500 ease-out transform origin-top"
+          >
+            <div
+              (click)="onCambioIdioma('en')"
+              class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+            >
+              <img
+                src="assets/us.png"
+                alt="US Flag"
+                class="inline-block w-4 h-3 mr-2"
+              />
+              English
+            </div>
+            <div
+              (click)="onCambioIdioma('es')"
+              class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+            >
+              <img
+                src="assets/es.png"
+                alt="Spanish Flag"
+                class="inline-block w-4 h-3 mr-2"
+              />
+              Español
+            </div>
+            <div
+              (click)="onCambioIdioma('fr')"
+              class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+            >
+              <img
+                src="assets/fr.png"
+                alt="France Flag"
+                class="inline-block w-4 h-3 mr-2"
+              />
+              Frances
+            </div>
+            <div
+              (click)="onCambioIdioma('de')"
+              class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+            >
+              <img
+                src="assets/de.png"
+                alt="Germany Flag"
+                class="inline-block w-4 h-3 mr-2"
+              />
+              German
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar para cerrar sesión -->
+      <div class="relative ml-4 md:flex hidden" *ngIf="mostrarAvatar">
+        <button
+        (click)="toggleUserMenu()"
+        class="relative w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-700 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-500 transition-transform transform hover:scale-110 active:scale-100 shadow-md hover:shadow-lg active:shadow-sm duration-300 ease-in-out"
+        title="Menú de Usuario"
+      >
+        <i
+          [ngClass]="{
+            'fa-user': !isUserMenuOpen,
+            'fa-xmark': isUserMenuOpen
+          }"
+          class="fa-solid text-xl transition-transform duration-300 ease-in-out"
+        ></i>
+        <!-- Círculo de fondo animado con colores más oscuros para el modo oscuro -->
+        <div class="absolute inset-0 rounded-full bg-gray-300 dark:bg-gray-800 opacity-20 transform scale-0 hover:scale-100 transition-transform duration-300 ease-in-out"></div>
+      </button>
+      
+
+      
+        <!-- Menú desplegable -->
+        <div
+          *ngIf="isUserMenuOpen"
+          class="absolute right-0 top-12 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-4 z-20 transition-transform transform opacity-0 scale-95 animate-dropdown"
+        >
+          <!-- Cerrar sesión -->
+          <button
+            (click)="logout()"
+            class="flex items-center justify-center w-full px-4 py-2 hover:text-red-500 dark:hover:text-red-500 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out text-sm rounded-lg"
+          >
+            <i
+              class="fa-solid fa-sign-out-alt mr-2 text-base hover:text-red-500"
+            ></i>
+            {{ "labels.cerrarSesion" | translate }}
+          </button>
+      
+          <!-- Iconos SVG -->
+          <div class="relative mt-2 flex justify-center">
+            <!-- SVG de acción -->
+            <svg
+              (click)="alternarMensaje('navbar')"
+              xmlns="http://www.w3.org/2000/svg"
+              [ngClass]="{ hidden: mostrarMensaje }"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 sm:w-7 sm:h-7 text-blue-400 dark:text-blue-300 cursor-pointer transition duration-200 ease-in-out"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 1-11-4.69v.447a3.5 3.5 0 0 0 1.025 2.475L8.293 10 8 10.293a1 1 0 0 0 0 1.414l1.06 1.06a1.5 1.5 0 0 1 .44 1.061v.363a1 1 0 0 0 .553.894l.276.139a1 1 0 0 0 1.342-.448l1.454-2.908a1.5 1.5 0 0 0-.281-1.731l-.772-.772a1 1 0 0 0-1.023-.242l-.384.128a.5.5 0 0 1-.606-.25l-.296-.592a.481.481 0 0 1 .646-.646l.262.131a1 1 0 0 0 .447.106h.188a1 1 0 0 0 .949-1.316l-.068-.204a.5.5 0 0 1 .149-.538l1.44-1.234A6.492 6.492 0 0 1 16.5 10Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+      
+            <!-- SVG de cerrar -->
+            <svg
+              (click)="alternarMensaje('navbar')"
+              xmlns="http://www.w3.org/2000/svg"
+              [ngClass]="{ block: mostrarMensaje, hidden: !mostrarMensaje }"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 sm:w-7 sm:h-7 text-red-400 dark:text-red-300 cursor-pointer transition duration-200 ease-in-out"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 9.293l3.293-3.293a1 1 0 0 1 1.414 1.414L11.414 10l3.293 3.293a1 1 0 0 1-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 0 1-1.414-1.414L8.586 10 5.293 6.707a1 1 0 0 1 1.414-1.414L10 8.586z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+      
+          <div class="mt-2 px-4 py-2 text-gray-800 dark:text-gray-200 text-sm">
+            <p>
+              {{ "labels.usuarioLogin" | translate }}:
+              <b>{{ nombreUsuario }}</b>
+            </p>
+            <p>{{ "labels.horaInicioSesion" | translate }}:</p>
+            <p class="font-bold">{{ horaInicioSesionFormatted || 'No disponible' }}</p>
+            <p>{{ "labels.fechaVencimientoToken" | translate }}:</p>
+            <p class="font-bold">{{ fechaVencimientoToken || 'No disponible' }}</p>
+          </div>
+          <!-- Sección oculta -->
+          <div
+          [ngClass]="{
+            'max-h-0 opacity-0': !mostrarMensaje,
+            'max-h-[200px] opacity-100': mostrarMensaje
+          }"
+          class="transition-all duration-500 ease-in-out overflow-visible px-4"
+        >
+        
+            <!-- Separador -->
+            <hr class="my-2 border-gray-300 dark:border-gray-600" />
+            <div class="relative mb-4 flex justify-center">
+              <div class="relative flex items-center w-full max-w-sm">
+                <input
+                  type="text"
+                  [(ngModel)]="urlApi"
+                  (ngModelChange)="mostrarMensajeUrlConfirmacion = true"
+                  placeholder="{{ 'labels.ingresarUrlLogin' | translate }}"
+                  class="w-full px-4 py-2 bg-gray-200 border rounded-lg focus:outline-none pr-12 text-sm focus:bg-gray-100 focus:ring-1 focus:ring-indigo-700 dark:focus:bg-gray-600 dark:text-white dark:bg-gray-700 dark:focus:ring-1 dark:focus:ring-indigo-700 dark:border-none"
+                />
+                <button
+                  (click)="copiarAPortapapeles()"
+                  class="absolute right-2 top-0.5 transform -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-black p-2 rounded-full text-xs font-medium shadow-sm transition duration-300 ease-in-out"
+                  title="Copiar al portapapeles"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-4 w-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5A3.375 3.375 0 0 0 6.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-1.5a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 0 0-9-9Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+           </div>
+            <!-- Mensaje de confirmación de URL actualizada -->                                   
+            <p
+            *ngIf="mostrarMensajeUrlConfirmacion"
+            class="mt-1 ml-1 text-red-500 text-xs whitespace-nowrap text-ellipsis transition-all duration-500 ease-in-out"
+            >
+            {{ "labels.actualizarUrl" | translate }}
+            </p>
+
+            <!-- Mensaje de verificación de URL -->
+            <p
+            *ngIf="mostrarMensajeUrlVerificacion"
+            class="mt-2 text-xs overflow-hidden whitespace-nowrap text-ellipsis"
+            [ngClass]="{'text-red-500': esError, 'text-green-500': esValido}"
+          >
+            {{ mensajeErrorUrl | translate }}
+          </p>
+            <div class="flex justify-center mt-4 gap-4">
+              <button
+                (click)="confirmarUrl()"
+                class="p-2 bg-gray-700 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
+              >
+                {{ "labels.confirmarBtns" | translate }}
+              </button>
+              <button
+              (click)="verificarUrl(urlApi)"
+              class="p-2 bg-blue-900 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
+              [disabled]="isVerificando"
+            >
+              <ng-container *ngIf="!isVerificando; else spinner">
+                {{ "labels.verificarBtns" | translate }}
+              </ng-container>
+              <ng-template #spinner>
+                <svg
+                  class="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+              </ng-template>
+            </button>
+            </div>           
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón de menú movil-->
+      <div class="md:hidden flex items-center">
+        <button
+          (click)="toggleSidebar()"
+          type="button"
+          class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 ml-4"
+          aria-controls="navbar-cta"
+          aria-expanded="false"
+        >
+          <svg
+            class="w-5 h-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 17 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M1 1h15M1 7h15M1 13h15"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div *ngIf="isSidebarOpen" class="fixed inset-0 z-50 md:hidden">
+    <div class="bg-gray-900 bg-opacity-75 w-full h-full">
+      <div class="bg-gray-100 dark:bg-gray-900 h-full w-64 p-4 relative">
+        <!-- Botón del avatar y menú desplegable -->
+        <div class="relative mt-6">
+          <button
+            (click)="toggleUserMenuSidebar()"
+            class="relative w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-500 transition-transform transform hover:scale-110 active:scale-100 shadow-md hover:shadow-lg active:shadow-sm duration-300 ease-in-out"
+          >
+            <i
+              [ngClass]="{
+                'fa-user': !isUserMenuOpenSidebar,
+                'fa-xmark': isUserMenuOpenSidebar
+              }"
+              class="fa-solid text-xl transition-transform duration-300 ease-in-out"
+            ></i>
+            <div class="absolute inset-0 rounded-full bg-gray-300 dark:bg-gray-800 opacity-20 transform scale-0 hover:scale-100 transition-transform duration-300 ease-in-out"></div>
+          </button>
+          
+          <!--menú desplegable -->
+          <div
+          *ngIf="isUserMenuOpenSidebar"
+          class="mt-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-4 transition-all duration-300 ease-in-out overflow-auto"
+          [ngClass]="{
+            'max-h-0 opacity-0': !isUserMenuOpenSidebar,
+            'max-h-screen opacity-100': isUserMenuOpenSidebar
+          }"
+        >
+            <!-- Boton para Cerrar sesión -->
+            <button
+              (click)="logout()"
+              class="flex items-center w-full px-4 py-2 hover:text-red-500 dark:hover:text-red-500 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out text-sm rounded-lg"
+            >
+              <i
+                class="fa-solid fa-sign-out-alt mr-2 text-base hover:text-red-500"
+              ></i>
+              {{ "labels.cerrarSesion" | translate }}
+            </button>
+
+            <div class="relative mt-2 flex justify-center">
+              <!-- SVG de acción -->
+              <svg
+                (click)="alternarMensaje('sidebar')"
+                xmlns="http://www.w3.org/2000/svg"
+                [ngClass]="{ hidden: mostrarMensajeSidebar }"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 sm:w-7 sm:h-7 text-blue-400 dark:text-blue-300 cursor-pointer transition duration-200 ease-in-out"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 1-11-4.69v.447a3.5 3.5 0 0 0 1.025 2.475L8.293 10 8 10.293a1 1 0 0 0 0 1.414l1.06 1.06a1.5 1.5 0 0 1 .44 1.061v.363a1 1 0 0 0 .553.894l.276.139a1 1 0 0 0 1.342-.448l1.454-2.908a1.5 1.5 0 0 0-.281-1.731l-.772-.772a1 1 0 0 0-1.023-.242l-.384.128a.5.5 0 0 1-.606-.25l-.296-.592a.481.481 0 0 1 .646-.646l.262.131a1 1 0 0 0 .447.106h.188a1 1 0 0 0 .949-1.316l-.068-.204a.5.5 0 0 1 .149-.538l1.44-1.234A6.492 6.492 0 0 1 16.5 10Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+  
+              <!-- SVG de cerrar -->
+              <svg
+                (click)="alternarMensaje('sidebar')"
+                xmlns="http://www.w3.org/2000/svg"
+                [ngClass]="{ block: mostrarMensajeSidebar, hidden: !mostrarMensajeSidebar }"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 sm:w-7 sm:h-7 text-red-400 dark:text-red-300 cursor-pointer transition duration-200 ease-in-out"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 9.293l3.293-3.293a1 1 0 0 1 1.414 1.414L11.414 10l3.293 3.293a1 1 0 0 1-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 0 1-1.414-1.414L8.586 10 5.293 6.707a1 1 0 0 1 1.414-1.414L10 8.586z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+
+            <!-- Información adicional -->
+            <div
+              class="mt-2 px-4 py-2 text-gray-800 dark:text-gray-200 text-sm"
+            >
+              <p>
+                {{ "labels.usuarioLogin" | translate }}:
+                <b>{{ nombreUsuario }}</b>
+              </p>
+              <p>{{ "labels.horaInicioSesion" | translate }}:</p>
+              <p class="font-bold">{{ horaInicioSesionFormatted || 'No disponible' }}</p>
+              <p>{{ "labels.fechaVencimientoToken" | translate }}:</p>
+              <p class="font-bold">{{ fechaVencimientoToken || 'No disponible' }}</p>
+            </div>
+
+          <!-- Sección oculta URL -->
+          <div
+          [ngClass]="{
+            'max-h-0 opacity-0': !mostrarMensajeSidebar,
+            'max-h-screen opacity-100': mostrarMensajeSidebar
+          }"
+          class="transition-all duration-500 ease-in-out overflow-auto px-4"
+        >
+            <!-- Separador -->
+            <hr class="my-2 border-gray-300 dark:border-gray-600" />
+            <div class="relative mb-4 flex justify-center">
+              <!-- Seccion para modificar URL -->
+              <div class="relative flex items-center w-full max-w-sm">
+                <input
+                  type="text"
+                  [(ngModel)]="urlApi"
+                  (ngModelChange)="mostrarMensajeUrlConfirmacion = true"
+                  placeholder="{{ 'labels.ingresarUrlLogin' | translate }}"
+                  class="w-full px-4 py-2 bg-gray-200 border rounded-lg focus:outline-none pr-12 text-sm focus:bg-gray-100 focus:ring-1 focus:ring-indigo-700 dark:focus:bg-gray-600 dark:text-white dark:bg-gray-700 dark:focus:ring-1 dark:focus:ring-indigo-700 dark:border-none"
+                />
+                <button
+                  (click)="copiarAPortapapeles()"
+                  class="absolute right-2 top-0.5 transform -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-black p-2 rounded-full text-xs font-medium shadow-sm transition duration-300 ease-in-out"
+                  title="Copiar al portapapeles"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-4 w-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5A3.375 3.375 0 0 0 6.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-1.5a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 0 0-9-9Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p
+*ngIf="mostrarMensajeUrlConfirmacion"
+class="mt-2 text-red-500 text-xs whitespace-nowrap text-ellipsis transition-all duration-500 ease-in-out"
+>
+{{ "labels.actualizarUrl" | translate }}
+</p>
+
+<!-- Mensaje de verificación de URL -->
+<p
+*ngIf="mostrarMensajeUrlVerificacion"
+class="mt-2 text-xs text-ellipsis transition-all duration-500 ease-in-out"
+[ngClass]="{
+  'text-red-500': mensajeErrorUrl.includes('Error') || mensajeErrorUrl.includes('no es válida'),
+  'text-green-500': mensajeErrorUrl.includes('válida')
+}"
+>
+{{ mensajeErrorUrl }}
+</p>
+            <!-- Seccion de botones para seccion de URL -->
+            <div class="flex justify-center mt-4 gap-4">
+              <button
+                (click)="confirmarUrl()"
+                class="p-2 bg-gray-700 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
+              >
+                {{ "labels.confirmarBtns" | translate }}
+              </button>
+              <button
+              (click)="verificarUrl(urlApi)"
+              class="p-2 bg-blue-900 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
+              [disabled]="isVerificando"
+            >
+              <ng-container *ngIf="!isVerificando; else spinner">
+                {{ "labels.verificarBtns" | translate }}
+              </ng-container>
+              <ng-template #spinner>
+                <svg
+                  class="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+              </ng-template>
+            </button>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- Botón de cierre del sidebar -->
+        <button
+          (click)="toggleSidebar()"
+          class="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700"
+        >
+          <svg
+            class="w-5 h-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
+        <!-- Opciones del Sidebar -->
+        <ul class="mt-8 space-y-4">
+          <li>
+            <a
+              href="#"
+              class="flex items-center space-x-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 px-4 py-3 rounded-md text-sm font-medium transition-all duration-300 ease-in-out transform hover:scale-105 relative"
+              routerLink="tabla"
+              routerLinkActive="active"
+              [ngClass]="{
+                'text-orange-500 border-l-4 border-orange-500 dark:text-orange-400 dark:border-orange-400':
+                  menuOpcion === 'tabla'
+              }"
+              (click)="onOption('tabla'); ocultarDocumentos()"
+            >
+              <span>{{ "labels.busquedaDeCliente" | translate }}</span>
+              <!-- Borde lateral en hover -->
+              <span
+                class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-10 bg-transparent group-hover:bg-gray-300 dark:group-hover:bg-gray-700 transition-all duration-300 ease-in-out"
+              ></span>
+            </a>
+          </li>
+          <li *ngIf="receivedData && receivedData.length > 0">
+            <a
+              href="#"
+              class="flex items-center space-x-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 px-4 py-3 rounded-md text-sm font-medium transition-all duration-300 ease-in-out transform hover:scale-105 relative"
+              routerLink="documentospendientes"
+              routerLinkActive="active"
+              [ngClass]="{
+                'text-orange-500 border-l-4 border-orange-500 dark:text-orange-400 dark:border-orange-400':
+                  menuOpcion === 'documentospendientes'
+              }"
+              (click)="onOption('documentospendientes')"
+            >
+              <span>{{ "labels.documentosPendientesDePago" | translate }}</span>
+              <!-- Borde lateral en hover -->
+              <span
+                class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-10 bg-transparent group-hover:bg-gray-300 dark:group-hover:bg-gray-700 transition-all duration-300 ease-in-out"
+              ></span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Botón de idioma -->
+        <div class="flex items-center absolute bottom-4 w-full px-4">
+          <label
+            for="language-select"
+            class="text-gray-800 dark:text-gray-200 mr-2 text-sm"
+          >
+            {{ "labels.idioma" | translate }}
+          </label>
+          <div class="relative">
+            <button
+              (click)="toggleIdiomaMenuSidebar()"
+              class="flex items-center rounded-full p-2 px-4 text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 ease-in-out shadow-lg"
+            >
+              <div class="relative w-6 h-4">
+                <img
+                  [src]="getFlagUrl(traduccionService.getIdiomaActual())"
+                  alt="Current Language Flag"
+                  class="absolute inset-0 object-cover"
+                />
+              </div>
+              <span class="text-sm font-medium ml-3">
+                {{
+                  traduccionService.getIdiomaActual() === "en"
+                    ? "English"
+                    : traduccionService.getIdiomaActual() === "es"
+                    ? "Español"
+                    : traduccionService.getIdiomaActual() === "fr"
+                    ? "Frances"
+                    : "German"
+                }}
+              </span>
+            </button>
+            <div
+              *ngIf="isIdiomaMenuOpenSidebar"
+              class="absolute bottom-full mb-2 bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg w-36 z-20 transition-transform duration-500 ease-out transform origin-top"
+            >
+              <div
+                (click)="onCambioIdioma('en')"
+                class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+              >
+                <img
+                  src="assets/us.png"
+                  alt="US Flag"
+                  class="inline-block w-4 h-3 mr-2"
+                />
+                English
+              </div>
+              <div
+                (click)="onCambioIdioma('es')"
+                class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+              >
+                <img
+                  src="assets/es.png"
+                  alt="Spanish Flag"
+                  class="inline-block w-4 h-3 mr-2"
+                />
+                Español
+              </div>
+              <div
+                (click)="onCambioIdioma('fr')"
+                class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+              >
+                <img
+                  src="assets/fr.png"
+                  alt="France Flag"
+                  class="inline-block w-4 h-3 mr-2"
+                />
+                Frances
+              </div>
+              <div
+                (click)="onCambioIdioma('de')"
+                class="p-2 cursor-pointer flex items-center text-sm hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+              >
+                <img
+                  src="assets/de.png"
+                  alt="Germany Flag"
+                  class="inline-block w-4 h-3 mr-2"
+                />
+                German
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Componentes Condicionales -->
+  <ng-container [ngSwitch]="menuOpcion">
+    <app-tabla
+      *ngSwitchCase="'tabla'"
+      (dataEmitted)="receiveDataFromChild($event)"
+    ></app-tabla>
+    <app-tabla-docs-pendientes
+      *ngSwitchDefault
+      [parametrosArray]="parametrosArray"
+    ></app-tabla-docs-pendientes>
+  </ng-container>
+
+  <!-- Botón para cambiar fondo -->
+  <div class="fixed bottom-20 left-4 z-10">
+    <button
+      (click)="toggleFondos()"
+      class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 transition duration-300"
+      title="{{ 'labels.cambiarFondo' | translate }}"
+    >
+      <i class="fa-solid fa-image text-xl"></i>
+    </button>
+  </div>
+  
+
+  <!-- Sección de selección de fondos -->
+  <div
+  *ngIf="mostrarFondos"
+  class="fixed bottom-20 left-4 z-20 bg-white dark:bg-gray-800 shadow-xl rounded-lg transition-transform duration-200 ease-in-out"
+>
+    <div class="relative w-72 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+      <!-- Icono de Cierre -->
+      <button
+        (click)="toggleFondos()"
+        class="absolute top-2 right-2 p-2 text-gray-800 dark:text-gray-200 hover:text-red-500 transition duration-300"
+        title="Cerrar"
+      >
+        <i class="fa-solid fa-times text-xl"></i>
+      </button>
+
+      <h3 class="text-gray-800 dark:text-gray-200 text-center mb-3 font-semibold text-lg">
+        {{ "labels.seleccionarFondo" | translate }}
+      </h3>
+
+      <!-- Botón de Quitar Fondo en esquina inferior izquierda -->
+      <button
+        (click)="quitarFondo()"
+        class="absolute bottom-4 left-4 w-7 h-7 flex items-center justify-center bg-red-500 text-white rounded-full shadow-md transition duration-300 hover:bg-red-600"
+        title="Quitar Fondo"
+      >
+        <i class="fa-solid fa-trash text-xs"></i>
+      </button>
+
+      <!-- Fondos Predeterminados -->
+      <div class="grid grid-cols-2 gap-3 mt-2">
+        <div
+          *ngFor="let fondo of fondosPredeterminados"
+          (click)="seleccionarFondo(fondo)"
+          class="relative cursor-pointer border-2 rounded-lg overflow-hidden transition-all duration-300 hover:border-blue-400"
+          [ngClass]="{
+            'border-blue-500': fondoSeleccionado === fondo.url,
+            'border-transparent': fondoSeleccionado !== fondo.url
+          }"
+        >
+          <img
+            [src]="fondo.url"
+            [alt]="fondo.nombre"
+            class="h-20 w-full object-cover transition-transform duration-300 hover:scale-105"
+          />
+
+          <!-- Indicador de fondo seleccionado -->
+          <div
+            class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center text-white font-semibold"
+            *ngIf="fondoSeleccionado === fondo.url"
+          >
+            <i class="fa-solid fa-check-circle text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Subir Fondo Personalizado -->
+      <div class="mt-5 text-center border-t border-gray-300 dark:border-gray-700 pt-3">
+        <h3 class="text-gray-800 dark:text-gray-200 mb-2 font-medium">
+          {{ "labels.subirFondoPersonalizado" | translate }}
+        </h3>
+
+        <label
+          for="file-upload"
+          class="inline-flex items-center px-2 py-1 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600 transition duration-300 text-sm"
+        >
+          <i class="fa-solid fa-upload mr-1"></i>
+          {{ "labels.seleccionarImagen" | translate }}
+          <input
+            id="file-upload"
+            type="file"
+            (change)="cargarFondoPersonalizado($event)"
+            accept="image/*"
+            class="hidden"
+          />
+        </label>
+
+        <!-- Texto de cargando -->
+        <div *ngIf="cargandoFondoPersonalizado" class="text-blue-500 mt-2">
+          {{ "labels.cargandoFondo" | translate }}...
+        </div>
+
+        <!-- Mostrar mensaje si ya se aplicó un fondo personalizado -->
+        <div
+          *ngIf="usandoFondoPersonalizado"
+          class="mt-3 text-green-500 text-sm"
+        >
+          {{ "labels.fondoPersonalizadoAplicado" | translate }}
+        </div>
+
+        <!-- Previsualización del fondo personalizado -->
+        <div
+          *ngIf="
+            fondoPersonalizado &&
+            !cargandoFondoPersonalizado &&
+            !usandoFondoPersonalizado
+          "
+          class="mt-3"
+        >
+          <img
+            [src]="fondoPersonalizado"
+            alt="Fondo Personalizado"
+            class="h-20 w-full object-cover rounded-lg border border-gray-300 dark:border-gray-700"
+          />
+
+          <!-- Contenedor para botones de fondo personalizado -->
+          <div class="flex justify-center mt-2 space-x-2">
+            <button
+              (click)="aplicarFondoPersonalizado()"
+              class="py-1 px-3 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300 text-sm"
+            >
+              <i class="fa-solid fa-check mr-1"></i>
+              {{ "labels.aplicarFondo" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de Modo Oscuro/Claro -->
+  <button
+  (click)="toggleModoOscuroElemento()"
+  class="fixed bottom-4 left-4 w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center shadow-lg hover:bg-gray-400 transition duration-300 z-10"
+  title="Modo {{ esModoOscuro ? 'oscuro' : 'claro' }}"
+>
+  <ng-container *ngIf="esModoOscuro; else modoClaro">
+    <i
+      class="fa-solid fa-moon text-gray-700"
+      [ngClass]="{ 'morph-shape': animateIcon }"
+    ></i>
+  </ng-container>
+  <ng-template #modoClaro>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      class="w-6 h-6"
+      [ngClass]="{ 'morph-shape': animateIcon }"
+    >
+      <path
+        d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"
+      />
+    </svg>
+  </ng-template>
+</button>
+

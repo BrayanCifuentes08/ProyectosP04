@@ -1,0 +1,312 @@
+<div *ngIf="cargando" class="flex items-center justify-center h-full">
+  <app-loading></app-loading>
+</div>
+
+<div class="flex flex-col items-center px-4 sm:px-6 md:px-8 lg:px-10">
+  <!-- Input de búsqueda -->
+  <div class="relative w-full md:w-auto z-10 p-4 fade-in">
+    <!-- Contenedor del input y botón -->
+    <div class="flex items-center space-x-2 mt-4">
+      <!-- Contenedor del input -->
+      <div class="relative flex-1">
+        <!-- Icono de búsqueda -->
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <i class="fa-solid fa-magnifying-glass text-gray-400 dark:text-gray-200"></i>
+        </div>
+        <!-- Campo de texto -->
+        <input
+          type="text"
+          class="block w-full py-3 pl-12 pr-20 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-amber-400 focus:ring-2 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:focus:ring-amber-300 transition-all duration-300 shadow-md hover:shadow-lg peer"
+          [placeholder]="'labels.ingresarCriterio' | translate"
+          [(ngModel)]="pCriterioBusqueda"
+          #inputBuscar
+          required
+          (keyup.enter)="buscarCliente()"
+        />
+        <!-- Botón de borrado -->
+        <button
+          type="button"
+          class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-400 dark:text-gray-200 animate-clear-button"
+          *ngIf="pCriterioBusqueda"
+          (click)="clearInput(inputBuscar)"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+      </div>
+      <!-- Botón de búsqueda -->
+      <button
+        type="button"
+        (click)="buscarCliente()"
+        class="text-white bg-amber-600 hover:bg-amber-700 focus:ring-4 focus:outline-none focus:ring-amber-300 font-medium rounded-lg text-sm px-4 py-3 dark:bg-amber-500 dark:hover:bg-amber-600 transition-all duration-300 shadow-md hover:shadow-lg"
+      >
+        {{ "labels.buscar" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensajes de advertencia -->
+  <app-mensaje-advertencia
+    [mostrar]="mostrarAdvertencia"
+    titulo="{{ 'messages.advertencia' | translate }}"
+    mensaje="{{ 'messages.ingresarCriterioBusqueda' | translate }}"
+    iconoClase="fa-solid fa-triangle-exclamation"
+    iconoColor="text-orange-300"
+    (cerrar)="cerrarMensaje()"
+  >
+  </app-mensaje-advertencia>
+
+  <!-- Mensaje de no datos encontrados -->
+  <app-mensaje-advertencia
+    [mostrar]="!cargando && !mostrarAdvertencia && noDatosEncontrados"
+    titulo="{{ 'messages.noSeLocalizaronDatos' | translate }}"
+    mensaje="{{ 'messages.noHayDatosCoincidentes' | translate }}"
+    iconoClase="fa-solid fa-person-circle-exclamation"
+    iconoColor="text-orange-300"
+    (cerrar)="cerrarMensaje()"
+  >
+  </app-mensaje-advertencia>
+
+  <!-- Tabla de clientes -->
+  <div class="flex justify-center w-full overflow-x-auto mt-10">
+    <!-- Contenedor para la tabla y la tarjeta -->
+  <div class="flex w-full max-w-screen-2xl space-x-4">
+    <div
+      *ngIf="clientes.length > 0"
+      [ngClass]="{ 'fade-in': mostrarTabla }"
+      class="max-w-screen-2xl overflow-x-auto shadow-md sm:rounded-lg scrollable-container"
+      style="max-height: 600px; "
+    >
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-auto"
+      >
+        <!-- Encabezado de la tabla -->
+        <thead
+          class="bg-orange-500 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+        >
+          <tr>
+            <th scope="col" class="p-4">
+              <div class="flex items-center">
+                <label for="checkbox-all-search" class="sr-only">Selec</label>
+              </div>
+            </th>
+            <th
+              scope="col"
+              class="px-16 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.facturaNombre" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.cuenta" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.cta" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.facturaNIT" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.facturaDireccion" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.ccDireccion" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.desCuentaCta" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.direccion1CuentaCta" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.email" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.telefono" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.celular" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.limiteCredito" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.permitirCxC" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.grupoCuenta" | translate }}
+            </th>
+            <th
+              scope="col"
+              class="px-8 py-3 sm:w-1/6 md:w-1/12 text-white dark:text-orange-400"
+            >
+              {{ "fields.desGrupoCuenta" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="text-xs">
+          <tr
+          *ngFor="let model of clientes; let i = index"
+          class="transition-transform transform hover:translate-x-2 bg-white border-b dark:bg-gray-700 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+          (click)="onClienteSeleccionado(model)"
+        >
+        
+            <td class="w-4 p-4">
+              <div class="flex items-center">
+                <label
+                  class="relative flex cursor-pointer items-center rounded-full p-3"
+                  for="checkbox-table-search-{{ i }}"
+                  data-ripple-dark="true"
+                >
+                  <input
+                    id="checkbox-table-search-{{ i }}"
+                    type="checkbox"
+                    class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-gray-500 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-teal-500 checked:bg-teal-500 checked:before:bg-teal-500 hover:before:opacity-20 dark:border-gray-400 dark:checked:border-teal-500 dark:checked:bg-teal-500 dark:before:bg-teal-500 dark:hover:before:opacity-25"
+                    [checked]="selectedCheckbox === i"
+                    (change)="onCheckboxChange(i)"
+                  />
+                  <div
+                    class="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100"
+                  >
+                    <i class="fa-solid fa-check"></i>
+                  </div>
+                </label>
+              </div>
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.factura_Nombre }}
+            </td>
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 dark:text-gray-200 whitespace-nowrap dark:text-blu sm:w-1/6 md:w-1/12"
+            >
+              {{ model.cuenta_Correntista }}
+            </th>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.cuenta_Cta }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.factura_Nit }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.factura_Direccion }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.cC_Direccion }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.des_Cuenta_Cta }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.direccion_1_Cuenta_Cta }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.email }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.telefono }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.celular }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.limite_Credito }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.permitir_CxC }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.grupo_Cuenta }}
+            </td>
+            <td class="px-4 py-2 text-gray-900 dark:text-gray-200">
+              {{ model.des_Grupo_Cuenta }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <p
+        *ngIf="clientes.length < 3 && clientes.length > 0"
+        class="px-4 py-2 text-gray-900 text-2xl dark:text-white text-center"
+      >
+        {{ "messages.noHayMasClientes" | translate }}
+      </p>
+    </div>
+    <!-- Tarjeta con informacion del cliente -->
+    <div *ngIf="mostrarTarjeta" [ngClass]="{'creative-fade-in': mostrarTarjeta}" class="w-1/4 bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg dark:shadow-gray-700">
+      <!-- Encabezado de la tarjeta -->
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6 border-b border-gray-200 dark:border-gray-600 pb-2">
+        <i class="fa-solid fa-circle-info"></i> {{ "messages.datosDeCliente" | translate }}
+      </h2>
+      
+      <!-- Contenido de la tarjeta con scroll -->
+      <div class="overflow-y-auto max-h-[calc(600px)] space-y-6">
+        <div class="space-y-2">
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            <strong class="text-gray-800 dark:text-gray-200">{{ "fields.facturaNombre" | translate }}</strong>
+            <span class="block mt-1">{{ clienteSeleccionado?.factura_Nombre || "messages.noExiste" | translate }}</span>
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            <strong class="text-gray-800 dark:text-gray-200"> {{ "fields.cta" | translate }}</strong>
+            <span class="block mt-1">{{ clienteSeleccionado?.cuenta_Cta || "messages.noExiste" | translate }}</span>
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            <strong class="text-gray-800 dark:text-gray-200">{{ "fields.facturaNIT" | translate }}</strong>
+            <span class="block mt-1">{{ clienteSeleccionado?.factura_Nit || "messages.noExiste" | translate }}</span>
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            <strong class="text-gray-800 dark:text-gray-200"> {{ "fields.facturaDireccion" | translate }}</strong>
+            <span class="block mt-1">{{ clienteSeleccionado?.factura_Direccion || "messages.noExiste" | translate }}</span>
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            <strong class="text-gray-800 dark:text-gray-200">{{ "fields.ccDireccion" | translate }}</strong>
+            <span class="block mt-1">{{ clienteSeleccionado?.ccDireccion || "messages.noExiste" | translate }}</span>
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            <strong class="text-gray-800 dark:text-gray-200"> {{ "fields.telefono" | translate }}</strong>
+            <span class="block mt-1">{{ clienteSeleccionado?.telefono || "messages.noExiste" | translate }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
