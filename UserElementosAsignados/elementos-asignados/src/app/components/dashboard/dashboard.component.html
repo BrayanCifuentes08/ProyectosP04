@@ -1,1 +1,37 @@
-<app-inicio/>
+<!-- Componente Dashboard -->
+<div>
+    <!-- Botones para Asignar y Desasignar -->
+    <div class="flex justify-start space-x-4 mb-6">
+      <button 
+        (click)="asignarElemento()" 
+        [ngClass]="{'bg-blue-900': mostrarAsignador, 'bg-blue-500': !mostrarAsignador}" 
+        class="text-white px-3 py-2 rounded hover:bg-blue-600 text-sm transition duration-200"
+      >
+        Asignar Elemento
+      </button>
+      <button 
+        (click)="desasignarElemento()" 
+        [ngClass]="{'bg-sky-800': mostrarDesasignador, 'bg-sky-500': !mostrarDesasignador}" 
+        class="text-white px-3 py-2 rounded hover:bg-sky-600 text-sm transition duration-200"
+      >
+        Desasignar Elemento
+      </button>
+    </div>
+    
+  <!-- Línea divisoria -->
+  <hr class="border-t-2 border-gray-300 mb-6">
+  
+    <!-- Componente de Asignador y Desasignador -->
+    <div class="flex justify-between">
+      <div *ngIf="mostrarAsignador" class="w-full">
+        <app-asignador></app-asignador>
+      </div>
+      <div *ngIf="mostrarDesasignador" class="w-full">
+        <app-desasignador></app-desasignador>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mostrarInicio">
+    <app-inicio></app-inicio> 
+  </div>
