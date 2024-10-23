@@ -1,20 +1,23 @@
+import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Plantillas/PlantillaImagen.dart';
 import 'package:elementos_asignados/components/Plantillas/SeleccionFondo.dart';
 import 'package:elementos_asignados/components/SplashScreen.dart';
+import 'package:elementos_asignados/generated/l10n.dart';
+// import 'package:elementos_asignados/services/LoginService.dart';
 import 'package:elementos_asignados/services/PreferenciasService.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp()
-      // MultiProvider(
-      //   providers: [
-      //     ChangeNotifierProvider(create: (context) => ThemeNotifier()),
-      //     ChangeNotifierProvider(create: (context) => CatalogoProvider()),
-      //     ChangeNotifierProvider(create: (context) => AccionService())
-      //   ],
-      //   child: MyApp(),
-      // ),
-      );
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -164,13 +167,13 @@ class _MyAppState extends State<MyApp> {
               ),
         },
         locale: _locale,
-        // localizationsDelegates: [
-        //   S.delegate,
-        //   GlobalMaterialLocalizations.delegate,
-        //   GlobalWidgetsLocalizations.delegate,
-        //   GlobalCupertinoLocalizations.delegate,
-        // ],
-        // supportedLocales: S.delegate.supportedLocales,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       ),
     );
   }

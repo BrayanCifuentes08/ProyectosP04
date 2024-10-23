@@ -35,6 +35,12 @@
 
   "splashMantenimiento":                     "Maintenance",
 
+  "inicioBienvenido":                        "Welcome to the Catalog Maintenance System",
+  "inicioCerrarSesion":                      "Logout",
+  "inicioHoraDeInicioSesion":                "Login time:",
+  "inicioLaSesionExpira":                    "The session expires:",
+  "inicioInicio":                            "Home",
+
   "drawerMantenimiento":                     "Maintenance",
   "drawerManetenimientoMayus":               "MAINTENANCE",
   "drawerIdioma":                            "Language",

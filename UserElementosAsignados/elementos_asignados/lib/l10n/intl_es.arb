@@ -37,8 +37,16 @@
   "mensajesUsuario": "Usuario",
   "mensajesSesionGuardadaEl": "Sesión guardada el",
   "mensajesSesionExpiraEl": "Sesión expira el",
+  
+
 
   "splashMantenimiento":                                       "Mantenimiento",
+                  
+  "inicioBienvenido":                                          "Bienvenido al Sistema de Mantenimiento de Catálogos",
+  "inicioCerrarSesion":                                        "Cerrar Sesión",
+  "inicioHoraDeInicioSesion":                                  "Hora de inicio sesión:",
+  "inicioLaSesionExpira":                                      "La sesión expira:",
+  "inicioInicio":                                              "Inicio",
                   
   "drawerMantenimiento":                                       "Mantenimiento",
   "drawerManetenimientoMayus":                                 "MANTENIMIENTO",
