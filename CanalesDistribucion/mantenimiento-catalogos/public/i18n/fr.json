@@ -1,0 +1,66 @@
+{
+    "labels": {
+        "pestañaMantenimiento" : "entretien",
+        "horaInicioSesion" : "Heure de début de la session",
+        "horaCierreSesion" : "Cl estate is is estate",
+        "informacionSeleccionadaCatalogo": "Informations sélectionnées dans le catalogue",
+        "totalRegistros" : "Nombre total d'enregistrements",
+        "seleccionarDescripcion": "Sélectionnez une description",
+        "usuario": "Utilisateur",
+        "estacionTrabajo": "Poste de travail",
+        "catalogo": "Catalogue",
+        "visualizandoCatalogo" : "Affichage du catalogue",
+        "visualizandoRegistro" : "Fiche de visualisation",
+        "agregandoRegistro" : "Ajout d'une inscription",
+        "cambiarIdioma": "changer de langue",
+        "URLValida" : "L'URL est valide.",
+        "URLInvalida" : "L'URL de base n'est pas valide.",
+        "ErrorValidarURL" : "Échec de la vérification de l'URL."
+    },
+    "buttonsLabels": {
+        "btnActualizar": "Mise à jour",
+        "btnAgregar": "Ajouter",
+        "btnEliminar": "Supprimer",
+        "btnBuscar"  : "Recherche",
+        "btnLimpiarSeleccion" : "Effacer la sélection",
+        "btnGuardar": "Sauvegarder l'enregistrement",
+         "atencionCierreSesion" : "Attention"
+    },
+    "infoTextos": {
+        "textoBtnAgregar": "En cliquant sur ce bouton, vous activez les entrées vides pour remplir les informations requises.",
+        "textoBtnActualizar": "En cliquant sur ce bouton, l'enregistrement est mis à jour.",
+        "textoBtnEliminar": "En cliquant sur ce bouton, l'enregistrement est supprimé.",
+        "textoBtnLimpiar": "En cliquant sur ce bouton, les sélections actuelles sont supprimées et la liste des enregistrements est mise à jour.",
+        "textoBtnGuardar": "En cliquant sur ce bouton, l'enregistrement est sauvegardé.",
+        "textoBtnCerrarSesion" : "Si vous cliquez sur ce bouton, vous serez déconnecté et vos données seront supprimées. Vous serez redirigé vers la page de connexion."
+    },
+    "messages": {
+        "errorContraseña": "Vous devez saisir le mot de passe",
+        "errorUsuario": "Vous devez saisir le nom de l'utilisateur",
+        "datosGuardadosSesion": "J'ai correctement sauvegardé votre session.",
+        "datosNoGuardadosSesion": "Votre session ne sera pas sauvegardée."
+    },
+    "labelsLogin": {
+        "cerrarSesion" : "Déconnexion",
+        "iniciarSesion": "Connexion",
+        "usuarioLogin": "Utilisateur",
+        "contraseñaLogin": "Mot de passe",
+        "cargandoLogin": "Chargement",
+        "ingresarUrlLogin": "Entrez l'URL de l'API",
+        "actualizarUrl": "Appuyez sur 'Confirmer' pour mettre à jour l'URL.",
+        "confirmarBtns": "Confirmer",
+        "verificarBtns": "Vérifier",
+        "verModalInfo": "Voir le menu déroulant",
+        "menuAutenticacion": "Menu d'authentification",
+        "seleccionarInformacionAdicional" : "Sélectionnez les informations requises",
+        "estacionesTrabajoLogin": "Postes de travail",
+        "empresasLogin": "Entreprises",
+        "aplicacionesLogin": "Applications",
+        "displaysLogin": "Affichages",
+        "noDisplaysDisponibles": "Aucun affichage disponible",
+        "opcionesSeleccionadas": "Options sélectionnées",
+        "guardarCambios": "Enregistrer les modifications",
+        "guardarDatosSesion": "Sauvegarder les données de la session"
+    }
+  }
+  

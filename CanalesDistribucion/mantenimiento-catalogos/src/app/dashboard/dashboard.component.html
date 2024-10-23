@@ -1,0 +1,190 @@
+<div class="mb-12 grid gap-6 md:grid-cols-2">
+  <!-- Primer recuadro más grande -->
+  <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 dark:text-gray-200 dark:bg-gray-800 shadow-xl shadow-emerald-100/30 dark:shadow-black col-span-1 row-span-1 h-80 transition-all duration-500 ease-in-out opacity-0 transform translate-y-4"
+  [ngClass]="{'opacity-100 translate-y-0': isVisibleContenedor1, 'opacity-0 translate-y-4': !isVisibleContenedor1}">
+    <!-- Icono con interacción -->
+    <div class="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-blue-500/40 shadow-lg absolute right-0 -mt-4 grid h-16 w-16 place-items-center transition-transform duration-300 ease-in-out transform hover:scale-110">
+      <i class="fa-solid fa-book-bookmark text-2xl"></i>
+    </div>
+
+    
+    <div class="p-4 text-left">
+      <p class="block antialiased font-sans text-xs md:text-sm lg:text-base leading-normal font-normal text-black dark:text-gray-300">
+        {{'labels.informacionSeleccionadaCatalogo' | translate}} - <strong class="text-black dark:text-gray-300">{{catalogoSeleccionado}}</strong>
+      </p>
+    </div>
+
+    <div class="flex flex-wrap justify-center p-2 gap-3 items-center">
+      <!-- Input de búsqueda -->
+      <div class="relative group w-auto">
+        <input
+          (input)="generarRegistros(this.catalogoSeleccionado ?? '')" 
+          name="criterioBusqueda"
+          type="text"
+          placeholder="{{'buttonsLabels.btnBuscar' | translate}}"
+          class="bg-transparent border-0 border-b-2 border-transparent rounded-md py-1 pl-8 pr-2 text-xs md:text-sm lg:text-base focus:outline-none focus:border-blue-500 focus:bg-transparent transition duration-200 w-36 sm:w-28 md:w-28"
+        />
+        <span class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600 transition-colors duration-200 group-focus-within:text-blue-500">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+      </div>
+
+      <div *ngIf="mostrarBtnAgregar" class="relative group">
+        <button (click)="habilitarInputsVacios()" class="flex items-center text-green-600 hover:text-green-800">
+          <i class="fa-solid fa-plus text-lg md:text-xl"></i>
+        </button>
+      
+        <!-- Tooltip -->
+        <div class="absolute z-20 hidden w-64 transition duration-150 ease-in-out group-hover:block left-1/2 -translate-x-1/2 top-full mt-2 shadow-lg bg-gray-700 dark:bg-gray-900 p-4 rounded">
+          <svg class="absolute left-1/2 transform -translate-x-1/2 -top-3 h-4 w-4 text-gray-700 dark:text-gray-900" viewBox="0 0 10 5">
+            <polygon points="0,5 5,0 10,5" fill="currentColor" />
+          </svg>
+          <p class="text-sm font-bold text-green-600 pb-1">{{'buttonsLabels.btnAgregar' | translate}}</p>
+          <p class="text-xs leading-4 text-white pb-3">{{'infoTextos.textoBtnAgregar' | translate}}</p>
+        </div>
+      </div>
+      
+      <div class="relative group">
+        <button (click)="limpiarSeleccion()" class="flex items-center text-sky-600 hover:text-sky-700">
+          <i class="fa-solid fa-broom text-lg md:text-xl"></i>
+        </button>
+      
+        <!-- Tooltip -->
+        <div class="absolute z-20 hidden w-64 transition duration-150 ease-in-out group-hover:block left-1/2 -translate-x-1/2 top-full mt-2 shadow-lg bg-gray-700 dark:bg-gray-900 p-4 rounded">
+          <!-- Flecha más grande -->
+          <svg class="absolute left-1/2 transform -translate-x-1/2 -top-3 h-4 w-4 text-gray-700 dark:text-gray-900" viewBox="0 0 10 5">
+            <polygon points="0,5 5,0 10,5" fill="currentColor" />
+          </svg>
+          <p class="text-sm font-bold text-sky-600 pb-1">{{'buttonsLabels.btnLimpiarSeleccion' | translate}}</p>
+          <p class="text-xs leading-4 text-white pb-3">{{'infoTextos.textoBtnLimpiar' | translate}}</p>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="border-t border-blue-gray-50 p-4 h-44 overflow-y-auto custom-scroll">
+      <p class="block antialiased font-sans text-base leading-relaxed font-normal text-black dark:text-gray-300 mb-2">
+        {{'labels.seleccionarDescripcion' | translate}}:
+      </p>
+    
+      <!--Listsa para mostrar descripciones-->
+      <div class="flex flex-col space-y-1">
+        <!-- Indicador de carga -->
+        <div *ngIf="cargando" class="flex flex-col justify-center items-center h-32">
+          <i class="fa-solid fa-spinner fa-spin text-blue-500 text-3xl"></i>
+          <p class="mt-2 text-sm">Cargando datos...</p>
+        </div>
+      
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="text-red-600 text-center mt-2">
+          {{ errorMessage }}
+        </div>
+        <label 
+          *ngFor="let descripcion of getDescripciones()" 
+          class="flex items-center rounded-lg 
+                 hover:bg-blue-100 dark:hover:bg-gray-700 
+                 hover:shadow-lg dark:hover:shadow-lg dark:hover:shadow-gray-600 transition-colors duration-200 
+                 border border-transparent 
+                 hover:border-blue-300 dark:hover:border-gray-500 p-1 cursor-pointer"
+        >
+          <input 
+            type="radio" 
+            name="catalogo" 
+            [value]="descripcion" 
+            [(ngModel)]="opcionSeleccionada"
+            (change)="onDescripcionSeleccionada(descripcion)"
+            class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500" 
+          />
+          <span class="text-gray-800 dark:text-gray-300 text-sm"> {{ descripcion }} </span>
+        </label>
+      </div>
+    </div>
+    
+    <p *ngIf="getDescripciones().length > 0" class="text-black dark:text-gray-300 text-sm mt-2 mx-4">
+      {{'labels.totalRegistros' | translate}}: {{ getDescripciones().length }}
+    </p>
+    <p *ngIf="getDescripciones().length === 0" class="text-red-600 mt-2 mx-4">
+      No hay registros disponibles.
+    </p>
+  </div>
+
+  <!-- Segundo recuadro normal -->
+  <div class="relative flex flex-col bg-clip-border rounded-xl bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-xl shadow-emerald-100/30 dark:shadow-black col-span-1 row-span-1 h-auto transition-all duration-500 ease-in-out opacity-0 transform translate-y-4"
+      [ngClass]="{'opacity-100 translate-y-0': isVisibleContenedor2, 'opacity-0 translate-y-4': !isVisibleContenedor2}">
+
+    <div class="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-pink-500/40 shadow-lg absolute right-0 -mt-4 grid h-16 w-16 place-items-center transition-transform duration-300 ease-in-out transform hover:scale-110">
+      <i class="fa-solid fa-clipboard-list text-2xl"></i> 
+    </div>
+
+    <div class="p-4">
+      <p class="block antialiased font-sans text-base leading-normal font-normal text-black dark:text-gray-300 mb-4">
+        Campos del registro: <strong class="text-black dark:text-gray-300">{{opcionSeleccionada}}</strong>
+      </p>
+      <div class="flex flex-wrap justify-center p-2 gap-3 items-center">
+        <!-- Botón de eliminar -->
+        <div *ngIf="mostrarBtnBorrar" class="relative group">
+          <button (click)="eliminarRegistros()" class="flex items-center text-red-600 hover:text-red-800">
+            <i class="fa-solid fa-trash text-lg md:text-xl"></i>
+          </button>
+
+          <!-- Tooltip -->
+          <div class="absolute z-20 hidden w-64 transition duration-150 ease-in-out group-hover:block left-1/2 -translate-x-1/2 top-full mt-2 shadow-lg bg-gray-700 dark:bg-gray-900 p-4 rounded">
+            <!-- Flecha -->
+            <svg class="absolute left-1/2 transform -translate-x-1/2 -top-3 h-4 w-4 text-gray-700 dark:text-gray-900" viewBox="0 0 10 5">
+              <polygon points="0,5 5,0 10,5" fill="currentColor" />
+            </svg>
+            <p class="text-sm font-bold text-red-500 pb-1">{{ 'buttonsLabels.btnEliminar' | translate }}</p>
+            <p class="text-xs leading-4 text-white pb-3">{{ 'infoTextos.textoBtnEliminar' | translate }}</p>
+          </div>
+        </div>
+
+        <!-- Botón de actualizar -->
+        <div *ngIf="mostrarBtnActualizar" class="relative group">
+          <button (click)="actualizarRegistro()" class="flex items-center text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-file-pen text-lg md:text-xl"></i>
+          </button>
+
+          <!-- Tooltip -->
+          <div class="absolute z-20 hidden w-64 transition duration-150 ease-in-out group-hover:block left-1/2 -translate-x-1/2 top-full mt-2 shadow-lg bg-gray-700 dark:bg-gray-900 p-4 rounded">
+            <!-- Flecha -->
+            <svg class="absolute left-1/2 transform -translate-x-1/2 -top-3 h-4 w-4 text-gray-700 dark:text-gray-900" viewBox="0 0 10 5">
+              <polygon points="0,5 5,0 10,5" fill="currentColor" />
+            </svg>
+            <p class="text-sm font-bold text-gray-400 pb-1">{{ 'buttonsLabels.btnActualizar' | translate }}</p>
+            <p class="text-xs leading-4 text-white pb-3">{{ 'infoTextos.textoBtnActualizar' | translate }}</p>
+          </div>
+        </div>
+
+        <!-- Botón de guardar -->
+        <div *ngIf="mostrarBtnGuardar" class="relative group">
+          <button (click)="agregarRegistros()" class="flex items-center text-blue-600 hover:text-blue-800">
+            <i class="fa-solid fa-save text-lg md:text-xl"></i>
+          </button>
+
+          <!-- Tooltip -->
+          <div class="absolute z-20 hidden w-64 transition duration-150 ease-in-out group-hover:block left-1/2 -translate-x-1/2 top-full mt-2 shadow-lg bg-gray-700 dark:bg-gray-900 p-4 rounded">
+            <!-- Flecha -->
+            <svg class="absolute left-1/2 transform -translate-x-1/2 -top-3 h-4 w-4 text-gray-700 dark:text-gray-900" viewBox="0 0 10 5">
+              <polygon points="0,5 5,0 10,5" fill="currentColor" />
+            </svg>
+            <p class="text-sm font-bold text-blue-600 pb-1">{{ 'buttonsLabels.btnGuardar' | translate }}</p>
+            <p class="text-xs leading-4 text-white pb-3">{{ 'infoTextos.textoBtnGuardar' | translate }}</p>
+          </div>
+        </div>
+
+      </div>
+      <div id="inputContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      </div>
+    </div>
+  </div>
+</div>
+<app-messages
+  [isVisibleAlerta]="isVisibleAlerta"
+  [mensajeAlerta]="mensajeAlerta"
+  [isVisibleModal]="isVisibleModal"
+  [mensajeModal]="mensajeModal"
+  [mensajeExito]="mensajeExito"
+  [isVisibleExito]="isVisibleExito"
+  (cerrar)="ocultarMensaje()"
+  (confirmarAccion)="confirmarAccion()"
+  (cancelarAccion)="cancelarAccion()"
+></app-messages>
