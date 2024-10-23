@@ -1,0 +1,45 @@
+{
+  "@@locale": "en",
+  "locale": "en",
+
+  "loginDebeIngresarElUsuario": "You must enter the user",
+  "loginDebeIngresarLaContrasena":                              "You must enter the password",
+  "loginIngresarURL":                                          "Enter your URL here",
+  "loginTextoCopiado":                                         "Text copied to clipboard",
+  "loginURLvalida":                                            "The URL is valid and responding.",
+  "loginURLNoValida":                                          "The URL is not responding or invalid.",
+  "loginVerificar":                                            "Verify",
+  "loginConfirmar":                                            "Confirm",
+  "loginIniciarSesion":                                        "Login",
+  "loginUsuario": "User",
+  "loginIngresaUsuario": "Enter your user",
+  "loginContrasena": "Password",
+  "loginIngresaContrasena": "Enter your password",
+  "loginGuardarSesion": "Save Session",
+  "loginSeleccionarEstacionTrabajo": "Select a workstation",
+  "loginSeleccionarEmpresa": "Select a company",
+  "loginSeleccionarAplicacion": "Select an application",
+  "loginSeleccionarDisplay": "Select Displays",
+  "loginIngresar":                                             "Join",
+
+
+  "mensajesAdvertencia":                                          "Warning",
+  "mensajesAceptar":                                              "Accept",
+  "mensajesConfirmarCreacion":                                     "Confirm creation:",
+  "mensajesConfimar":                                             "Confirm",
+  "mensajesCancelar": "Cancel",
+  "mensajesCerrarSesion": "Log out",
+  "mensajesUsuario": "UserName",
+  "mensajesSesionGuardadaEl": "Session saved on",
+  "mensajesSesionExpiraEl": "Session expires on",
+
+  "splashMantenimiento":                     "Maintenance",
+
+  "drawerMantenimiento":                     "Maintenance",
+  "drawerManetenimientoMayus":               "MAINTENANCE",
+  "drawerIdioma":                            "Language",
+  "drawerPlantilla":                         "TEMPLATE",
+
+  "loadingCargando":                         "Loading data..."
+ 
+ }
