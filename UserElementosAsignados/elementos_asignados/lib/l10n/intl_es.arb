@@ -1,0 +1,50 @@
+{
+  "@@locale": "es",
+  "locale": "es",
+
+
+  "loginDebeIngresarElUsuario":                                "Debe ingresar el usuario",
+  "loginDebeIngresarLaContrasena":                             "Debe ingresar la contraseña",
+  "loginIngresarURL":                                          "Ingrese aquí su URL",
+  "loginTextoCopiado":                                         "Texto copiado al portapapeles",
+  "loginURLvalida":                                            "La URL es válida y responde.",
+  "loginURLNoValida":                                          "La URL no responde o no es válida.",
+  "loginVerificar":                                            "Verificar",
+  "loginConfirmar":                                            "Confirmar",
+  "loginIniciarSesion":                                        "Iniciar Sesión",
+  "loginUsuario":                                              "Usuario",
+  "loginIngresaUsuario": "Ingresa tu usuario",
+  "loginContrasena": "Contraseña",
+  "loginIngresaContrasena": "Ingresa tu contraseña",
+  "loginGuardarSesion": "Guardar Sesión",
+  "loginSeleccionarEstacionTrabajo" : "Seleccione una estación de trabajo",
+  "loginSeleccionarEmpresa": "Seleccione una empresa",
+  "loginSeleccionarAplicacion": "Seleccione una aplicación",
+  "loginSeleccionarDisplay": "Seleccione Displays",
+  "loginIngresar":                                             "Ingresar",
+
+
+
+
+
+
+  "mensajesAdvertencia":                                          "Advertencia",
+  "mensajesAceptar":                                              "Aceptar",
+  "mensajesConfirmarCreacion":                                    "Confirmar creación:",
+  "mensajesConfimar":                                             "Confirmar",
+  "mensajesCancelar": "Cancelar",
+  "mensajesCerrarSesion": "Cerrar sesión",
+  "mensajesUsuario": "Usuario",
+  "mensajesSesionGuardadaEl": "Sesión guardada el",
+  "mensajesSesionExpiraEl": "Sesión expira el",
+
+  "splashMantenimiento":                                       "Mantenimiento",
+                  
+  "drawerMantenimiento":                                       "Mantenimiento",
+  "drawerManetenimientoMayus":                                 "MANTENIMIENTO",
+  "drawerIdioma":                                              "Idioma",
+  "drawerPlantilla":                                           "PLANTILLA",
+                  
+  "loadingCargando":                                           "Cargando datos..."
+  
+}

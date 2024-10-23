@@ -1,0 +1,47 @@
+{
+  "@@locale": "fr",
+  "locale": "fr",
+
+  "loginDebeIngresarElUsuario": "Vous devez saisir le nom de l'utilisateur",
+  "loginDebeIngresarLaContrasena":                              "Vous devez saisir le mot de passe",
+  "loginIngresarURL":                                          "Entrez votre URL ici",
+  "loginTextoCopiado":                                         "Texte copié dans le presse-papiers",
+  "loginURLvalida":                                            "L'URL est valide et répond.",
+  "loginURLNoValida":                                          "L'URL ne répond pas ou est invalide.",
+  "loginVerificar":                                            "Vérifier",
+  "loginConfirmar":                                            "Confirmer",
+  "loginIniciarSesion":                                        "Connexion",
+  "loginUsuario": "Utilisateur",
+  "loginIngresaUsuario": "Entrez votre utilisateur",
+  "loginContrasena": "Mot de passe",
+  "loginIngresaContrasena": "Entrez votre mot de passe",
+  "loginGuardarSesion": "Sauvegarder la session",
+  "loginSeleccionarEstacionTrabajo": "Sélectionnez un poste de travail",
+  "loginSeleccionarEmpresa": "Sélectionnez une entreprise",
+  "loginSeleccionarAplicacion": "Sélectionnez une application",
+  "loginSeleccionarDisplay": "Sélectionnez les affichages",
+  "loginIngresar":                                             "Rejoindre",
+  
+
+
+  "mensajesAdvertencia":                                          "Avertissement",
+  "mensajesAceptar":                                              "Accepter",
+  "mensajesConfirmarCreacion": "Confirmer la création :",
+  "mensajesConfimar":                                             "Confirmer",
+  "mensajesCancelar": "Annuler",
+  "mensajesCerrarSesion": "Déconnexion",
+  "mensajesUsuario": "Nom d'utilisateur",
+  "mensajesSesionGuardadaEl": "Session enregistrée le",
+  "mensajesSesionExpiraEl": "La session expire le",
+  
+  "splashMantenimiento":                     "Entretien",
+
+  "drawerMantenimiento":                     "Entretien",
+  "drawerManetenimientoMayus":               "ENTRETIEN",
+  "drawerIdioma":                            "Langue",
+  "drawerPlantilla":                         "TEMPLATE",
+
+  "loadingCargando":                         "Chargement des données..."
+  
+ }
+ 
