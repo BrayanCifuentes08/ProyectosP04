@@ -1,37 +1,48 @@
 <!-- Componente Dashboard -->
 <div>
-    <!-- Botones para Asignar y Desasignar -->
-    <div class="flex justify-start space-x-4 mb-6">
-      <button 
+  <div class="flex flex-wrap justify-start sm:space-x-4 sm:space-y-0 space-y-2 mb-6">
+    <button 
         (click)="asignarElemento()" 
-        [ngClass]="{'bg-blue-900': mostrarAsignador, 'bg-blue-500': !mostrarAsignador}" 
-        class="text-white px-3 py-2 rounded hover:bg-blue-600 text-sm transition duration-200"
-      >
+        [ngClass]="{
+            'bg-sky-700 shadow-lg scale-105': mostrarAsignador, 
+            'bg-blue-500': !mostrarAsignador
+        }" 
+        class="text-white px-2 py-1 rounded hover:bg-sky-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform"
+    >
         Asignar Elemento
-      </button>
-      <button 
+    </button>
+    <button 
+        [disabled]=" true"
         (click)="desasignarElemento()" 
-        [ngClass]="{'bg-sky-800': mostrarDesasignador, 'bg-sky-500': !mostrarDesasignador}" 
-        class="text-white px-3 py-2 rounded hover:bg-sky-600 text-sm transition duration-200"
-      >
+        [ngClass]="{
+            'bg-sky-700 shadow-lg scale-105': mostrarDesasignador, 
+            'bg-gray-300': !mostrarDesasignador
+        }" 
+        class="text-white px-2 py-1 rounded hover:bg-gray-300 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform"
+    >
         Desasignar Elemento
-      </button>
-    </div>
-    
-  <!-- Línea divisoria -->
-  <hr class="border-t-2 border-gray-300 mb-6">
-  
-    <!-- Componente de Asignador y Desasignador -->
-    <div class="flex justify-between">
-      <div *ngIf="mostrarAsignador" class="w-full">
-        <app-asignador></app-asignador>
-      </div>
-      <div *ngIf="mostrarDesasignador" class="w-full">
-        <app-desasignador></app-desasignador>
-      </div>
-    </div>
-  </div>
+    </button>
+</div>
 
-  <div *ngIf="mostrarInicio">
-    <app-inicio></app-inicio> 
+
+  <!-- Línea divisoria -->
+  <hr class="border-t-2 border-gray-300 mb-6" />
+
+  <!-- Componente de Asignador y Desasignador -->
+  <div class="flex justify-between">
+    <div *ngIf="mostrarAsignador" class="w-full">
+      <app-asignador
+        (regresar)="mostrarInicio = true; mostrarAsignador = false"
+      />
+    </div>
+    <div *ngIf="mostrarDesasignador" class="w-full">
+      <app-desasignador
+        (regresar)="mostrarInicio = true; mostrarDesasignador = false"
+      />
+    </div>
   </div>
+</div>
+
+<div *ngIf="mostrarInicio">
+  <app-inicio></app-inicio>
+</div>

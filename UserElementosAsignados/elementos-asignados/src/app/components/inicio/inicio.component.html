@@ -1,84 +1,32 @@
 <!-- Contenedor principal -->
 <div class="mb-12">
-
+  <div class="mb-4">
+    <h4 class="text-lg font-semibold text-blue-gray-900">No. Elementos asignados: {{userElementosAsignados.length}}</h4>
+  </div>
+  <div *ngIf="isLoading" class="flex flex-col justify-center items-center h-64">
+    <div class="w-24 h-24 rounded-full animate-spin border-y-4 border-solid border-blue-500 border-t-transparent"></div>
+    <p class="mt-4 text-lg text-blue-gray-700">Cargando datos...</p> <!-- Texto adicional -->
+  </div>
   <!-- Recuadros de información -->
   <div  class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-    <div class="col-span-1">
+    <div class="col-span-1" *ngFor="let userElementos of userElementosAsignados; let i = index">
       <!-- Primer recuadro -->
-      <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
+      <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md fade-in" [ngClass]="{'fade-in': !isLoading, 'delay-[{{i}}*100]': !isLoading}">
         <div class="p-4 text-left">
-          <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">Elemento 1</h4>
+          <h4 class="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900">{{userElementos.descripcion}}</h4>
         </div>
         <div class="border-t border-blue-gray-50 p-4">
           <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 1:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Lorem ipsum dolor sit amet.</p>
+            <strong class="text-blue-gray-900">Fecha Hora:</strong>
+            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">{{userElementos.fecha_Hora}}</p>
           </div>
           <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 2:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Sed do eiusmod tempor incididunt.</p>
+            <strong class="text-blue-gray-900">No: Elemento Asignado</strong>
+            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">{{userElementos.elemento_Asignado}}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-span-1">
-      <!-- Segundo recuadro -->
-      <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
-        <div class="p-4 text-left">
-          <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">Elemento 2</h4>
-        </div>
-        <div class="border-t border-blue-gray-50 p-4">
-          <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 1:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Ut enim ad minim veniam.</p>
-          </div>
-          <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 2:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Nisi ut aliquip ex ea commodo.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-span-1">
-      <!-- Tercer recuadro -->
-      <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
-        <div class="p-4 text-left">
-          <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">Elemento 3</h4>
-        </div>
-        <div class="border-t border-blue-gray-50 p-4">
-          <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 1:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Duis aute irure dolor in reprehenderit.</p>
-          </div>
-          <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 2:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Excepteur sint occaecat cupidatat.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-span-1">
-      <!-- Cuarto recuadro -->
-      <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
-        <div class="p-4 text-left">
-          <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">Elemento 4</h4>
-        </div>
-        <div class="border-t border-blue-gray-50 p-4">
-          <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 1:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Sed ut perspiciatis unde omnis.</p>
-          </div>
-          <div class="mb-2">
-            <strong class="text-blue-gray-900">Campo 2:</strong>
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Nemo enim ipsam voluptatem quia.</p>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
-
-  
 </div>
