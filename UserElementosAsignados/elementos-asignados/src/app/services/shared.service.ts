@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { ApiService } from './api.service';
+import { UserElementoAsignadoM } from '../models/user-elemento-asignado';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +18,20 @@ export class SharedService {
   accion$ = this.accionSubject.asObservable(); 
   private loading = true;
   
-  constructor() {
+  constructor(private apiService: ApiService) {
     if (typeof window !== 'undefined') {
       this.esModoOscuro = localStorage.getItem('theme') === 'dark';
       this.aplicarTema(); //Aplica el tema inicial al cargar el servicio
     }
   }
   
+  private userElementosAsignadosSubject = new BehaviorSubject<UserElementoAsignadoM[]>([]);
+  userElementosAsignados$ = this.userElementosAsignadosSubject.asObservable();
+
+  setUserElementosAsignados(elementos: UserElementoAsignadoM[]) {
+    this.userElementosAsignadosSubject.next(elementos);
+  }
+
   //*Seccion de metodos utilizados para controlar el modo de la interfaz
   alternarTema(): void {
     this.esModoOscuro = !this.esModoOscuro;
@@ -77,4 +86,6 @@ export class SharedService {
   isLoading(): boolean {
     return this.loading;
   }
+
+
 }

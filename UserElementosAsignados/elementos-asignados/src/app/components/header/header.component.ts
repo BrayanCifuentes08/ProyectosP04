@@ -15,6 +15,7 @@ import { ApiService } from '../../services/api.service';
 export class HeaderComponent {
   esModoOscuro: boolean = false;
   usuario: string = ''
+  
   constructor(
     public traduccionService: TraduccionService, 
     private sharedService: SharedService, 

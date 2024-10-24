@@ -16,15 +16,18 @@ export default class DashboardComponent {
   mostrarAsignador: boolean = false;
   mostrarDesasignador: boolean = false;
   mostrarInicio: boolean = true;
+  headerText: string = 'Inicio';
   asignarElemento() {
-    this.mostrarInicio= false;
+    this.mostrarInicio = false;
     this.mostrarAsignador = true;
-    this.mostrarDesasignador = false; // O según tu lógica
+    this.mostrarDesasignador = false;
+    this.headerText = 'Asignar Elemento'; // Cambia el texto del encabezado
   }
 
   desasignarElemento() {
     this.mostrarDesasignador = true;
-    this.mostrarInicio= false;
-    this.mostrarAsignador = false; // O según tu lógica
+    this.mostrarInicio = false;
+    this.mostrarAsignador = false;
+    this.headerText = 'Desasignar Elemento'; // Cambia el texto del encabezado
   }
 }
