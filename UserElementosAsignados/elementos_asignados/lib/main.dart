@@ -1,3 +1,4 @@
+import 'package:elementos_asignados/common/FloatingActionButtonNotifier.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Plantillas/PlantillaImagen.dart';
 import 'package:elementos_asignados/components/Plantillas/SeleccionFondo.dart';
@@ -14,6 +15,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+        ChangeNotifierProvider(
+            create: (context) => FloatingActionButtonNotifier()),
       ],
       child: MyApp(),
     ),
