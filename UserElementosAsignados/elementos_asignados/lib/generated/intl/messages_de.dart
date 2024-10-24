@@ -27,6 +27,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("WARTUNG"),
         "drawerMantenimiento": MessageLookupByLibrary.simpleMessage("Wartung"),
         "drawerPlantilla": MessageLookupByLibrary.simpleMessage("TEMPLATE"),
+        "inicioBienvenido": MessageLookupByLibrary.simpleMessage(
+            "Willkommen beim Katalogpflegesystem"),
+        "inicioCerrarSesion": MessageLookupByLibrary.simpleMessage("Abmelden"),
+        "inicioHoraDeInicioSesion":
+            MessageLookupByLibrary.simpleMessage("Startzeit der Sitzung:"),
+        "inicioInicio": MessageLookupByLibrary.simpleMessage("Startseite"),
+        "inicioLaSesionExpira":
+            MessageLookupByLibrary.simpleMessage("Die Sitzung läuft ab:"),
         "loadingCargando":
             MessageLookupByLibrary.simpleMessage("Daten werden geladen..."),
         "locale": MessageLookupByLibrary.simpleMessage("de"),

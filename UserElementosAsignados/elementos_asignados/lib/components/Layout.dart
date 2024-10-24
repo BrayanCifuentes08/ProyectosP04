@@ -1,14 +1,14 @@
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
+import 'package:elementos_asignados/components/Dashboard.dart';
 import 'package:elementos_asignados/components/Drawer.dart';
 import 'package:elementos_asignados/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class Mantenimiento extends StatefulWidget {
+class Layout extends StatefulWidget {
   final String imagePath;
   final String? catalogo;
   final bool isBackgroundSet;
@@ -26,7 +26,7 @@ class Mantenimiento extends StatefulWidget {
   // final String? despEmpresa;
   // final String? despEstacion_Trabajo;
 
-  Mantenimiento({
+  Layout({
     required this.imagePath,
     required this.isBackgroundSet,
     required this.catalogo,
@@ -46,16 +46,16 @@ class Mantenimiento extends StatefulWidget {
   });
 
   @override
-  _MantenimientoState createState() => _MantenimientoState();
+  _LayoutState createState() => _LayoutState();
 }
 
-class _MantenimientoState extends State<Mantenimiento> {
+class _LayoutState extends State<Layout> {
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
   FocusNode _focusSearch = FocusNode();
   late Locale _idiomaActual;
-  String _opcionSeleccionada = '';
+  // String _opcionSeleccionada = '';
   int _backGestureCount = 0;
   bool _isFabVisible = true;
 
@@ -142,28 +142,20 @@ class _MantenimientoState extends State<Mantenimiento> {
                 gradient: !themeNotifier.temaClaro
                     ? LinearGradient(
                         colors: [
-                          Color.fromARGB(255, 124, 124, 124),
-                          Color.fromARGB(255, 124, 124, 124),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
+                          Color(0xFFF0276a2),
+                          Color(0xFFF194a5a),
+                          Color(0xFFF194a5a),
+                          Color(0xFFF194a5a),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )
                     : LinearGradient(
                         colors: [
-                          Color(0xFFDD952A),
-                          Color(0xFFDD952A),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
-                          Color(0xFF004964),
+                          Color(0xFFF0276a2),
+                          Color(0xFFF194a5a),
+                          Color(0xFFF194a5a),
+                          Color(0xFFF194a5a),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -203,12 +195,12 @@ class _MantenimientoState extends State<Mantenimiento> {
                     decoration: BoxDecoration(
                       gradient: !themeNotifier.temaClaro
                           ? LinearGradient(colors: [
-                              Color.fromARGB(255, 124, 124, 124),
-                              Color(0xFF004964),
+                              Color(0xFFF0276a2),
+                              Color(0xFFF194a5a),
                             ])
                           : LinearGradient(colors: [
-                              Color(0xFFDD952A),
-                              Color(0xFF004964),
+                              Color(0xFFF0276a2),
+                              Color(0xFFF194a5a),
                             ]),
                     ),
                   ),
@@ -219,9 +211,7 @@ class _MantenimientoState extends State<Mantenimiento> {
                         width: constraints.maxWidth * 0.8,
                         alignment: Alignment.bottomCenter,
                         child: Text(
-                          widget.catalogo != null
-                              ? S.of(context).drawerMantenimiento
-                              : S.of(context).inicioInicio,
+                          S.of(context).inicioInicio,
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -249,35 +239,14 @@ class _MantenimientoState extends State<Mantenimiento> {
                   ),
                 ],
               ),
-              // if (widget.catalogo != null)
-              //   Dashboard(
-              //     catalogo: widget.catalogo,
-              //     searchController: searchController,
-              //     opcionSeleccionado: _opcionSeleccionada,
-              //     onOpcionChanged: (String? newValue) {
-              //       setState(() {
-              //         _opcionSeleccionada = newValue!;
-              //         print(_opcionSeleccionada);
-              //       });
-              //     },
-              //     isBackgroundSet: widget.isBackgroundSet,
-              //     imagePath: widget.imagePath,
-              //     changeLanguage: widget.changeLanguage,
-              //     idiomaDropDown: _idiomaActual,
-              //     temaClaro: widget.temaClaro,
-              //     baseUrl: widget.baseUrl,
-              //     onScrollToTop: desplazarScrollArriba,
-              //     onScrollToDown: desplazarScroll,
-              //     token: widget.token,
-              //     pUserName: widget.pUserName,
-              //     pEmpresa: widget.pEmpresa,
-              //     pEstacion_Trabajo: widget.pEstacion_Trabajo,
-              //     fechaSesion: widget.fechaSesion,
-              //     fechaExpiracion: widget.fechaExpiracion,
-              //     despEmpresa: widget.despEmpresa,
-              //     despEstacion_Trabajo: widget.despEstacion_Trabajo,
-              //     focusSearch: _focusSearch,
-              //   ),
+              Dashboard(
+                isBackgroundSet: widget.isBackgroundSet,
+                imagePath: widget.imagePath,
+                changeLanguage: widget.changeLanguage,
+                idiomaDropDown: widget.idiomaDropDown,
+                onScrollToDown: desplazarScroll,
+                onScrollToTop: desplazarScrollArriba,
+              ),
               // if (widget.catalogo == null)
               // PantallaInicio(
               //   isBackgroundSet: widget.isBackgroundSet,

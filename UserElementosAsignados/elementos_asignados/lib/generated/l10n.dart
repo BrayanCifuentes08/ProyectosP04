@@ -350,6 +350,56 @@ class S {
     );
   }
 
+  /// `Welcome to the Catalog Maintenance System`
+  String get inicioBienvenido {
+    return Intl.message(
+      'Welcome to the Catalog Maintenance System',
+      name: 'inicioBienvenido',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get inicioCerrarSesion {
+    return Intl.message(
+      'Logout',
+      name: 'inicioCerrarSesion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login time:`
+  String get inicioHoraDeInicioSesion {
+    return Intl.message(
+      'Login time:',
+      name: 'inicioHoraDeInicioSesion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The session expires:`
+  String get inicioLaSesionExpira {
+    return Intl.message(
+      'The session expires:',
+      name: 'inicioLaSesionExpira',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get inicioInicio {
+    return Intl.message(
+      'Home',
+      name: 'inicioInicio',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Maintenance`
   String get drawerMantenimiento {
     return Intl.message(
