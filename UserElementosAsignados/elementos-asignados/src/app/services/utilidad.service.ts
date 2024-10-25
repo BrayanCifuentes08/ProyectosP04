@@ -39,16 +39,15 @@ export class UtilidadService {
     return `${dia}/${mes}/${año}`;
   }
 
-  formatearFechaHora(date: Date): string {
-    return date.toLocaleString('es-ES', { // Cambia 'es-ES' por el locale que desees
+  formatFechaCompleta(fecha: Date): string {
+    const opciones: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
-      hour12: false // Usa 24 horas
-    });
+    };
+    return new Date(fecha).toLocaleString('es-ES', opciones);
   }
 
   formatearNumeros(valor: number): string {
