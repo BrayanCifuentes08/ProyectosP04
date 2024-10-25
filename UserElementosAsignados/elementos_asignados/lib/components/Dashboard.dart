@@ -70,11 +70,11 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _getUserElementosAsignados() async {
     // Verifica que el widget esté montado antes de realizar cualquier acción.
     if (!mounted) return;
-    _elementosAsignados = [];
-    isEmptyAsignados = false;
-    isRequestError = false;
     setState(() {
-      _cargando = true; // Establecer isLoading a true al inicio de la carga
+      _elementosAsignados = [];
+      isEmptyAsignados = false;
+      isRequestError = false;
+      _cargando = true;
     });
 
     String url = '${widget.baseUrl}PaBscUserElementoAsignadoCtrl';
@@ -436,13 +436,18 @@ class _DashboardState extends State<Dashboard> {
           children: [
             Icon(icon, size: 40, color: Colors.green),
             SizedBox(height: 10),
-            Text(
-              itemName,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Tooltip(
+              message: itemName, // Muestra el nombre completo del elemento
+              child: Text(
+                itemName,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis, // Limitar el texto
+                maxLines: 2, // Asegurarse de que sólo se muestre una línea
               ),
-              textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
             Text(
