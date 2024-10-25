@@ -59,6 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
                 idiomaDropDown: widget.idiomaDropDown,
                 temaClaro: widget.temaClaro,
                 baseUrl: 'http://192.168.10.41:9090/api/',
+                pUserName: 'AUDITOR01',
                 // token: sessionData['token'],
                 // pUserName: sessionData['username'],
                 // pEmpresa: sessionData['empresa'],

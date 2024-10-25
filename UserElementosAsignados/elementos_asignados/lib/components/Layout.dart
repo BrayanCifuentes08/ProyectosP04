@@ -1,3 +1,4 @@
+import 'package:elementos_asignados/common/FloatingActionButtonNotifier.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Dashboard.dart';
 import 'package:elementos_asignados/components/Drawer.dart';
@@ -16,7 +17,7 @@ class Layout extends StatefulWidget {
   Locale idiomaDropDown;
   final bool temaClaro;
   // final String token;
-  // final String pUserName;
+  final String pUserName;
   // final int pEmpresa;
   // final int pEstacion_Trabajo;
   String baseUrl;
@@ -34,7 +35,7 @@ class Layout extends StatefulWidget {
     required this.idiomaDropDown,
     required this.temaClaro,
     // required this.token,
-    // required this.pUserName,
+    required this.pUserName,
     // required this.pEmpresa,
     // required this.pEstacion_Trabajo,
     required this.baseUrl,
@@ -134,201 +135,150 @@ class _LayoutState extends State<Layout> {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
     return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-                gradient: !themeNotifier.temaClaro
-                    ? LinearGradient(
-                        colors: [
-                          Color(0xFFF0276a2),
-                          Color(0xFFF194a5a),
-                          Color(0xFFF194a5a),
-                          Color(0xFFF194a5a),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
-                    : LinearGradient(
-                        colors: [
-                          Color(0xFFF0276a2),
-                          Color(0xFFF194a5a),
-                          Color(0xFFF194a5a),
-                          Color(0xFFF194a5a),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )),
+      onWillPop: _onWillPop,
+      child: Stack(children: [
+        Container(
+          decoration: BoxDecoration(
+              gradient: !themeNotifier.temaClaro
+                  ? LinearGradient(
+                      colors: [
+                        Color(0xFFF0276a2),
+                        Color(0xFFF194a5a),
+                        Color(0xFFF194a5a),
+                        Color(0xFFF194a5a),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : LinearGradient(
+                      colors: [
+                        Color(0xFFF0276a2),
+                        Color(0xFFF194a5a),
+                        Color(0xFFF194a5a),
+                        Color(0xFFF194a5a),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )),
+        ),
+        Scaffold(
+          backgroundColor: Color.fromARGB(0, 255, 255, 255),
+          key: _scaffoldKey,
+          drawer: CustomDrawer(
+            imagePath: widget.imagePath,
+            isBackgroundSet: widget.isBackgroundSet,
+            catalogo: widget.catalogo,
+            changeLanguage: widget.changeLanguage,
+            idiomaDropDown: _idiomaActual,
+            temaClaro: widget.temaClaro,
+            // token: widget.token,
+            // pUserName: widget.pUserName,
+            // pEmpresa: widget.pEmpresa,
+            // pEstacion_Trabajo: widget.pEstacion_Trabajo,
+            // fechaSesion: widget.fechaSesion,
+            baseUrl: widget.baseUrl,
+            // fechaExpiracion: widget.fechaExpiracion,
+            // despEmpresa: widget.despEmpresa,
+            // despEstacion_Trabajo: widget.despEstacion_Trabajo,
           ),
-          Scaffold(
-            backgroundColor: Color.fromARGB(0, 255, 255, 255),
-            key: _scaffoldKey,
-            drawer: CustomDrawer(
-              imagePath: widget.imagePath,
-              isBackgroundSet: widget.isBackgroundSet,
-              catalogo: widget.catalogo,
-              changeLanguage: widget.changeLanguage,
-              idiomaDropDown: _idiomaActual,
-              temaClaro: widget.temaClaro,
-              // token: widget.token,
-              // pUserName: widget.pUserName,
-              // pEmpresa: widget.pEmpresa,
-              // pEstacion_Trabajo: widget.pEstacion_Trabajo,
-              // fechaSesion: widget.fechaSesion,
-              baseUrl: widget.baseUrl,
-              // fechaExpiracion: widget.fechaExpiracion,
-              // despEmpresa: widget.despEmpresa,
-              // despEstacion_Trabajo: widget.despEstacion_Trabajo,
-            ),
-            body: CustomScrollView(controller: _scrollController, slivers: [
-              SliverAppBar(
-                expandedHeight: 110.0,
-                pinned: true,
-                floating: true,
-                elevation: 10,
-                shadowColor: Color(0xFF004964),
-                backgroundColor: Color(0xFF004964),
-                flexibleSpace: FlexibleSpaceBar(
-                  background: AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    decoration: BoxDecoration(
-                      gradient: !themeNotifier.temaClaro
-                          ? LinearGradient(colors: [
-                              Color(0xFFF0276a2),
-                              Color(0xFFF194a5a),
-                            ])
-                          : LinearGradient(colors: [
-                              Color(0xFFF0276a2),
-                              Color(0xFFF194a5a),
-                            ]),
-                    ),
-                  ),
-                  centerTitle: false,
-                  title: LayoutBuilder(
-                    builder: (context, constraints) {
-                      return Container(
-                        width: constraints.maxWidth * 0.8,
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          S.of(context).inicioInicio,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-                    },
+          body: CustomScrollView(controller: _scrollController, slivers: [
+            SliverAppBar(
+              expandedHeight: 110.0,
+              pinned: true,
+              floating: true,
+              elevation: 10,
+              shadowColor: Color(0xFF004964),
+              backgroundColor: Color(0xFF004964),
+              flexibleSpace: FlexibleSpaceBar(
+                background: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  decoration: BoxDecoration(
+                    gradient: !themeNotifier.temaClaro
+                        ? LinearGradient(colors: [
+                            Color(0xFFF0276a2),
+                            Color(0xFFF194a5a),
+                          ])
+                        : LinearGradient(colors: [
+                            Color(0xFFF0276a2),
+                            Color(0xFFF194a5a),
+                          ]),
                   ),
                 ),
-                leading: IconButton(
-                  padding: EdgeInsets.only(left: 20.0, top: 10.0),
-                  icon: Icon(Icons.menu, color: Colors.white, size: 30),
-                  onPressed: () {
-                    _scaffoldKey.currentState?.openDrawer();
+                centerTitle: false,
+                title: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Container(
+                      width: constraints.maxWidth * 0.8,
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        S.of(context).inicioInicio,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
                   },
                 ),
-                actions: [
-                  Padding(
-                    padding:
-                        EdgeInsets.only(right: 10.0, top: 5.0, bottom: 5.0),
-                    child: Image.asset('assets/logo.png',
-                        height: 50.0, color: Colors.white),
+              ),
+              leading: IconButton(
+                padding: EdgeInsets.only(left: 20.0, top: 10.0),
+                icon: Icon(Icons.menu, color: Colors.white, size: 30),
+                onPressed: () {
+                  _scaffoldKey.currentState?.openDrawer();
+                },
+              ),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.only(right: 10.0, top: 5.0, bottom: 5.0),
+                  child: Image.asset('assets/logo.png',
+                      height: 50.0, color: Colors.white),
+                ),
+              ],
+            ),
+            Dashboard(
+              isBackgroundSet: widget.isBackgroundSet,
+              imagePath: widget.imagePath,
+              changeLanguage: widget.changeLanguage,
+              idiomaDropDown: widget.idiomaDropDown,
+              onScrollToDown: desplazarScroll,
+              onScrollToTop: desplazarScrollArriba,
+              baseUrl: widget.baseUrl,
+              pUserName: widget.pUserName,
+            ),
+          ]),
+          floatingActionButton: fabNotifier.buttonState == 0
+              ? null // No mostrar el botón
+              : FloatingActionButton(
+                  onPressed: () {
+                    if (fabNotifier.buttonState == 1) {
+                      desplazarScroll();
+                      fabNotifier.setButtonState(2);
+                    } else if (fabNotifier.buttonState == 2) {
+                      desplazarScrollArriba();
+                      fabNotifier.setButtonState(1);
+                    }
+                  },
+                  backgroundColor: Color(0xFF004964),
+                  child: Icon(
+                    fabNotifier.buttonState == 1
+                        ? Icons.keyboard_arrow_down
+                        : Icons.keyboard_arrow_up,
+                    size: 25,
+                    color: Colors.white,
                   ),
-                ],
-              ),
-              Dashboard(
-                isBackgroundSet: widget.isBackgroundSet,
-                imagePath: widget.imagePath,
-                changeLanguage: widget.changeLanguage,
-                idiomaDropDown: widget.idiomaDropDown,
-                onScrollToDown: desplazarScroll,
-                onScrollToTop: desplazarScrollArriba,
-              ),
-              // if (widget.catalogo == null)
-              // PantallaInicio(
-              //   isBackgroundSet: widget.isBackgroundSet,
-              //   imagePath: widget.imagePath,
-              //   changeLanguage: widget.changeLanguage,
-              //   idiomaDropDown: _idiomaActual,
-              //   temaClaro: widget.temaClaro,
-              //   token: widget.token,
-              //   pUserName: widget.pUserName,
-              //   pEmpresa: widget.pEmpresa,
-              //   pEstacion_Trabajo: widget.pEstacion_Trabajo,
-              //   fechaSesion: widget.fechaSesion,
-              //   baseUrl: widget.baseUrl,
-              //   fechaExpiracion: widget.fechaExpiracion,
-              //   despEmpresa: widget.despEmpresa,
-              //   despEstacion_Trabajo: widget.despEstacion_Trabajo,
-              // ),
-            ]),
-            // bottomNavigationBar: widget.catalogo != null
-            //     ? Footer(
-            //         imagePath: widget.imagePath,
-            //         isBackgroundSet: widget.isBackgroundSet,
-            //         catalogo: widget.catalogo,
-            //         changeLanguage: widget.changeLanguage,
-            //         idiomaDropDown: _idiomaActual,
-            //         pUserName: widget.pUserName,
-            //         despEmpresa: widget.despEmpresa,
-            //         despEstacion_Trabajo: widget.despEstacion_Trabajo,
-            //         token: widget.token,
-            //         pEmpresa: widget.pEmpresa,
-            //         pEstacion_Trabajo: widget.pEstacion_Trabajo,
-            //         baseUrl: widget.baseUrl,
-            //         fechaSesion: widget.fechaSesion,
-            //         fechaExpiracion: widget.fechaExpiracion,
-            //       )
-            //     : null,
-            // floatingActionButton: widget.catalogo != null
-            //     ? AnimatedOpacity(
-            //         opacity: _isFabVisible ? 1.0 : 0.0,
-            //         duration: Duration(
-            //             milliseconds:
-            //                 500), // Ajusta la duración para hacerla más suave
-            //         curve: Curves.easeInOut, // Curva para suavizar la animación
-            //         child: FloatingActionButton(
-            //           onPressed: () {
-            //             Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(
-            //                     builder: (context) => Mantenimiento(
-            //                           isBackgroundSet: widget.isBackgroundSet,
-            //                           imagePath: widget.imagePath,
-            //                           changeLanguage: widget.changeLanguage,
-            //                           idiomaDropDown: widget.idiomaDropDown,
-            //                           temaClaro: themeNotifier.temaClaro,
-            //                           token: widget.token,
-            //                           pUserName: widget.pUserName,
-            //                           pEmpresa: widget.pEmpresa,
-            //                           pEstacion_Trabajo:
-            //                               widget.pEstacion_Trabajo,
-            //                           fechaSesion: widget.fechaSesion,
-            //                           baseUrl: widget.baseUrl,
-            //                           fechaExpiracion: widget.fechaExpiracion,
-            //                           despEmpresa: widget.despEmpresa,
-            //                           despEstacion_Trabajo:
-            //                               widget.despEstacion_Trabajo,
-            //                           catalogo: null,
-            //                         ))); // Acción del botón
-            //           },
-            //           backgroundColor: Color(0xFF004964),
-            //           child: Icon(Icons.home, size: 25, color: Colors.white),
-            //           tooltip: 'Regresar a Pantalla de Inicio',
-            //           mini: true,
-            //           shape: RoundedRectangleBorder(
-            //             borderRadius:
-            //                 BorderRadius.circular(10), // Bordes más redondeados
-            //           ),
-            //         ),
-            //       )
-            //     : null,
-            // floatingActionButtonLocation: FloatingActionButtonLocation
-            //     .startFloat, // Lado inferior izquierdo
-          ),
-        ]));
+                  tooltip: 'Acción del botón flotante',
+                  mini: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+        ),
+      ]),
+    );
   }
 }
