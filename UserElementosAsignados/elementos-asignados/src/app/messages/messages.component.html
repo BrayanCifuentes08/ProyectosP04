@@ -29,4 +29,49 @@
       </div>
     </div>
   </div>
+
   
+
+  <!-- Mensaje de alerta o errores -->
+<div *ngIf="isVisibleAlerta" 
+class="fixed right-4 top-4 z-50 bg-red-100 text-red-700 shadow-md rounded-lg p-3 mb-4 text-xs w-full max-w-xs sm:max-w-sm md:max-w-md"
+[ngClass]="{'animate-bounceIn': isVisibleAlerta, 'animate-fadeOut': !isVisibleAlerta}"
+role="alert">
+
+<div class="flex items-center">
+<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+ <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm-2 4a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+</svg>
+
+<div class="flex-1 text-sm">
+ <p class="font-sans leading-tight font-medium">
+   {{ mensajeAlerta }}
+ </p>
+</div>
+
+<button (click)="ocultarAlerta()" class="text-gray-500 hover:text-gray-800 focus:outline-none ml-2">
+ <i class="fa fa-times" aria-hidden="true"></i> <!-- Icono de cerrar -->
+</button>
+</div>
+</div>
+
+<!-- Mensaje de éxito -->
+<div *ngIf="isVisibleExito" 
+class="fixed right-4 top-4 z-50 bg-green-100 text-green-700 shadow-md rounded-lg p-3 mb-4 text-xs w-full max-w-xs sm:max-w-sm md:max-w-md"
+[ngClass]="{'animate-bounceIn': isVisibleExito, 'animate-fadeOut': !isVisibleExito}"
+role="alert">
+
+<div class="flex items-center">
+<i class="fa-solid fa-circle-check text-base mr-2"></i>
+
+<div class="flex-1 text-sm">
+ <p class="font-sans leading-tight font-medium">
+   {{ mensajeExito }}
+ </p>
+</div>
+
+<button (click)="ocultarExito()" class="text-gray-500 hover:text-gray-800 focus:outline-none ml-2">
+ <i class="fa fa-times" aria-hidden="true"></i> <!-- Icono de cerrar -->
+</button>
+</div>
+</div>
