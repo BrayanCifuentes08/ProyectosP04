@@ -8,6 +8,7 @@ import 'package:elementos_asignados/models/PaBscElementosNoAsignadosM.dart';
 import 'package:elementos_asignados/models/PaBscUserElementoAsignadoM.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -352,8 +353,8 @@ class _DashboardState extends State<Dashboard> {
                       itemCount: _elementosAsignados.length,
                       itemBuilder: (context, index) {
                         final elemento = _elementosAsignados[index];
-                        return _buildAssignedItemCard(
-                            elemento.descripcion, Icons.assignment);
+                        return _buildAssignedItemCard(elemento.descripcion,
+                            elemento.fechaHora, Icons.assignment);
                       },
                     ),
                   ),
@@ -417,7 +418,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   // Tarjeta para los elementos asignados al usuario
-  Widget _buildAssignedItemCard(String itemName, IconData icon) {
+  Widget _buildAssignedItemCard(
+      String itemName, DateTime fechaHora, IconData icon) {
+    // Formato de fecha
+    final String formattedDate =
+        DateFormat('dd/MM/yyyy, HH:mm').format(fechaHora);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -437,6 +443,14 @@ class _DashboardState extends State<Dashboard> {
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10),
+            Text(
+              formattedDate,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[700],
+              ),
             ),
           ],
         ),

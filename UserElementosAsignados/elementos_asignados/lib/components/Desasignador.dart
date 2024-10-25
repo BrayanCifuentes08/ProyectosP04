@@ -38,6 +38,7 @@ class _DesasignadorState extends State<Desasignador> {
   bool _cargando = false;
   List<bool> _seleccionados = [];
   bool _cargandoPost = false;
+  bool respuesta = false;
 
   @override
   void initState() {
@@ -113,46 +114,12 @@ class _DesasignadorState extends State<Desasignador> {
               "se está ejecutando el delete para el elemento ${widget.elementosAsignados[index].descripcion}");
 
           if (response.statusCode == 200) {
+            setState(() {
+              respuesta = true;
+            });
+
             print(
                 "Elemento desasignado con éxito: ${widget.elementosAsignados[index].descripcion}");
-            _mostrarMensajeScaffold(
-                context,
-                "Elemento/s desasignados correctamente",
-                MdiIcons.checkboxMarkedCircle,
-                Color(0xFFF15803D),
-                Duration(seconds: 4));
-            Navigator.of(context).pushReplacement(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return Layout(
-                    imagePath: widget.imagePath,
-                    isBackgroundSet: widget.isBackgroundSet,
-                    catalogo: null,
-                    changeLanguage: widget.changeLanguage,
-                    idiomaDropDown: widget.idiomaDropDown,
-                    temaClaro: widget.temaClaro,
-                    baseUrl: 'http://192.168.10.41:9090/api/',
-                    pUserName: 'AUDITOR01',
-                    // token: sessionData['token'],
-                    // pUserName: sessionData['username'],
-                    // pEmpresa: sessionData['empresa'],
-                    // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-                    // baseUrl: sessionData['urlBase'],
-                    // fechaSesion: sessionData['fecha'],
-                    // fechaExpiracion: sessionData['fechaExpiracion'],
-                    // despEmpresa: sessionData['desEmpresa'],
-                    // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
-                  );
-                },
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              ),
-            );
           } else if (response.statusCode >= 400 && response.statusCode < 500) {
             // Código de estado en el rango 400-499 (errores del cliente)
             print('Error del cliente: ${response.statusCode}');
@@ -172,6 +139,45 @@ class _DesasignadorState extends State<Desasignador> {
           }
         }
       }
+    }
+    if (respuesta) {
+      _mostrarMensajeScaffold(
+          context,
+          "Elemento/s desasignados correctamente",
+          MdiIcons.checkboxMarkedCircle,
+          Color(0xFFF15803D),
+          Duration(seconds: 4));
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return Layout(
+              imagePath: widget.imagePath,
+              isBackgroundSet: widget.isBackgroundSet,
+              catalogo: null,
+              changeLanguage: widget.changeLanguage,
+              idiomaDropDown: widget.idiomaDropDown,
+              temaClaro: widget.temaClaro,
+              baseUrl: 'http://192.168.10.41:9090/api/',
+              pUserName: 'AUDITOR01',
+              // token: sessionData['token'],
+              // pUserName: sessionData['username'],
+              // pEmpresa: sessionData['empresa'],
+              // pEstacion_Trabajo: sessionData['estacionTrabajo'],
+              // baseUrl: sessionData['urlBase'],
+              // fechaSesion: sessionData['fecha'],
+              // fechaExpiracion: sessionData['fechaExpiracion'],
+              // despEmpresa: sessionData['desEmpresa'],
+              // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
     }
   }
 

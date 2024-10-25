@@ -34,6 +34,7 @@ class Asignador extends StatefulWidget {
 class _AsignadorState extends State<Asignador> {
   bool _cargando = false;
   bool _cargandoPost = false;
+  bool respuesta = false;
   List<PaBscElementosNoAsignadosM> _elementosNoAsignados = [];
   List<bool> _seleccionados = [];
 
@@ -152,44 +153,7 @@ class _AsignadorState extends State<Asignador> {
           if (response.statusCode == 200) {
             print(
                 "Elemento asignado con éxito: ${_elementosNoAsignados[index].descripcion}");
-            _mostrarMensajeScaffold(
-                context,
-                "Elemento/s asignados correctamente",
-                MdiIcons.checkboxMarkedCircle,
-                Color(0xFFF15803D),
-                Duration(seconds: 4));
-            Navigator.of(context).pushReplacement(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return Layout(
-                    imagePath: widget.imagePath,
-                    isBackgroundSet: widget.isBackgroundSet,
-                    catalogo: null,
-                    changeLanguage: widget.changeLanguage,
-                    idiomaDropDown: widget.idiomaDropDown,
-                    temaClaro: widget.temaClaro,
-                    baseUrl: 'http://192.168.10.41:9090/api/',
-                    pUserName: 'AUDITOR01',
-                    // token: sessionData['token'],
-                    // pUserName: sessionData['username'],
-                    // pEmpresa: sessionData['empresa'],
-                    // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-                    // baseUrl: sessionData['urlBase'],
-                    // fechaSesion: sessionData['fecha'],
-                    // fechaExpiracion: sessionData['fechaExpiracion'],
-                    // despEmpresa: sessionData['desEmpresa'],
-                    // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
-                  );
-                },
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              ),
-            );
+            respuesta = true;
           } else if (response.statusCode >= 400 && response.statusCode < 500) {
             // Código de estado en el rango 400-499 (errores del cliente)
             print('Error del cliente: ${response.statusCode}');
@@ -202,7 +166,6 @@ class _AsignadorState extends State<Asignador> {
         } catch (error) {
           print('Error: $error');
         } finally {
-          // Verifica que el widget esté montado antes de llamar a setState
           if (mounted) {
             setState(() {
               _cargandoPost = false;
@@ -210,6 +173,45 @@ class _AsignadorState extends State<Asignador> {
           }
         }
       }
+    }
+    if (respuesta) {
+      _mostrarMensajeScaffold(
+          context,
+          "Elemento/s asignados correctamente",
+          MdiIcons.checkboxMarkedCircle,
+          Color(0xFFF15803D),
+          Duration(seconds: 4));
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return Layout(
+              imagePath: widget.imagePath,
+              isBackgroundSet: widget.isBackgroundSet,
+              catalogo: null,
+              changeLanguage: widget.changeLanguage,
+              idiomaDropDown: widget.idiomaDropDown,
+              temaClaro: widget.temaClaro,
+              baseUrl: 'http://192.168.10.41:9090/api/',
+              pUserName: 'AUDITOR01',
+              // token: sessionData['token'],
+              // pUserName: sessionData['username'],
+              // pEmpresa: sessionData['empresa'],
+              // pEstacion_Trabajo: sessionData['estacionTrabajo'],
+              // baseUrl: sessionData['urlBase'],
+              // fechaSesion: sessionData['fecha'],
+              // fechaExpiracion: sessionData['fechaExpiracion'],
+              // despEmpresa: sessionData['desEmpresa'],
+              // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
     }
   }
 
