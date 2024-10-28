@@ -1,6 +1,6 @@
 <!-- Componente Dashboard -->
 <div>
-  <div class="flex flex-wrap justify-start sm:space-x-4 sm:space-y-0 space-y-2 mb-6">
+  <div class="flex flex-wrap justify-start sm:space-x-4 sm:space-y-0 space-y-2 mb-6 items-center w-full">
     <button 
         (click)="asignarElemento()" 
         [ngClass]="{
@@ -11,8 +11,8 @@
     >
         Asignar Elemento
     </button>
+  
     <button 
- 
         (click)="desasignarElemento()" 
         [ngClass]="{
             'bg-sky-700 shadow-lg scale-105': mostrarDesasignador, 
@@ -22,7 +22,16 @@
     >
         Desasignar Elemento
     </button>
-</div>
+    <button
+      *ngIf="!mostrarInicio"
+      (click)="volverInicio()"
+      class="bg-gray-800 text-white px-2 py-1 rounded hover:bg-gray-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform flex items-center justify-center gap-2 ml-auto"
+    >
+    <i class="fa-solid fa-house ml-1"></i>
+      Volver al Inicio
+    </button>
+  </div>
+  
 
 
   <!-- Línea divisoria -->
@@ -32,16 +41,25 @@
   <div class="flex justify-between">
     <div *ngIf="mostrarAsignador" class="w-full">
       <app-asignador
-        (regresar)="mostrarInicio = true; mostrarAsignador = false"
+       (mensajeExito)="manejarMensajeExito($event)" 
+       (regresar)="volverInicio()"
       />
     </div>
     <div *ngIf="mostrarDesasignador" class="w-full">
       <app-desasignador
-        (regresar)="mostrarInicio = true; mostrarDesasignador = false"
+        (mensajeExito)="manejarMensajeExito($event)"
+        (regresar)="volverInicio()"
       />
     </div>
   </div>
 </div>
+
+<app-messages
+
+[mensajeExito]="isVisibleExito ? mensajeExito : ''" 
+[isVisibleExito]="isVisibleExito" 
+(cerrar)="ocultarExito()" 
+></app-messages>
 
 <div *ngIf="mostrarInicio">
   <app-inicio></app-inicio>

@@ -1,6 +1,8 @@
 export interface DeleteUserElementoAsignadoM {
     UserName: string,
-    Elemento_Asignado: number
+    Elemento_Asignado: number,
+    mensaje: string,
+    resultado: boolean
 }
 
 export interface DeleteUserElementoAsignadoParams {

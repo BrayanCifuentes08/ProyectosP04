@@ -5,9 +5,21 @@
   <!-- Primer recuadro más grande -->
   <div class="col-span-2 flex flex-col">
     <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md p-6 flex-grow">
-      <div class="p-4 text-left">
-        <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">Seleccionar Elementos</h4>
+      <div class="p-4 flex items-center justify-between flex-wrap gap-2">
+        <h4 class="antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
+          Seleccionar Elementos
+        </h4>
+        <label class="flex items-center gap-2 bg-gray-100 p-1.5 rounded-md hover:bg-blue-100 transition duration-200 ease-in-out cursor-pointer">
+          <input 
+            type="checkbox" 
+            class="form-checkbox text-blue-600 w-5 h-5" 
+            [checked]="isAllSelected()" 
+            (change)="toggleSelectAll($event)"
+          />
+          <span class="text-sm font-medium text-gray-700">Seleccionar Todos</span>
+        </label>
       </div>
+      
       <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow">
         <div class="grid grid-cols-2 gap-4">
           <div *ngIf="isLoading" class="col-span-2 flex flex-col justify-center items-center">
@@ -15,7 +27,8 @@
             <p class="mt-2 text-gray-600">Cargando datos...</p>
           </div>
           <label *ngFor="let elemento of elementosAsignadosInicio" class="flex items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100 transition duration-200 ease-in-out">
-            <input type="checkbox" class="form-checkbox text-blue-600" (change)="seleccionElemento(elemento, $event)">
+            <input type="checkbox" class="form-checkbox text-blue-600" 
+            [checked]="isSelected(elemento)" (change)="seleccionElemento(elemento, $event)">
             <span class="ml-2">{{ elemento.descripcion }}</span>
           </label>
         </div>

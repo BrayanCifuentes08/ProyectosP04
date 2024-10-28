@@ -23,6 +23,7 @@ export class DesasignadorComponent {
   isVisibleModal: boolean = false;
   mensajeModal: string = ''; 
   mostrarBtnLimpiarSeleccion: boolean = false
+  @Output() mensajeExito = new EventEmitter<string>(); 
 
   ngOnInit(): void {
     this.sharedService.userElementosAsignados$.subscribe((elementos) => {
@@ -40,6 +41,8 @@ export class DesasignadorComponent {
       const model = {
         UserName: 'AUDITOR01',
         Elemento_Asignado: elemento.elemento_Asignado,
+        mensaje: '',
+        resultado: false,
       };
       return this.apiService.deleteUserElementoAsignado(model);
     });
@@ -51,6 +54,7 @@ export class DesasignadorComponent {
         this.elementosAsignadosSeleccionado = [];
         this.onRegresar();
         this.mostrarBtnLimpiarSeleccion = false; 
+        this.mensajeExito.emit('Elementos desasignados correctamente.'); 
       },
       error: error => {
         console.error("Error al desasignar elementos:", error);
@@ -59,25 +63,52 @@ export class DesasignadorComponent {
     });
   }
 
+  // Funcion para seleccionar/deseleccionar todos los elementos
+  toggleSelectAll(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      this.elementosAsignadosSeleccionado = [...this.elementosAsignadosInicio];
+    } else {
+      this.elementosAsignadosSeleccionado = [];
+    }
+
+    this.hayElementosSeleccionados = this.elementosAsignadosSeleccionado.length > 0;
+    this.mostrarBtnLimpiarSeleccion = false
+  }
+
+  // Verifica si todos los elementos están seleccionados
+  isAllSelected(): boolean {
+    return this.elementosAsignadosInicio.length > 0 && 
+           this.elementosAsignadosInicio.length === this.elementosAsignadosSeleccionado.length;
+  }
+
+  // Verifica si un elemento está seleccionado
+  isSelected(elemento: UserElementoAsignadoM): boolean {
+    return this.elementosAsignadosSeleccionado.includes(elemento);
+  }
+
   seleccionElemento(elemento: UserElementoAsignadoM, event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
+    const inputElement = event.target as HTMLInputElement;  
   
     if (inputElement.checked) {
       this.elementosAsignadosSeleccionado.push(elemento);
-      console.log("Elementos seleccionados", this.elementosAsignadosSeleccionado)
     } else {
       // Remueve el elemento si el checkbox se desmarca
       this.elementosAsignadosSeleccionado = this.elementosAsignadosSeleccionado.filter(e => e.elemento_Asignado !== elemento.elemento_Asignado);
     }
+    
+    // Actualiza el estado del checkbox "Seleccionar Todos"
     this.hayElementosSeleccionados = this.elementosAsignadosSeleccionado.length > 0;
-    this.mostrarBtnLimpiarSeleccion = this.hayElementosSeleccionados; 
+    this.mostrarBtnLimpiarSeleccion = this.hayElementosSeleccionados
   }
+
 
   onRegresar() {
     this.regresar.emit();
   }
 
-  // Método para mostrar el modal
+  // Funcion para mostrar el modal
   mostrarModalConfirmacion(): void {
     this.isVisibleModal = true;
   }
@@ -86,7 +117,7 @@ export class DesasignadorComponent {
     this.elementosAsignadosSeleccionado = [];
     this.hayElementosSeleccionados = false;
     this.mostrarBtnLimpiarSeleccion = false
-    // Opcional: si necesitas desmarcar los checkboxes en la UI, puedes hacerlo aquí
+    //desmarcar los checkboxes en la UI, puedes hacerlo aquí
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((checkbox) => {
       (checkbox as HTMLInputElement).checked = false;
