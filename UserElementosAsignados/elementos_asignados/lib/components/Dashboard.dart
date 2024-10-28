@@ -420,7 +420,6 @@ class _DashboardState extends State<Dashboard> {
   // Tarjeta para los elementos asignados al usuario
   Widget _buildAssignedItemCard(
       String itemName, DateTime fechaHora, IconData icon) {
-    // Formato de fecha
     final String formattedDate =
         DateFormat('dd/MM/yyyy, HH:mm').format(fechaHora);
 
@@ -430,31 +429,37 @@ class _DashboardState extends State<Dashboard> {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0), // Reducimos el padding
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: Colors.green),
-            SizedBox(height: 10),
+            Icon(icon,
+                size: 36, color: Colors.green), // Tamaño del ícono reducido
+            SizedBox(height: 8), // Espacio reducido
             Tooltip(
-              message: itemName, // Muestra el nombre completo del elemento
+              message: itemName,
               child: Text(
                 itemName,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis, // Limitar el texto
-                maxLines: 2, // Asegurarse de que sólo se muestre una línea
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2, // Limita a dos líneas
               ),
             ),
-            SizedBox(height: 10),
-            Text(
-              formattedDate,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
+            SizedBox(height: 8), // Espacio reducido
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                formattedDate,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[700],
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],
