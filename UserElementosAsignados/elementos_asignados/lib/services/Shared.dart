@@ -2,20 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'; // Asegúrate de importar esto para IconData
 
 class AccionService extends ChangeNotifier {
-  Accion? _accion; // Estado inicial vacío
+  Accion? _accion;
 
-  Accion? get accion => _accion; // Getter para obtener el estado actual
+  Accion? get accion => _accion;
 
   // Método para actualizar el estado
-  void setAccion(String texto, IconData icono) {
-    _accion = Accion(texto, icono); // Actualiza el estado con texto e ícono
-    notifyListeners(); // Notifica a los oyentes sobre el cambio
+  void setAccion(String texto) {
+    _accion = Accion(texto);
+    notifyListeners();
   }
 }
 
 class Accion {
   final String texto;
-  final IconData icono;
 
-  Accion(this.texto, this.icono);
+  Accion(this.texto);
 }
