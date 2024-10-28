@@ -1,0 +1,28 @@
+/* spinner.component.css */
+.loader {
+    border: 8px solid transparent; /* Sin color de fondo */
+    border-top: 8px solid #4A90E2; /* Color de la barra de carga */
+    border-left: 8px solid #f59e0b; /* Color adicional para el efecto de degradado */
+    border-radius: 50%;
+    width: 80px; /* Tamaño del spinner */
+    height: 80px; /* Tamaño del spinner */
+    animation: spin 1s linear infinite; /* Velocidad de rotación */
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.3); /* Sombra más sutil */
+  }
+  
+  /* Animación para el spinner */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Efecto de pulsación para el texto */
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  

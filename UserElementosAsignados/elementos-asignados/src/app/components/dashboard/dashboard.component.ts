@@ -4,6 +4,7 @@ import { AsignadorComponent } from "../asignador/asignador.component";
 import { DesasignadorComponent } from "../desasignador/desasignador.component";
 import { CommonModule } from '@angular/common';
 import { MessagesComponent } from "../../messages/messages.component";
+import { SharedService } from '../../services/shared.service';
 
 
 @Component({
@@ -20,6 +21,12 @@ export default class DashboardComponent {
   headerText: string = 'Inicio';
   isVisibleExito: boolean = false;
   mensajeExito: string = ''; 
+  isVisibleAlerta: boolean = false;
+  mensajeAlerta: string = ''; 
+
+  constructor(private sharedService: SharedService){
+
+  }
 
   asignarElemento() {
     if (this.mostrarAsignador) {
@@ -28,7 +35,7 @@ export default class DashboardComponent {
       this.mostrarAsignador = true;
       this.mostrarDesasignador = false;
       this.mostrarInicio = false;
-      this.headerText = 'Asignar Elemento';
+      this.sharedService.changeHeaderText('Asignar');
     }
   }
 
@@ -39,7 +46,7 @@ export default class DashboardComponent {
       this.mostrarDesasignador = true;
       this.mostrarAsignador = false;
       this.mostrarInicio = false;
-      this.headerText = 'Desasignar Elemento';
+      this.sharedService.changeHeaderText('Desasignar');
     }
   }
 
@@ -52,14 +59,26 @@ export default class DashboardComponent {
     }, 5000);
   }
 
+  manejarMensajeError(mensaje: string): void {
+    this.mensajeAlerta = mensaje;
+    this.isVisibleAlerta = true;
+    setTimeout(() => {
+      this.ocultarAlerta();
+    }, 5000);
+  }
+
   ocultarExito(): void {
     this.isVisibleExito = false;
+  }
+
+  ocultarAlerta(): void {
+    this.isVisibleAlerta = false;
   }
 
   volverInicio(): void {
     this.mostrarAsignador = false;
     this.mostrarDesasignador = false;
     this.mostrarInicio = true;
-    this.headerText = 'Inicio';
+    this.sharedService.changeHeaderText('Inicio');
   }
 }

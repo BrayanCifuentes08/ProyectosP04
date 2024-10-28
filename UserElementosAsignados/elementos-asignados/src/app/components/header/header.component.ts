@@ -8,20 +8,22 @@ import { ApiService } from '../../services/api.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule, CommonModule,],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
   esModoOscuro: boolean = false;
   usuario: string = ''
+  menuColoresVisible: boolean = false; 
+  @Input() headerText: string = 'Inicio';
   constructor(
     public traduccionService: TraduccionService, 
     private sharedService: SharedService, 
     private apiService:ApiService,    
     @Inject(PLATFORM_ID) private platformId: Object
   )
-    {}
+  {}
 
   ngOnInit(){
     if (isPlatformBrowser(this.platformId)) {
@@ -44,5 +46,7 @@ export class HeaderComponent {
   abrirSidebar() {
     this.sharedService.alternarSidebar(true);
   }
+
+  
 
 }

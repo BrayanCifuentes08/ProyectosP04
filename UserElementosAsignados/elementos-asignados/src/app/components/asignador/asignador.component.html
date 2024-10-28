@@ -1,59 +1,101 @@
 <div class="mb-4">
-  <h4 class="text-lg font-semibold text-blue-gray-900">No. Elementos sin asignar: {{elementosNoAsignados.length}}</h4>
+  <div class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-base shadow-md">
+    <h4 class="font-semibold flex items-center">
+      No. Elementos sin asignar: 
+      <span class="font-bold ml-1">{{ elementosNoAsignados.length }}</span>
+    </h4>
+  </div>
 </div>
+
 <!-- Recuadros de información más grandes -->
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
   
-<!-- Primer recuadro más grande: Lista de elementos seleccionables -->
-<div class="col-span-2 flex flex-col">
-  <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md p-6 flex-grow">
-    <div class="p-4 flex items-center justify-between flex-wrap gap-2">
-      <h4 class="antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
-        Seleccionar Elementos
-      </h4>
-      <label class="flex items-center gap-2 bg-gray-100 p-1.5 rounded-md hover:bg-blue-100 transition duration-200 ease-in-out cursor-pointer">
-        <input 
-          type="checkbox" 
-          class="form-checkbox text-blue-600 w-5 h-5" 
-          [checked]="isAllSelected()" 
-          (change)="toggleSelectAll($event)"
-        />
-        <span class="text-sm font-medium text-gray-700">Seleccionar Todos</span>
-      </label>
-    </div>
-
-    <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow">
-      <div class="grid grid-cols-2 gap-4">
-        <div *ngIf="isLoading" class="col-span-2 flex flex-col justify-center items-center">
-          <div class="w-8 h-8 rounded-full animate-spin border-y-4 border-solid border-blue-500 border-t-transparent"></div>
-          <p class="mt-2 text-gray-600">Cargando datos...</p>
-        </div>
-        <!-- Iterar sobre los elementos no asignados y mostrar su descripción -->
-        <label *ngFor="let elemento of elementosNoAsignados" class="flex items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100 transition duration-200 ease-in-out">
-          <input type="checkbox" class="form-checkbox text-blue-600" 
-                [checked]="isSelected(elemento)" (change)="seleccionElemento(elemento, $event)">
-          <span class="ml-2">{{ elemento.descripcion }}</span> 
+  <!-- Primer recuadro más grande: Lista de elementos seleccionables -->
+  <div class="col-span-2 flex flex-col">
+    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md p-6 flex-grow">
+      <div class="p-4 flex items-center justify-between flex-wrap gap-2">
+        <h4 class="antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
+          Seleccionar Elementos
+        </h4>
+        <label class="flex items-center gap-2 bg-gray-100 p-1.5 rounded-md hover:bg-blue-100 transition duration-200 ease-in-out cursor-pointer">
+          <input 
+            type="checkbox" 
+            class="form-checkbox text-blue-600 w-5 h-5" 
+            [checked]="isAllSelected()" 
+            (change)="toggleSelectAll($event)"
+          />
+          <span class="text-sm font-medium text-gray-700">Seleccionar Todos</span>
         </label>
       </div>
-    </div>
 
-    <div class="mt-2 flex justify-end">
-      <button *ngIf="mostrarBtnLimpiarSeleccion" 
-              (click)="limpiarSelecciones()" 
-              class="text-sm text-gray-700 border border-gray-300 rounded-md px-3 py-1 hover:bg-gray-100 hover:border-gray-500 transition duration-200 ease-in-out">
-        Limpiar Selecciones
-      </button>
+      <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow">
+        <div class="grid grid-cols-2 gap-4">
+          <div *ngIf="isLoadingDatos" class="col-span-2 flex flex-col justify-center items-center">
+            <div class="w-8 h-8 rounded-full animate-spin border-y-4 border-solid border-blue-500 border-t-transparent"></div>
+            <p class="mt-2 text-gray-600">Cargando datos...</p>
+          </div>
+          <!-- Iterar sobre los elementos no asignados y mostrar su descripción -->
+          <label *ngFor="let elemento of elementosNoAsignados" class="flex items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100 transition duration-200 ease-in-out">
+            <input type="checkbox" class="form-checkbox text-blue-600" 
+                  [checked]="isSelected(elemento)" (change)="seleccionElemento(elemento, $event)">
+            <span class="ml-2">{{ elemento.descripcion }}</span> 
+          </label>
+        </div>
+      </div>
+
+      <div class="mt-2 flex justify-end">
+        <button *ngIf="mostrarBtnLimpiarSeleccion" 
+                (click)="limpiarSelecciones()" 
+                class="text-sm text-gray-700 border border-gray-300 rounded-md px-3 py-1 hover:bg-gray-100 hover:border-gray-500 transition duration-200 ease-in-out">
+          Limpiar Selecciones
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
 
   <!-- Segundo recuadro más grande: Información de los elementos seleccionados -->
   <div class="col-span-2 flex flex-col">
     <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md p-6 flex-grow">
       <div class="p-4 text-left">
-        <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">Información de Elementos Seleccionados</h4>
+        <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-gray-800 mb-2">
+          Información de Elementos Seleccionados
+        </h4>
+      
+        <!-- Badge Start -->
+        <span 
+          *ngIf="hayElementosSeleccionados"
+          class="inline-flex items-center rounded-full p-1.5 bg-slate-600 text-white 
+                 group transition-all duration-500 focus:ring-2 focus:ring-slate-600 
+                 focus:ring-offset-2 focus:outline-none mt-1"
+          role="alert"
+          tabindex="0"
+        >
+          <svg 
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 20 20" 
+            fill="currentColor" 
+            class="w-5 h-5"
+          >
+            <path 
+              fill-rule="evenodd" 
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" 
+              clip-rule="evenodd" 
+            />
+          </svg>
+      
+          <span 
+            class="whitespace-nowrap inline-block max-w-0 group-hover:max-w-xs 
+                   group-focus:max-w-xs overflow-hidden transition-all duration-500 
+                   group-hover:px-2 group-focus:px-2 text-sm"
+          >
+            {{ elementosSeleccionados.length }} elementos seleccionados
+          </span>
+        </span>
       </div>
+      
+      
       <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow">
         <div *ngIf="!hayElementosSeleccionados" class="text-gray-600">
           No se ha seleccionado ningún elemento.
@@ -85,4 +127,4 @@
   (cancelarAccion)="isVisibleModal = false" 
 ></app-messages>
 
-  
+<app-spinner [isLoading]="isLoading"></app-spinner>

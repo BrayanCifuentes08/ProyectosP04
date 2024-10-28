@@ -1,7 +1,12 @@
 <!-- Contenedor principal -->
 <div class="mb-12">
   <div class="mb-4">
-    <h4 class="text-lg font-semibold text-blue-gray-900">No. Elementos asignados: {{userElementosAsignados.length}}</h4>
+    <div class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-base shadow-md">
+      <h4 class="font-semibold flex items-center">
+        No. Elementos asignados: 
+        <span class="font-bold ml-1">{{ userElementosAsignados.length }}</span>
+      </h4>
+    </div>
   </div>
   <div *ngIf="isLoading" class="flex flex-col justify-center items-center h-64">
     <div class="w-24 h-24 rounded-full animate-spin border-y-4 border-solid border-blue-500 border-t-transparent"></div>

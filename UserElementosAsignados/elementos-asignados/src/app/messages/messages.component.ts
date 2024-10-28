@@ -12,13 +12,14 @@ export class MessagesComponent {
   @Input() mensajeAlerta: string = ''; // Mensaje para la alerta
   @Input() mensajeModal: string = '';  // Mensaje para el modal
   @Input() mensajeExito: string = '';
-  @Input() isVisibleAlerta: boolean = false; // Controla la visibilidad de la alerta
-  @Input() isVisibleModal: boolean = false;  // Controla la visibilidad del modal
+  @Input() isVisibleAlerta: boolean = false; 
+  @Input() isVisibleModal: boolean = false;  
   @Input() isVisibleExito: boolean = false;
 
   @Output() confirmarAccion = new EventEmitter<void>();
   @Output() cancelarAccion = new EventEmitter<void>();
-  @Output() cerrar = new EventEmitter<void>(); // Para cerrar la alerta
+  @Output() cerrar = new EventEmitter<void>();
+
 
   constructor() {}
 

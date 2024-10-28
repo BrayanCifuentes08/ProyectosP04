@@ -87,5 +87,10 @@ export class SharedService {
     return this.loading;
   }
 
+  private headerTextSource = new BehaviorSubject<string | null>(null); // Valor predeterminado
+  currentHeaderText = this.headerTextSource.asObservable();
 
+  changeHeaderText(text: string) {
+    this.headerTextSource.next(text);
+  }
 }

@@ -6,17 +6,19 @@ import { UserElementoAsignadoM } from '../../models/user-elemento-asignado';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { MessagesComponent } from "../../messages/messages.component";
+import { SpinnerComponent } from "../../spinner/spinner.component";
 
 @Component({
   selector: 'app-asignador',
   standalone: true,
-  imports: [CommonModule, MessagesComponent],
+  imports: [CommonModule, MessagesComponent, SpinnerComponent],
   templateUrl: './asignador.component.html',
   styleUrl: './asignador.component.css'
 })
 export class AsignadorComponent {
   elementosNoAsignados: ElementosNoAsignadosM[] = [];
   elementosSeleccionados: ElementosNoAsignadosM[] = [];
+  isLoadingDatos: boolean = false;
   isLoading: boolean = false;
   hayElementosSeleccionados: boolean = false;
   mostrarBtnAsignar: boolean = false;
@@ -26,6 +28,7 @@ export class AsignadorComponent {
   mostrarBtnLimpiarSeleccion: boolean = false
   @Output() regresar = new EventEmitter<void>();
   @Output() mensajeExito = new EventEmitter<string>(); 
+  @Output() mensajeError = new EventEmitter<string>();
   
   constructor(private apiService: ApiService, private router: Router) {}
 
@@ -34,16 +37,16 @@ export class AsignadorComponent {
   }
 
   obtenerElementosNoAsignados(): void {
-    this.isLoading = true;
+    this.isLoadingDatos = true;
     const model = {}; 
     this.apiService.getElementosNoAsigandos(model).subscribe({
       next: (data: ElementosNoAsignadosM[]) => {
         console.log(data)
         this.elementosNoAsignados = data;
-        this.isLoading = false;
+        this.isLoadingDatos = false;
       },
       error: (error) => {
-        this.isLoading = false; 
+        this.isLoadingDatos = false; 
         console.error('Error al obtener los elementos:', error);
       }
     });
@@ -55,7 +58,7 @@ export class AsignadorComponent {
       alert("No hay elementos seleccionados para asignar.");
       return;
     }
-  
+    this.isLoading = true;
     console.log("Elementos seleccionados:", this.elementosSeleccionados);
     const asignaciones = this.elementosSeleccionados.map(elemento => {
       const model = {
@@ -66,20 +69,36 @@ export class AsignadorComponent {
       };
       return this.apiService.insertUserElementoAsignado(model);
     });
-  
+
     forkJoin(asignaciones).subscribe({
       next: results => {
-        console.log("Elementos asignados correctamente:", results);
-        this.elementosSeleccionados = [];
+        console.log("Resultados de asignación:", results);
+
+        const errores = results
+          .flat()
+          .filter((result: any) => !result.resultado);
+
+        if (errores.length > 0) {
+          const mensaje = errores.map(e => e.mensaje || 'Error desconocido').join(', ');
+          console.error("Errores:", mensaje);
+          this.mensajeError.emit(mensaje); // Emitimos el mensaje de error
+        } else {
+          console.log("Elementos asignados correctamente:", results);
+          this.elementosSeleccionados = [];
+          this.mostrarBtnLimpiarSeleccion = false;
+          this.mensajeExito.emit('Elementos asignados correctamente.');
+        }
         this.onRegresar();
-        this.mostrarBtnLimpiarSeleccion = false; 
-        this.mensajeExito.emit('Elementos asignados correctamente.');
+        this.isLoading = false;
       },
       error: error => {
         console.error("Error al asignar elementos:", error);
+        this.mensajeError.emit('Ocurrió un error en la asignación.');
+        this.isLoading = false;
       }
     });
   }
+  
 
   // Funcion para seleccionar/deseleccionar todos los elementos
   toggleSelectAll(event: Event): void {

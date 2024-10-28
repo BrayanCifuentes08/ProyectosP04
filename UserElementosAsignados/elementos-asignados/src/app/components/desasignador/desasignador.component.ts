@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
 import { MessagesComponent } from "../../messages/messages.component";
+import { SpinnerComponent } from "../../spinner/spinner.component";
 
 @Component({
   selector: 'app-desasignador',
   standalone: true,
-  imports: [CommonModule, MessagesComponent],
+  imports: [CommonModule, MessagesComponent, SpinnerComponent],
   templateUrl: './desasignador.component.html',
   styleUrl: './desasignador.component.css'
 })
@@ -24,6 +25,8 @@ export class DesasignadorComponent {
   mensajeModal: string = ''; 
   mostrarBtnLimpiarSeleccion: boolean = false
   @Output() mensajeExito = new EventEmitter<string>(); 
+  @Output() mensajeError = new EventEmitter<string>();
+  
 
   ngOnInit(): void {
     this.sharedService.userElementosAsignados$.subscribe((elementos) => {
@@ -36,7 +39,7 @@ export class DesasignadorComponent {
       alert("No hay elementos seleccionados para desasignar.");
       return;
     }
-    // Crear un arreglo de observables para las llamadas
+    this.isLoading = true; 
     const desasignaciones = this.elementosAsignadosSeleccionado.map(elemento => {
       const model = {
         UserName: 'AUDITOR01',
@@ -46,19 +49,34 @@ export class DesasignadorComponent {
       };
       return this.apiService.deleteUserElementoAsignado(model);
     });
-
-    //forkJoin para esperar a que todas las solicitudes se completen
+  
     forkJoin(desasignaciones).subscribe({
       next: results => {
-        console.log("Elementos desasignados correctamente:", results);
-        this.elementosAsignadosSeleccionado = [];
-        this.onRegresar();
-        this.mostrarBtnLimpiarSeleccion = false; 
-        this.mensajeExito.emit('Elementos desasignados correctamente.'); 
+        console.log("Resultados de desasignación:", results); // Log completo para inspección
+  
+        // Ajuste para manejar el array dentro de array en la respuesta
+
+        const errores = results
+          .flat()
+          .filter((result: any) => !result.resultado);
+
+          this.isLoading = false;  
+        if (errores.length > 0) {
+          const mensaje = errores.map(e => e.mensaje || 'Error desconocido').join(', ');
+          console.error("Errores:", mensaje);
+          this.mensajeError.emit(mensaje); // Emitimos el mensaje de error
+          this.onRegresar();
+        } else {
+          console.log("Elementos desasignados correctamente:", results);
+          this.elementosAsignadosSeleccionado = [];
+          this.onRegresar();
+          this.mostrarBtnLimpiarSeleccion = false;
+          this.mensajeExito.emit('Elementos desasignados correctamente.');
+        }
       },
       error: error => {
         console.error("Error al desasignar elementos:", error);
-
+        this.isLoading = false;
       }
     });
   }

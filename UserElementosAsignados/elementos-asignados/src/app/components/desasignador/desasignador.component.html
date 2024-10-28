@@ -1,5 +1,10 @@
 <div class="mb-4">
-  <h4 class="text-lg font-semibold text-blue-gray-900">No. Elementos asignados: {{elementosAsignadosInicio.length}}</h4>
+  <div class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-base shadow-md">
+    <h4 class="font-semibold flex items-center">
+      No. Elementos asignados: 
+      <span class="font-bold ml-1">{{ elementosAsignadosInicio.length }}</span>
+    </h4>
+  </div>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
   <!-- Primer recuadro más grande -->
@@ -47,6 +52,38 @@
     <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md p-6 flex-grow">
       <div class="p-4 text-left">
         <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">Información de Elementos Seleccionados</h4>
+        
+        <!-- Badge Start -->
+        <span 
+          *ngIf="hayElementosSeleccionados"
+          class="inline-flex items-center rounded-full p-1.5 bg-slate-600 text-white 
+                 group transition-all duration-500 focus:ring-2 focus:ring-slate-600 
+                 focus:ring-offset-2 focus:outline-none mt-1"
+          role="alert"
+          tabindex="0"
+        >
+          <svg 
+            aria-hidden="true" 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 20 20" 
+            fill="currentColor" 
+            class="w-5 h-5"
+          >
+            <path 
+              fill-rule="evenodd" 
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" 
+              clip-rule="evenodd" 
+            />
+          </svg>
+      
+          <span 
+            class="whitespace-nowrap inline-block max-w-0 group-hover:max-w-xs 
+                   group-focus:max-w-xs overflow-hidden transition-all duration-500 
+                   group-hover:px-2 group-focus:px-2 text-sm"
+          >
+            {{ elementosAsignadosSeleccionado.length }} elementos seleccionados
+          </span>
+        </span>
       </div>
       <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow">
         <div *ngIf="!hayElementosSeleccionados" class="text-gray-600">
@@ -77,5 +114,7 @@
   (confirmarAccion)="desasignarElementos()"
   (cancelarAccion)="isVisibleModal = false" 
 ></app-messages>
+
+<app-spinner [isLoading]="isLoading"></app-spinner>
 
   

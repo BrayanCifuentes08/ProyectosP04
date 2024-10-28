@@ -41,12 +41,14 @@
   <div class="flex justify-between">
     <div *ngIf="mostrarAsignador" class="w-full">
       <app-asignador
+      (mensajeError)="manejarMensajeError($event)"
        (mensajeExito)="manejarMensajeExito($event)" 
        (regresar)="volverInicio()"
       />
     </div>
     <div *ngIf="mostrarDesasignador" class="w-full">
       <app-desasignador
+      (mensajeError)="manejarMensajeError($event)"
         (mensajeExito)="manejarMensajeExito($event)"
         (regresar)="volverInicio()"
       />
@@ -55,11 +57,12 @@
 </div>
 
 <app-messages
-
-[mensajeExito]="isVisibleExito ? mensajeExito : ''" 
-[isVisibleExito]="isVisibleExito" 
-(cerrar)="ocultarExito()" 
-></app-messages>
+  [mensajeExito]="isVisibleExito ? mensajeExito : ''" 
+  [mensajeAlerta]="isVisibleAlerta ? mensajeAlerta : ''"
+  [isVisibleExito]="isVisibleExito" 
+  [isVisibleAlerta]="isVisibleAlerta" 
+  (cerrar)="ocultarAlerta()">
+</app-messages>
 
 <div *ngIf="mostrarInicio">
   <app-inicio></app-inicio>
