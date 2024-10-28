@@ -5,6 +5,7 @@ import 'package:elementos_asignados/common/Mensajes.dart';
 import 'package:elementos_asignados/components/Layout.dart';
 
 import 'package:elementos_asignados/models/PaBscUserElementoAsignadoM.dart';
+import 'package:elementos_asignados/models/PaDeleteUserElementoAsignadoM.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -36,6 +37,7 @@ class Desasignador extends StatefulWidget {
 
 class _DesasignadorState extends State<Desasignador> {
   bool _cargando = false;
+  List<PaDeleteUserElementoAsignadoM> _infoDesasignacion = [];
   List<bool> _seleccionados = [];
   bool _cargandoPost = false;
 
@@ -76,6 +78,8 @@ class _DesasignadorState extends State<Desasignador> {
     String mensaje,
     IconData? icono,
     Color colorIcono,
+    Color colorText,
+    Color colorFondo,
     Duration duracion,
   ) async {
     await mostrarMensajeScaffold(
@@ -84,6 +88,8 @@ class _DesasignadorState extends State<Desasignador> {
       icono: icono,
       colorIcono: colorIcono,
       duracion: duracion,
+      colorText: colorText,
+      colorFondo: colorFondo,
     );
   }
 
@@ -93,6 +99,7 @@ class _DesasignadorState extends State<Desasignador> {
       _cargandoPost = true;
     });
     String url = '${widget.baseUrl}PaDeleteUserElementoAsignadoCtrl';
+    bool errorOccurred = false;
 
     for (int index = 0; index < _seleccionados.length; index++) {
       if (_seleccionados[index]) {
@@ -100,6 +107,8 @@ class _DesasignadorState extends State<Desasignador> {
           "UserName": widget.pUserName,
           "Elemento_Asignado":
               widget.elementosAsignados[index].elementoAsignado,
+          "resultado": true,
+          "mensaje": "",
         };
 
         try {
@@ -113,57 +122,56 @@ class _DesasignadorState extends State<Desasignador> {
               "se está ejecutando el delete para el elemento ${widget.elementosAsignados[index].descripcion}");
 
           if (response.statusCode == 200) {
-            print(
-                "Elemento desasignado con éxito: ${widget.elementosAsignados[index].descripcion}");
-            _mostrarMensajeScaffold(
-                context,
-                "Elemento/s desasignados correctamente",
-                MdiIcons.checkboxMarkedCircle,
-                Color(0xFFF15803D),
-                Duration(seconds: 4));
-            Navigator.of(context).pushReplacement(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return Layout(
-                    imagePath: widget.imagePath,
-                    isBackgroundSet: widget.isBackgroundSet,
-                    catalogo: null,
-                    changeLanguage: widget.changeLanguage,
-                    idiomaDropDown: widget.idiomaDropDown,
-                    temaClaro: widget.temaClaro,
-                    baseUrl: 'http://192.168.10.41:9090/api/',
-                    pUserName: 'AUDITOR01',
-                    // token: sessionData['token'],
-                    // pUserName: sessionData['username'],
-                    // pEmpresa: sessionData['empresa'],
-                    // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-                    // baseUrl: sessionData['urlBase'],
-                    // fechaSesion: sessionData['fecha'],
-                    // fechaExpiracion: sessionData['fechaExpiracion'],
-                    // despEmpresa: sessionData['desEmpresa'],
-                    // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
-                  );
-                },
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              ),
-            );
+            List<dynamic> jsonResponse = json.decode(response.body);
+            List<PaDeleteUserElementoAsignadoM> infoDesasignacion = jsonResponse
+                .map((data) => PaDeleteUserElementoAsignadoM.fromJson(data))
+                .toList();
+            // Actualizar el estado con los datos obtenidos
+
+            setState(() {
+              _infoDesasignacion = infoDesasignacion;
+              if (_infoDesasignacion[0].resultado) {
+                errorOccurred = false;
+                _mostrarMensajeScaffold(
+                    context,
+                    "Elemento  ${widget.elementosAsignados[index].descripcion} desasignado correctamente",
+                    MdiIcons.checkboxMarkedCircle,
+                    Color(0xFFF15803D),
+                    Color(0xFFF15803D),
+                    Color(0xFFFDCFCE7),
+                    Duration(seconds: 2));
+              }
+              if (!_infoDesasignacion[0].resultado) {
+                errorOccurred = true;
+                _mostrarMensajeScaffold(
+                    context,
+                    _infoDesasignacion[0].mensaje,
+                    FontAwesomeIcons.circleExclamation,
+                    Color.fromARGB(255, 128, 21, 21),
+                    Color.fromARGB(255, 128, 21, 21),
+                    Color.fromARGB(255, 252, 220, 220),
+                    Duration(seconds: 4));
+
+                return;
+              }
+            });
           } else if (response.statusCode >= 400 && response.statusCode < 500) {
+            errorOccurred = true;
             // Código de estado en el rango 400-499 (errores del cliente)
             print('Error del cliente: ${response.statusCode}');
             print('Respuesta del error: ${response.body}');
+            return;
           } else if (response.statusCode >= 500) {
+            errorOccurred = true;
             // Código de estado en el rango 500-599 (errores del servidor)
             print('Error del servidor: ${response.statusCode}');
             print('Respuesta del error: ${response.body}');
+            return;
           }
         } catch (error) {
+          errorOccurred = true;
           print('Error: $error');
+          return;
         } finally {
           if (mounted) {
             setState(() {
@@ -172,6 +180,39 @@ class _DesasignadorState extends State<Desasignador> {
           }
         }
       }
+    }
+    if (!errorOccurred) {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return Layout(
+              imagePath: widget.imagePath,
+              isBackgroundSet: widget.isBackgroundSet,
+              catalogo: null,
+              changeLanguage: widget.changeLanguage,
+              idiomaDropDown: widget.idiomaDropDown,
+              temaClaro: widget.temaClaro,
+              baseUrl: 'http://192.168.10.41:9090/api/',
+              pUserName: 'AUDITOR01',
+              // token: sessionData['token'],
+              // pUserName: sessionData['username'],
+              // pEmpresa: sessionData['empresa'],
+              // pEstacion_Trabajo: sessionData['estacionTrabajo'],
+              // baseUrl: sessionData['urlBase'],
+              // fechaSesion: sessionData['fecha'],
+              // fechaExpiracion: sessionData['fechaExpiracion'],
+              // despEmpresa: sessionData['desEmpresa'],
+              // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
     }
   }
 
@@ -218,6 +259,29 @@ class _DesasignadorState extends State<Desasignador> {
               ),
               child: Column(
                 children: [
+                  CheckboxListTile(
+                    title: Text(
+                      _seleccionados.every((seleccionado) => seleccionado)
+                          ? 'Deseleccionar Todos'
+                          : 'Seleccionar Todos',
+                      style:
+                          TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                    ),
+                    value: _seleccionados.every((seleccionado) => seleccionado),
+                    onChanged: (bool? value) {
+                      setState(() {
+                        for (int i = 0; i < _seleccionados.length; i++) {
+                          _seleccionados[i] = value ?? false;
+                        }
+                        fabNotifier.setButtonState(
+                            _seleccionados.any((seleccionado) => seleccionado)
+                                ? 1
+                                : 0);
+                      });
+                    },
+                    activeColor: Colors.blueAccent,
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
                   Expanded(
                     child: GridView.count(
                       shrinkWrap: true,
@@ -285,7 +349,10 @@ class _DesasignadorState extends State<Desasignador> {
                               fabNotifier.setButtonState(0); // Ocultar botón
                             });
                           },
-                          child: Text('Limpiar selecciones'),
+                          child: Text(
+                            'Limpiar selecciones',
+                            style: TextStyle(color: Colors.blueGrey),
+                          ),
                         ),
                       ),
                     ),

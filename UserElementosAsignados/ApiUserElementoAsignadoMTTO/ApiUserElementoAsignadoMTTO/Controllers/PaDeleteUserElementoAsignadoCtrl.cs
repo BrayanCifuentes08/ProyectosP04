@@ -40,7 +40,12 @@ namespace ApiUserElementoAsignadoMTTO.Controllers
                     // Ejecutar el procedimiento almacenado y obtener los resultados
                     var resultados = db.Query<PaDeleteUserElementoAsignadoM>("Pa_delete_User_Elemento_Asignado", parameters, commandType: CommandType.StoredProcedure);
 
-                    var resultado = resultados;
+                    var resultado = resultados.Select(model => new
+                    {
+                        model.resultado,
+                        model.mensaje,
+
+                    });
 
                     return Ok(resultado);
 

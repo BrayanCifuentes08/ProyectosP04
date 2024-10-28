@@ -8,6 +8,7 @@ import 'package:elementos_asignados/models/PaBscElementosNoAsignadosM.dart';
 import 'package:elementos_asignados/models/PaBscUserElementoAsignadoM.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,11 +70,11 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _getUserElementosAsignados() async {
     // Verifica que el widget esté montado antes de realizar cualquier acción.
     if (!mounted) return;
-    _elementosAsignados = [];
-    isEmptyAsignados = false;
-    isRequestError = false;
     setState(() {
-      _cargando = true; // Establecer isLoading a true al inicio de la carga
+      _elementosAsignados = [];
+      isEmptyAsignados = false;
+      isRequestError = false;
+      _cargando = true;
     });
 
     String url = '${widget.baseUrl}PaBscUserElementoAsignadoCtrl';
@@ -352,8 +353,8 @@ class _DashboardState extends State<Dashboard> {
                       itemCount: _elementosAsignados.length,
                       itemBuilder: (context, index) {
                         final elemento = _elementosAsignados[index];
-                        return _buildAssignedItemCard(
-                            elemento.descripcion, Icons.assignment);
+                        return _buildAssignedItemCard(elemento.descripcion,
+                            elemento.fechaHora, Icons.assignment);
                       },
                     ),
                   ),
@@ -417,7 +418,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   // Tarjeta para los elementos asignados al usuario
-  Widget _buildAssignedItemCard(String itemName, IconData icon) {
+  Widget _buildAssignedItemCard(
+      String itemName, DateTime fechaHora, IconData icon) {
+    // Formato de fecha
+    final String formattedDate =
+        DateFormat('dd/MM/yyyy, HH:mm').format(fechaHora);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -430,13 +436,26 @@ class _DashboardState extends State<Dashboard> {
           children: [
             Icon(icon, size: 40, color: Colors.green),
             SizedBox(height: 10),
-            Text(
-              itemName,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Tooltip(
+              message: itemName, // Muestra el nombre completo del elemento
+              child: Text(
+                itemName,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis, // Limitar el texto
+                maxLines: 2, // Asegurarse de que sólo se muestre una línea
               ),
-              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10),
+            Text(
+              formattedDate,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[700],
+              ),
             ),
           ],
         ),
