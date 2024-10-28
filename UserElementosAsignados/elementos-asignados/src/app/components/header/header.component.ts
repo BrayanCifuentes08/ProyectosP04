@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, Input, PLATFORM_ID } from '@angular/core';
 import { TraduccionService } from '../../services/traduccion.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedService } from '../../services/shared.service';
@@ -15,7 +15,6 @@ import { ApiService } from '../../services/api.service';
 export class HeaderComponent {
   esModoOscuro: boolean = false;
   usuario: string = ''
-  
   constructor(
     public traduccionService: TraduccionService, 
     private sharedService: SharedService, 
