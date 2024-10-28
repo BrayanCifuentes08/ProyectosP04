@@ -3,6 +3,7 @@ import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Dashboard.dart';
 import 'package:elementos_asignados/components/Drawer.dart';
 import 'package:elementos_asignados/generated/l10n.dart';
+import 'package:elementos_asignados/services/Shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -59,6 +60,7 @@ class _LayoutState extends State<Layout> {
   // String _opcionSeleccionada = '';
   int _backGestureCount = 0;
   bool _isFabVisible = true;
+  late AccionService accionService;
 
   @override
   void initState() {
@@ -79,6 +81,10 @@ class _LayoutState extends State<Layout> {
           });
         }
       }
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      accionService = Provider.of<AccionService>(context, listen: false);
+      accionService.setAccion("${S.of(context).inicioInicio}");
     });
     _idiomaActual = widget.idiomaDropDown;
   }
@@ -136,6 +142,8 @@ class _LayoutState extends State<Layout> {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
+    accionService = Provider.of<AccionService>(context);
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Stack(children: [
@@ -192,39 +200,38 @@ class _LayoutState extends State<Layout> {
               shadowColor: Color(0xFF004964),
               backgroundColor: Color(0xFF004964),
               flexibleSpace: FlexibleSpaceBar(
-                background: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  decoration: BoxDecoration(
-                    gradient: !themeNotifier.temaClaro
-                        ? LinearGradient(colors: [
-                            Color(0xFFF0276a2),
-                            Color(0xFFF194a5a),
-                          ])
-                        : LinearGradient(colors: [
-                            Color(0xFFF0276a2),
-                            Color(0xFFF194a5a),
-                          ]),
+                  background: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    decoration: BoxDecoration(
+                      gradient: !themeNotifier.temaClaro
+                          ? LinearGradient(colors: [
+                              Color(0xFFF0276a2),
+                              Color(0xFFF194a5a),
+                            ])
+                          : LinearGradient(colors: [
+                              Color(0xFFF0276a2),
+                              Color(0xFFF194a5a),
+                            ]),
+                    ),
                   ),
-                ),
-                centerTitle: false,
-                title: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Container(
-                      width: constraints.maxWidth * 0.8,
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        S.of(context).inicioInicio,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    );
-                  },
-                ),
-              ),
+                  centerTitle: false,
+                  title: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Container(
+                        width: constraints.maxWidth * 0.8,
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          accionService.accion?.texto ?? '',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    },
+                  )),
               leading: IconButton(
                 padding: EdgeInsets.only(left: 20.0, top: 10.0),
                 icon: Icon(Icons.menu, color: Colors.white, size: 30),

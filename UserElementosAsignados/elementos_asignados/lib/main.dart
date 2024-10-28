@@ -6,6 +6,7 @@ import 'package:elementos_asignados/components/SplashScreen.dart';
 import 'package:elementos_asignados/generated/l10n.dart';
 // import 'package:elementos_asignados/services/LoginService.dart';
 import 'package:elementos_asignados/services/PreferenciasService.dart';
+import 'package:elementos_asignados/services/Shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(
             create: (context) => FloatingActionButtonNotifier()),
+        ChangeNotifierProvider(create: (context) => AccionService()),
       ],
       child: MyApp(),
     ),

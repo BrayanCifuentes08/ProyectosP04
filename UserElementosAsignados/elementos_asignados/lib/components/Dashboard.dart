@@ -1,11 +1,12 @@
 import 'dart:convert';
-
 import 'package:elementos_asignados/common/Loading.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Asignador.dart';
 import 'package:elementos_asignados/components/Desasignador.dart';
-import 'package:elementos_asignados/models/PaBscElementosNoAsignadosM.dart';
+import 'package:elementos_asignados/components/Layout.dart';
+import 'package:elementos_asignados/generated/l10n.dart';
 import 'package:elementos_asignados/models/PaBscUserElementoAsignadoM.dart';
+import 'package:elementos_asignados/services/Shared.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -129,6 +130,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final accionService = Provider.of<AccionService>(context);
     return SliverToBoxAdapter(
         child: Padding(
       padding: const EdgeInsets.all(0),
@@ -277,6 +279,10 @@ class _DashboardState extends State<Dashboard> {
                                 mostrarGridElementosUsuario = isAsignarElemento;
                                 if (mostrarGridElementosUsuario) {
                                   _getUserElementosAsignados();
+                                  accionService
+                                      .setAccion(S.of(context).inicioInicio);
+                                } else if (!isAsignarElemento) {
+                                  accionService.setAccion("Asignar");
                                 }
                               });
                             },
@@ -290,7 +296,6 @@ class _DashboardState extends State<Dashboard> {
                                   : Colors.blue,
                             ),
                           ),
-                          SizedBox(height: 10),
                           if (_elementosAsignados.isNotEmpty)
                             ElevatedButton(
                               onPressed: () async {
@@ -301,6 +306,10 @@ class _DashboardState extends State<Dashboard> {
                                       isDesasignarElemento;
                                   if (mostrarGridElementosUsuario) {
                                     _getUserElementosAsignados();
+                                    accionService
+                                        .setAccion(S.of(context).inicioInicio);
+                                  } else if (!isDesasignarElemento) {
+                                    accionService.setAccion("Desasignar");
                                   }
                                 });
                               },
@@ -314,6 +323,60 @@ class _DashboardState extends State<Dashboard> {
                                     : Colors.blue,
                               ),
                             ),
+                          if (_elementosAsignados.isNotEmpty &&
+                                  !isDesasignarElemento ||
+                              _elementosAsignados.isNotEmpty &&
+                                  !isAsignarElemento)
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                setState(() {
+                                  Navigator.of(context).pushReplacement(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                          secondaryAnimation) {
+                                        return Layout(
+                                          imagePath: widget.imagePath,
+                                          isBackgroundSet:
+                                              widget.isBackgroundSet,
+                                          catalogo: null,
+                                          changeLanguage: widget.changeLanguage,
+                                          idiomaDropDown: widget.idiomaDropDown,
+                                          temaClaro: themeNotifier.temaClaro,
+                                          baseUrl:
+                                              'http://192.168.10.41:9090/api/',
+                                          pUserName: 'AUDITOR01',
+                                          // token: sessionData['token'],
+                                          // pUserName: sessionData['username'],
+                                          // pEmpresa: sessionData['empresa'],
+                                          // pEstacion_Trabajo: sessionData['estacionTrabajo'],
+                                          // baseUrl: sessionData['urlBase'],
+                                          // fechaSesion: sessionData['fecha'],
+                                          // fechaExpiracion: sessionData['fechaExpiracion'],
+                                          // despEmpresa: sessionData['desEmpresa'],
+                                          // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+                                        );
+                                      },
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                });
+                              },
+                              icon: Icon(FontAwesomeIcons.house,
+                                  color: Colors.white,
+                                  size: 15), // Ícono de casa
+                              label: Text(
+                                'Volver al inicio',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFFF194a5a)),
+                            ),
                         ],
                       ),
                     ],
@@ -323,23 +386,38 @@ class _DashboardState extends State<Dashboard> {
                   thickness: 2,
                   color: Colors.grey,
                 ),
-                if (mostrarGridElementosUsuario)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'No. elementos asignados: ${_elementosAsignados.length}',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade600),
-                      textAlign: TextAlign.start,
+                if (mostrarGridElementosUsuario && !isRequestError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Chip(
+                        label: Text(
+                          'No. elementos asignados: ${_elementosAsignados.length}',
+                          style: TextStyle(
+                            color: Color(0XFFF1F2937),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        backgroundColor: Color(0xFFFE5E7EB),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        avatar: Icon(
+                          Icons.info,
+                          color: Color(0XFFF1F2937),
+                          size: 18,
+                        ),
+                      ),
                     ),
                   ),
                 if (_cargando)
                   LoadingComponent(
                       color: Colors.blue,
                       changeLanguage: widget.changeLanguage),
-                if (mostrarGridElementosUsuario)
+                if (mostrarGridElementosUsuario && !isRequestError)
                   Flexible(
                     fit: FlexFit.loose,
                     child: GridView.builder(
@@ -420,7 +498,6 @@ class _DashboardState extends State<Dashboard> {
   // Tarjeta para los elementos asignados al usuario
   Widget _buildAssignedItemCard(
       String itemName, DateTime fechaHora, IconData icon) {
-    // Formato de fecha
     final String formattedDate =
         DateFormat('dd/MM/yyyy, HH:mm').format(fechaHora);
 
@@ -430,31 +507,37 @@ class _DashboardState extends State<Dashboard> {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0), // Reducimos el padding
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: Colors.green),
-            SizedBox(height: 10),
+            Icon(icon,
+                size: 36, color: Colors.green), // Tamaño del ícono reducido
+            SizedBox(height: 8), // Espacio reducido
             Tooltip(
-              message: itemName, // Muestra el nombre completo del elemento
+              message: itemName,
               child: Text(
                 itemName,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis, // Limitar el texto
-                maxLines: 2, // Asegurarse de que sólo se muestre una línea
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2, // Limita a dos líneas
               ),
             ),
-            SizedBox(height: 10),
-            Text(
-              formattedDate,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
+            SizedBox(height: 8), // Espacio reducido
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                formattedDate,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[700],
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],

@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class Asignador extends StatefulWidget {
   final bool isBackgroundSet;
   final String imagePath;
@@ -259,20 +260,31 @@ class _AsignadorState extends State<Asignador> {
           if (_cargando)
             LoadingComponent(
               color: Colors.blue,
-              changeLanguage: (Locale) {},
+              changeLanguage: widget.changeLanguage,
             )
           else ...[
             Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+              padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  'No. elementos sin asignar: ${_elementosNoAsignados.length}',
-                  style: TextStyle(
-                      fontSize: 13,
+                child: Chip(
+                  label: Text(
+                    'No. elementos sin asignar: ${_elementosNoAsignados.length}',
+                    style: TextStyle(
+                      color: Color(0XFFF1F2937),
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade600),
-                  textAlign: TextAlign.start,
+                    ),
+                  ),
+                  backgroundColor: Color(0xFFFE5E7EB),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  avatar: Icon(
+                    Icons.info,
+                    color: Color(0XFFF1F2937),
+                    size: 18,
+                  ),
                 ),
               ),
             ),
@@ -311,8 +323,9 @@ class _AsignadorState extends State<Asignador> {
                                 ? 1
                                 : 0);
                       });
-                    },activeColor: Colors.blueAccent,
-                     controlAffinity: ListTileControlAffinity.leading,
+                    },
+                    activeColor: Colors.blueAccent,
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
                   Expanded(
                     child: GridView.count(
@@ -405,13 +418,38 @@ class _AsignadorState extends State<Asignador> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Elementos seleccionados',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Elementos seleccionados',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Chip(
+                              label: Text(
+                                '${_seleccionados.where((seleccionado) => seleccionado).length} seleccionados',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              backgroundColor: Color(0xFFF475569),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 4),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              avatar: Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
+                          ],
                         ),
                         Divider(color: Colors.grey[300]),
                         SizedBox(height: 10),
@@ -432,15 +470,7 @@ class _AsignadorState extends State<Asignador> {
                                 ),
                                 SizedBox(height: 5),
                                 Text(
-                                  'Campo 1: Valor ${index + 1}',
-                                  style: TextStyle(color: Colors.black54),
-                                ),
-                                Text(
-                                  'Campo 2: Valor ${index + 1}',
-                                  style: TextStyle(color: Colors.black54),
-                                ),
-                                Text(
-                                  'Campo 3: Valor ${index + 1}',
+                                  'Elemento no. ${_elementosNoAsignados[index].elementoAsignado}',
                                   style: TextStyle(color: Colors.black54),
                                 ),
                                 SizedBox(height: 15),
