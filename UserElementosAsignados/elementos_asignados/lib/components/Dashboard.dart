@@ -399,7 +399,7 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                 Divider(
-                  height: 50,
+                  height: 35,
                   thickness: 2,
                   color: Colors.grey,
                 ),
