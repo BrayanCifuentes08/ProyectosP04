@@ -21,7 +21,6 @@ class Desasignador extends StatefulWidget {
   Locale idiomaDropDown;
   final String pUserName;
   final String baseUrl;
-
   final List<PaBscUserElementoAsignadoM> elementosAsignados;
   Desasignador(
       {required this.baseUrl,
@@ -38,14 +37,20 @@ class Desasignador extends StatefulWidget {
 
 class _DesasignadorState extends State<Desasignador> {
   bool _cargando = false;
+  TextEditingController searchController = TextEditingController();
+  List<PaBscUserElementoAsignadoM> elementosFiltrados = [];
   List<PaDeleteUserElementoAsignadoM> _infoDesasignacion = [];
-  List<bool> _seleccionados = [];
+  Map<String, bool> _seleccionados = {};
   bool _cargandoPost = false;
 
   @override
   void initState() {
     super.initState();
-    _seleccionados = List<bool>.filled(widget.elementosAsignados.length, false);
+    _seleccionados = {
+      for (var elemento in widget.elementosAsignados)
+        elemento.descripcion: false
+    };
+    elementosFiltrados = List.from(widget.elementosAsignados);
   }
 
   void _mostrarAlerta(
@@ -102,82 +107,96 @@ class _DesasignadorState extends State<Desasignador> {
     String url = '${widget.baseUrl}PaDeleteUserElementoAsignadoCtrl';
     bool errorOccurred = false;
 
-    for (int index = 0; index < _seleccionados.length; index++) {
-      if (_seleccionados[index]) {
-        Map<String, dynamic> requestBody = {
-          "UserName": widget.pUserName,
-          "Elemento_Asignado":
-              widget.elementosAsignados[index].elementoAsignado,
-          "resultado": true,
-          "mensaje": "",
-        };
+    for (var entry in _seleccionados.entries) {
+      if (entry.value) {
+        PaBscUserElementoAsignadoM? elemento;
 
-        try {
-          final response = await http.delete(
-            Uri.parse(url),
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode(requestBody),
-          );
-
-          print(
-              "se está ejecutando el delete para el elemento ${widget.elementosAsignados[index].descripcion}");
-
-          if (response.statusCode == 200) {
-            List<dynamic> jsonResponse = json.decode(response.body);
-            List<PaDeleteUserElementoAsignadoM> infoDesasignacion = jsonResponse
-                .map((data) => PaDeleteUserElementoAsignadoM.fromJson(data))
-                .toList();
-            // Actualizar el estado con los datos obtenidos
-
-            setState(() {
-              _infoDesasignacion = infoDesasignacion;
-              if (_infoDesasignacion[0].resultado) {
-                errorOccurred = false;
-                _mostrarMensajeScaffold(
-                    context,
-                    "Elemento  ${widget.elementosAsignados[index].descripcion} desasignado correctamente",
-                    MdiIcons.checkboxMarkedCircle,
-                    Color(0xFFF15803D),
-                    Color(0xFFF15803D),
-                    Color(0xFFFDCFCE7),
-                    Duration(seconds: 2));
-              }
-              if (!_infoDesasignacion[0].resultado) {
-                errorOccurred = true;
-                _mostrarMensajeScaffold(
-                    context,
-                    _infoDesasignacion[0].mensaje,
-                    FontAwesomeIcons.circleExclamation,
-                    Color.fromARGB(255, 128, 21, 21),
-                    Color.fromARGB(255, 128, 21, 21),
-                    Color.fromARGB(255, 252, 220, 220),
-                    Duration(seconds: 4));
-
-                return;
-              }
-            });
-          } else if (response.statusCode >= 400 && response.statusCode < 500) {
-            errorOccurred = true;
-            // Código de estado en el rango 400-499 (errores del cliente)
-            print('Error del cliente: ${response.statusCode}');
-            print('Respuesta del error: ${response.body}');
-            return;
-          } else if (response.statusCode >= 500) {
-            errorOccurred = true;
-            // Código de estado en el rango 500-599 (errores del servidor)
-            print('Error del servidor: ${response.statusCode}');
-            print('Respuesta del error: ${response.body}');
-            return;
+        // Encontrar el elemento en _elementosNoAsignados basado en la clave única
+        for (var el in widget.elementosAsignados) {
+          if (el.descripcion == entry.key) {
+            elemento = el;
+            break; // Salir del bucle una vez que se encuentra el elemento
           }
-        } catch (error) {
-          errorOccurred = true;
-          print('Error: $error');
-          return;
-        } finally {
-          if (mounted) {
-            setState(() {
-              _cargandoPost = false;
-            });
+        }
+
+        if (elemento != null) {
+          Map<String, dynamic> requestBody = {
+            "UserName": widget.pUserName,
+            "Elemento_Asignado": elemento.elementoAsignado,
+            "resultado": true,
+            "mensaje": "",
+          };
+
+          try {
+            final response = await http.delete(
+              Uri.parse(url),
+              headers: {"Content-Type": "application/json"},
+              body: jsonEncode(requestBody),
+            );
+
+            print(
+                "se está ejecutando el delete para el elemento ${elemento.descripcion}");
+
+            if (response.statusCode == 200) {
+              List<dynamic> jsonResponse = json.decode(response.body);
+              List<PaDeleteUserElementoAsignadoM> infoDesasignacion =
+                  jsonResponse
+                      .map((data) =>
+                          PaDeleteUserElementoAsignadoM.fromJson(data))
+                      .toList();
+              // Actualizar el estado con los datos obtenidos
+
+              setState(() {
+                _infoDesasignacion = infoDesasignacion;
+                if (_infoDesasignacion[0].resultado) {
+                  errorOccurred = false;
+                  _mostrarMensajeScaffold(
+                      context,
+                      "Elemento  ${elemento!.descripcion} desasignado correctamente",
+                      MdiIcons.checkboxMarkedCircle,
+                      Color(0xFFF15803D),
+                      Color(0xFFF15803D),
+                      Color(0xFFFDCFCE7),
+                      Duration(seconds: 2));
+                }
+                if (!_infoDesasignacion[0].resultado) {
+                  errorOccurred = true;
+                  _mostrarMensajeScaffold(
+                      context,
+                      _infoDesasignacion[0].mensaje,
+                      FontAwesomeIcons.circleExclamation,
+                      Color.fromARGB(255, 128, 21, 21),
+                      Color.fromARGB(255, 128, 21, 21),
+                      Color.fromARGB(255, 252, 220, 220),
+                      Duration(seconds: 4));
+
+                  return;
+                }
+              });
+            } else if (response.statusCode >= 400 &&
+                response.statusCode < 500) {
+              errorOccurred = true;
+              // Código de estado en el rango 400-499 (errores del cliente)
+              print('Error del cliente: ${response.statusCode}');
+              print('Respuesta del error: ${response.body}');
+              return;
+            } else if (response.statusCode >= 500) {
+              errorOccurred = true;
+              // Código de estado en el rango 500-599 (errores del servidor)
+              print('Error del servidor: ${response.statusCode}');
+              print('Respuesta del error: ${response.body}');
+              return;
+            }
+          } catch (error) {
+            errorOccurred = true;
+            print('Error: $error');
+            return;
+          } finally {
+            if (mounted) {
+              setState(() {
+                _cargandoPost = false;
+              });
+            }
           }
         }
       }
@@ -217,6 +236,22 @@ class _DesasignadorState extends State<Desasignador> {
     }
   }
 
+  void _filtrarElementos(String query) {
+    setState(() {
+      // Si el input está vacío, muestra todos los elementos
+      if (query.isEmpty) {
+        elementosFiltrados = List.from(widget.elementosAsignados);
+      } else {
+        // Aplica el filtro
+        elementosFiltrados = widget.elementosAsignados
+            .where((elemento) => elemento.descripcion
+                .toLowerCase()
+                .contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
@@ -230,6 +265,51 @@ class _DesasignadorState extends State<Desasignador> {
               changeLanguage: widget.changeLanguage,
             )
           else ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 1),
+              child: TextField(
+                controller: searchController,
+                onChanged: _filtrarElementos,
+                style: TextStyle(
+                  color: Colors.blue[900],
+                  fontSize: 16,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Buscar elemento...',
+                  hintStyle: TextStyle(
+                    color: Color(0XFFF1F2937),
+                    fontSize: 15,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.blue[400],
+                  ),
+                  suffixIcon: searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(Icons.clear, color: Colors.blue[300]),
+                          onPressed: () {
+                            searchController.clear();
+                            _filtrarElementos('');
+                          },
+                        )
+                      : null,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide:
+                        BorderSide(color: Colors.grey[300]!, width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide:
+                        BorderSide(color: Colors.blue[400]!, width: 1.5),
+                  ),
+                  filled: true,
+                ),
+                cursorColor: Colors.blue[900],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
               child: Align(
@@ -273,22 +353,24 @@ class _DesasignadorState extends State<Desasignador> {
                 children: [
                   CheckboxListTile(
                     title: Text(
-                      _seleccionados.every((seleccionado) => seleccionado)
+                      _seleccionados.values
+                              .every((seleccionado) => seleccionado)
                           ? 'Deseleccionar Todos'
                           : 'Seleccionar Todos',
                       style:
                           TextStyle(fontSize: 14, color: Colors.grey.shade600),
                     ),
-                    value: _seleccionados.every((seleccionado) => seleccionado),
+                    value: _seleccionados.values
+                        .every((seleccionado) => seleccionado),
                     onChanged: (bool? value) {
                       setState(() {
-                        for (int i = 0; i < _seleccionados.length; i++) {
-                          _seleccionados[i] = value ?? false;
+                        for (var key in _seleccionados.keys) {
+                          _seleccionados[key] = value ?? false;
                         }
-                        fabNotifier.setButtonState(
-                            _seleccionados.any((seleccionado) => seleccionado)
-                                ? 1
-                                : 0);
+                        fabNotifier.setButtonState(_seleccionados.values
+                                .any((seleccionado) => seleccionado)
+                            ? 1
+                            : 0);
                       });
                     },
                     activeColor: Colors.blueAccent,
@@ -301,35 +383,37 @@ class _DesasignadorState extends State<Desasignador> {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                       childAspectRatio: 6,
-                      children: List.generate(widget.elementosAsignados.length,
-                          (index) {
+                      children:
+                          List.generate(elementosFiltrados.length, (index) {
+                        final elemento = elementosFiltrados[index];
                         return Container(
                           decoration: BoxDecoration(
-                            color: _seleccionados[index]
+                            color: _seleccionados[elemento.descripcion] == true
                                 ? Colors.blue[50]
                                 : Colors.grey[100],
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: _seleccionados[index]
-                                  ? Colors.blue
-                                  : Colors.grey[300]!,
+                              color:
+                                  _seleccionados[elemento.descripcion] == true
+                                      ? Colors.blue
+                                      : Colors.grey[300]!,
                             ),
                           ),
                           child: CheckboxListTile(
                             title: Text(
-                              widget.elementosAsignados[index]
-                                  .descripcion, // Mostrar la propiedad descripcion
+                              elemento.descripcion,
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black87,
                                   overflow: TextOverflow.ellipsis),
                             ),
-                            value: _seleccionados[index],
+                            value:
+                                _seleccionados[elemento.descripcion] ?? false,
                             activeColor: Colors.blueAccent,
                             onChanged: (bool? value) {
                               setState(() {
-                                _seleccionados[index] = value!;
-                                if (_seleccionados
+                                _seleccionados[elemento.descripcion] = value!;
+                                if (_seleccionados.values
                                     .any((seleccionado) => seleccionado)) {
                                   fabNotifier
                                       .setButtonState(1); // Mostrar botón
@@ -345,7 +429,7 @@ class _DesasignadorState extends State<Desasignador> {
                       }),
                     ),
                   ),
-                  if (_seleccionados.any((seleccionado) => seleccionado))
+                  if (_seleccionados.values.any((seleccionado) => seleccionado))
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Align(
@@ -353,8 +437,7 @@ class _DesasignadorState extends State<Desasignador> {
                         child: TextButton(
                           onPressed: () {
                             setState(() {
-                              _seleccionados.fillRange(
-                                  0, _seleccionados.length, false);
+                              _seleccionados.updateAll((key, value) => false);
                               fabNotifier.setButtonState(0);
                             });
                           },
@@ -370,7 +453,7 @@ class _DesasignadorState extends State<Desasignador> {
             ),
           ],
           SizedBox(height: 20),
-          _seleccionados.any((seleccionado) => seleccionado)
+          _seleccionados.values.any((seleccionado) => seleccionado)
               ? Column(children: [
                   Container(
                     padding: EdgeInsets.all(16.0),
@@ -401,7 +484,7 @@ class _DesasignadorState extends State<Desasignador> {
                               ),
                               Chip(
                                 label: Text(
-                                  '${_seleccionados.where((seleccionado) => seleccionado).length} seleccionados',
+                                  '${_seleccionados.values.where((seleccionado) => seleccionado).length} seleccionados',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -422,10 +505,13 @@ class _DesasignadorState extends State<Desasignador> {
                             ]),
                         Divider(color: Colors.grey[300]),
                         SizedBox(height: 10),
-                        ..._seleccionados.asMap().entries.map((entry) {
-                          int index = entry.key;
+                        ..._seleccionados.entries.map((entry) {
+                          String descripcion = entry.key;
                           bool seleccionado = entry.value;
                           if (seleccionado) {
+                            int index = widget.elementosAsignados.indexWhere(
+                                (elemento) =>
+                                    elemento.descripcion == descripcion);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
