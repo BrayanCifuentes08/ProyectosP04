@@ -18,6 +18,7 @@ import { SpinnerComponent } from "../../spinner/spinner.component";
 export class AsignadorComponent {
   elementosNoAsignados: ElementosNoAsignadosM[] = [];
   elementosSeleccionados: ElementosNoAsignadosM[] = [];
+  elementosNoAsignadosOriginal: ElementosNoAsignadosM[] = [];
   isLoadingDatos: boolean = false;
   isLoading: boolean = false;
   hayElementosSeleccionados: boolean = false;
@@ -43,6 +44,7 @@ export class AsignadorComponent {
       next: (data: ElementosNoAsignadosM[]) => {
         console.log(data)
         this.elementosNoAsignados = data;
+        this.elementosNoAsignadosOriginal = [...data];
         this.isLoadingDatos = false;
       },
       error: (error) => {
@@ -162,4 +164,18 @@ export class AsignadorComponent {
       this.isVisibleModal = true;
   }
 
+  filtrarElementos(event: Event): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase();
+  
+    if (input.length === 0) {
+      // Si el input está vacío, se muestran todos los elementos sin perder las selecciones
+      this.elementosNoAsignados = [...this.elementosNoAsignadosOriginal];
+    } else {
+      // Filtrar elementos según la búsqueda
+      this.elementosNoAsignados = this.elementosNoAsignadosOriginal.filter(elemento =>
+        elemento.descripcion.toLowerCase().includes(input)
+      );
+    }
+  }
+  
 }

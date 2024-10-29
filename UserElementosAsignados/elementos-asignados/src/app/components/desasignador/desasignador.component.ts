@@ -26,11 +26,12 @@ export class DesasignadorComponent {
   mostrarBtnLimpiarSeleccion: boolean = false
   @Output() mensajeExito = new EventEmitter<string>(); 
   @Output() mensajeError = new EventEmitter<string>();
-  
+  private elementosAsignadosOriginal: UserElementoAsignadoM[] = [];
 
   ngOnInit(): void {
     this.sharedService.userElementosAsignados$.subscribe((elementos) => {
       this.elementosAsignadosInicio = elementos;
+      this.elementosAsignadosOriginal = [...elementos];
     });
   }
 
@@ -140,6 +141,21 @@ export class DesasignadorComponent {
     checkboxes.forEach((checkbox) => {
       (checkbox as HTMLInputElement).checked = false;
     });
+  }
+
+  
+  filtrarElementos(event: Event): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase();
+
+    if (input.length === 0) {
+      // Si el input está vacío, restaurar todos los elementos
+      this.elementosAsignadosInicio = [...this.elementosAsignadosOriginal];
+    } else {
+      // Filtrar elementos según la búsqueda
+      this.elementosAsignadosInicio = this.elementosAsignadosOriginal.filter(elemento =>
+        elemento.descripcion.toLowerCase().includes(input)
+      );
+    }
   }
       
 }

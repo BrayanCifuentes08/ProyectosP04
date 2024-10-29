@@ -1,10 +1,18 @@
-<div class="mb-4">
+<div class="mb-4 flex flex-col sm:flex-row items-center">
   <div class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-base shadow-md">
     <h4 class="font-semibold flex items-center">
       No. Elementos sin asignar: 
       <span class="font-bold ml-1">{{ elementosNoAsignados.length }}</span>
     </h4>
   </div>
+
+  <!-- Input de búsqueda agregado con clases responsivas -->
+  <input
+    type="text"
+    placeholder="Buscar elemento"
+    class="mt-2 sm:mt-0 sm:ml-4 px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 text-sm"
+    (input)="filtrarElementos($event)"
+  />
 </div>
 
 <!-- Recuadros de información más grandes -->

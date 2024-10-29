@@ -14,7 +14,7 @@ import { SharedService } from '../../services/shared.service';
   styleUrl: './layout.component.css'
 })
 export  default class LayoutComponent {
-  headerText: string = ''; // Valor predeterminado
+  headerText: string = ''; 
 
   constructor(private sharedService: SharedService) {}
 
