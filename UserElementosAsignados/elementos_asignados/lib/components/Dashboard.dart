@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:elementos_asignados/common/FloatingActionButtonNotifier.dart';
 import 'package:elementos_asignados/common/Loading.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Asignador.dart';
@@ -58,6 +59,8 @@ class _DashboardState extends State<Dashboard> {
   bool isAsignarElemento = true;
   bool isDesasignarElemento = true;
   bool mostrarGridElementosUsuario = true;
+  TextEditingController searchController = TextEditingController();
+  List<PaBscUserElementoAsignadoM> elementosFiltrados = [];
   List<PaBscUserElementoAsignadoM> _elementosAsignados = [];
   bool isEmptyAsignados = false;
   bool isRequestError = false;
@@ -102,6 +105,7 @@ class _DashboardState extends State<Dashboard> {
         if (mounted) {
           setState(() {
             _elementosAsignados = elementosAsignados;
+            elementosFiltrados = List.from(_elementosAsignados);
             isEmptyAsignados = _elementosAsignados.isEmpty;
           });
         }
@@ -127,10 +131,20 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  void _filtrarElementos(String query) {
+    setState(() {
+      elementosFiltrados = _elementosAsignados
+          .where((elemento) =>
+              elemento.descripcion.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     final accionService = Provider.of<AccionService>(context);
+    final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
     return SliverToBoxAdapter(
         child: Padding(
       padding: const EdgeInsets.all(0),
@@ -274,6 +288,7 @@ class _DashboardState extends State<Dashboard> {
                           ElevatedButton(
                             onPressed: () async {
                               setState(() {
+                                fabNotifier.setButtonState(0);
                                 isAsignarElemento = !isAsignarElemento;
                                 isDesasignarElemento = true;
                                 mostrarGridElementosUsuario = isAsignarElemento;
@@ -300,6 +315,7 @@ class _DashboardState extends State<Dashboard> {
                             ElevatedButton(
                               onPressed: () async {
                                 setState(() {
+                                  fabNotifier.setButtonState(0);
                                   isDesasignarElemento = !isDesasignarElemento;
                                   isAsignarElemento = true;
                                   mostrarGridElementosUsuario =
@@ -330,6 +346,7 @@ class _DashboardState extends State<Dashboard> {
                             ElevatedButton.icon(
                               onPressed: () async {
                                 setState(() {
+                                  fabNotifier.setButtonState(0);
                                   Navigator.of(context).pushReplacement(
                                     PageRouteBuilder(
                                       pageBuilder: (context, animation,
@@ -388,6 +405,54 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 if (mostrarGridElementosUsuario && !isRequestError)
                   Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 1.0, horizontal: 1),
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: _filtrarElementos,
+                      style: TextStyle(
+                        color: Colors.blue[900],
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Buscar elemento...',
+                        hintStyle: TextStyle(
+                          color: Color(0XFFF1F2937),
+                          fontSize: 15,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.blue[400],
+                        ),
+                        suffixIcon: searchController.text.isNotEmpty
+                            ? IconButton(
+                                icon:
+                                    Icon(Icons.clear, color: Colors.blue[300]),
+                                onPressed: () {
+                                  searchController.clear();
+                                  _filtrarElementos('');
+                                },
+                              )
+                            : null,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide:
+                              BorderSide(color: Colors.grey[300]!, width: 1.5),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide:
+                              BorderSide(color: Colors.blue[400]!, width: 1.5),
+                        ),
+                        filled: true,
+                      ),
+                      cursorColor: Colors.blue[900],
+                    ),
+                  ),
+                if (mostrarGridElementosUsuario && !isRequestError)
+                  Padding(
                     padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
@@ -428,9 +493,9 @@ class _DashboardState extends State<Dashboard> {
                         crossAxisSpacing: 10.0,
                         mainAxisSpacing: 10.0,
                       ),
-                      itemCount: _elementosAsignados.length,
+                      itemCount: elementosFiltrados.length,
                       itemBuilder: (context, index) {
-                        final elemento = _elementosAsignados[index];
+                        final elemento = elementosFiltrados[index];
                         return _buildAssignedItemCard(elemento.descripcion,
                             elemento.fechaHora, Icons.assignment);
                       },

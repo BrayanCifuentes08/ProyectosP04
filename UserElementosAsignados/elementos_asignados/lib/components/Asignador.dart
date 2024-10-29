@@ -36,8 +36,10 @@ class Asignador extends StatefulWidget {
 class _AsignadorState extends State<Asignador> {
   bool _cargando = false;
   bool _cargandoPost = false;
+   TextEditingController searchController = TextEditingController();
   List<PaBscElementosNoAsignadosM> _elementosNoAsignados = [];
   List<PaInsertUserElementoAsignadoM> _infoAsignacion = [];
+  List<PaBscElementosNoAsignadosM> elementosFiltrados = [];
   List<bool> _seleccionados = [];
 
   @override
@@ -116,6 +118,7 @@ class _AsignadorState extends State<Asignador> {
           _elementosNoAsignados = elementosNoAsignados;
           _seleccionados =
               List<bool>.filled(_elementosNoAsignados.length, false);
+          elementosFiltrados = List.from(_elementosNoAsignados);
         });
       } else {
         print('Error: ${response.statusCode}');
@@ -250,6 +253,15 @@ class _AsignadorState extends State<Asignador> {
     }
   }
 
+   void _filtrarElementos(String query) {
+    setState(() {
+      elementosFiltrados = _elementosNoAsignados
+          .where((elemento) =>
+              elemento.descripcion.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
@@ -263,6 +275,54 @@ class _AsignadorState extends State<Asignador> {
               changeLanguage: widget.changeLanguage,
             )
           else ...[
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 1.0, horizontal: 1),
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: _filtrarElementos,
+                      style: TextStyle(
+                        color: Colors.blue[900],
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Buscar elemento...',
+                        hintStyle: TextStyle(
+                          color: Color(0XFFF1F2937),
+                          fontSize: 15,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.blue[400],
+                        ),
+                        suffixIcon: searchController.text.isNotEmpty
+                            ? IconButton(
+                                icon:
+                                    Icon(Icons.clear, color: Colors.blue[300]),
+                                onPressed: () {
+                                  searchController.clear();
+                                  _filtrarElementos('');
+                                },
+                              )
+                            : null,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide:
+                              BorderSide(color: Colors.grey[300]!, width: 1.5),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          borderSide:
+                              BorderSide(color: Colors.blue[400]!, width: 1.5),
+                        ),
+                        filled: true,
+                      ),
+                      cursorColor: Colors.blue[900],
+                    ),
+                  ),
+                
             Padding(
               padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
               child: Align(
