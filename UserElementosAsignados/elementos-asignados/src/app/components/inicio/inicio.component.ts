@@ -16,6 +16,7 @@ import { UtilidadService } from '../../services/utilidad.service';
 })
 export class InicioComponent {
   userElementosAsignados: UserElementoAsignadoM[] = [];
+  userElementosAsignadosOriginal: UserElementoAsignadoM[] = [];
   isLoading: boolean = false; // Bandera para mostrar el spinner mientras cargan los datos
   hayElementosSeleccionados: boolean = false; // Bandera para controlar si se ha seleccionado algún elemento
 
@@ -37,6 +38,7 @@ export class InicioComponent {
           ...elemento,
           fecha_Hora: this.utilidadService.formatFechaCompleta(new Date(elemento.fecha_Hora)),
         }));
+        this.userElementosAsignadosOriginal = [...this.userElementosAsignados];
         this.isLoading = false;
         console.log('Elementos asignados', this.userElementosAsignados);
         this.sharedService.setUserElementosAsignados(this.userElementosAsignados);
@@ -46,6 +48,20 @@ export class InicioComponent {
         console.error('Error al obtener los elementos:', error);
       },
     });
+  }
+
+  filtrarElementos(event: Event): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase();
+
+    if (input.length === 0) {
+      // Si el input está vacío, se restauran todos los elementos
+      this.userElementosAsignados = [...this.userElementosAsignadosOriginal];
+    } else {
+      // Filtrar elementos según la búsqueda
+      this.userElementosAsignados = this.userElementosAsignadosOriginal.filter(elemento =>
+        elemento.descripcion.toLowerCase().includes(input)
+      );
+    }
   }
   
 }

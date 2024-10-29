@@ -7,6 +7,13 @@
         <span class="font-bold ml-1">{{ userElementosAsignados.length }}</span>
       </h4>
     </div>
+    <!-- Input de búsqueda agregado con clases responsivas -->
+  <input
+  type="text"
+  placeholder="Buscar elemento"
+  class="mt-2 sm:mt-0 sm:ml-4 px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 text-sm"
+  (input)="filtrarElementos($event)"
+/>
   </div>
   <div *ngIf="isLoading" class="flex flex-col justify-center items-center h-64">
     <div class="w-24 h-24 rounded-full animate-spin border-y-4 border-solid border-blue-500 border-t-transparent"></div>
