@@ -12,39 +12,37 @@ import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class Layout extends StatefulWidget {
   final String imagePath;
-  final String? catalogo;
   final bool isBackgroundSet;
   final Function(Locale) changeLanguage;
   Locale idiomaDropDown;
   final bool temaClaro;
-  // final String token;
+  final String token;
   final String pUserName;
-  // final int pEmpresa;
-  // final int pEstacion_Trabajo;
+  final int pEmpresa;
+  final int pEstacion_Trabajo;
   String baseUrl;
-  // final DateTime fechaSesion;
-  // final DateTime? fechaExpiracion;
+  final DateTime fechaSesion;
+  final DateTime? fechaExpiracion;
   final String? imageLogo;
-  // final String? despEmpresa;
-  // final String? despEstacion_Trabajo;
+  final String? despEmpresa;
+  final String? despEstacion_Trabajo;
 
   Layout({
     required this.imagePath,
     required this.isBackgroundSet,
-    required this.catalogo,
     required this.changeLanguage,
     required this.idiomaDropDown,
     required this.temaClaro,
-    // required this.token,
+    required this.token,
     required this.pUserName,
-    // required this.pEmpresa,
-    // required this.pEstacion_Trabajo,
+    required this.pEmpresa,
+    required this.pEstacion_Trabajo,
     required this.baseUrl,
-    // this.fechaExpiracion,
-    // required this.fechaSesion,
+    this.fechaExpiracion,
+    required this.fechaSesion,
     this.imageLogo,
-    // required this.despEmpresa,
-    // required this.despEstacion_Trabajo,
+    required this.despEmpresa,
+    required this.despEstacion_Trabajo,
   });
 
   @override
@@ -57,7 +55,6 @@ class _LayoutState extends State<Layout> {
   final ScrollController _scrollController = ScrollController();
   FocusNode _focusSearch = FocusNode();
   late Locale _idiomaActual;
-  // String _opcionSeleccionada = '';
   int _backGestureCount = 0;
   bool _isFabVisible = true;
   late AccionService accionService;
@@ -95,6 +92,7 @@ class _LayoutState extends State<Layout> {
     _focusSearch.dispose();
   }
 
+  //METODO PARA DESPLAZAR HACIA ABAJO
   void desplazarScroll() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Mueve el scroll al máximo del CustomScrollView
@@ -106,6 +104,7 @@ class _LayoutState extends State<Layout> {
     });
   }
 
+  //METODO PARA DESPLAZAR HACIA ARRIBA
   void desplazarScrollArriba() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Mueve el scroll al inicio del CustomScrollView
@@ -117,6 +116,7 @@ class _LayoutState extends State<Layout> {
     });
   }
 
+  //LOGICA DE MANEJO PARA GESTOS
   Future<bool> _onWillPop() async {
     if (_backGestureCount == 0) {
       _backGestureCount++;
@@ -138,6 +138,7 @@ class _LayoutState extends State<Layout> {
     }
   }
 
+  //WIDGET PRINCIPAL
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
@@ -147,6 +148,7 @@ class _LayoutState extends State<Layout> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Stack(children: [
+        //FONDO SCAFFOLD
         Container(
           decoration: BoxDecoration(
               gradient: !themeNotifier.temaClaro
@@ -174,28 +176,30 @@ class _LayoutState extends State<Layout> {
         Scaffold(
           backgroundColor: Color.fromARGB(0, 255, 255, 255),
           key: _scaffoldKey,
+          //DRAWER - MENU LATERAL
           drawer: CustomDrawer(
             imagePath: widget.imagePath,
             isBackgroundSet: widget.isBackgroundSet,
-            catalogo: widget.catalogo,
             changeLanguage: widget.changeLanguage,
             idiomaDropDown: _idiomaActual,
             temaClaro: widget.temaClaro,
-            // token: widget.token,
-            // pUserName: widget.pUserName,
-            // pEmpresa: widget.pEmpresa,
-            // pEstacion_Trabajo: widget.pEstacion_Trabajo,
-            // fechaSesion: widget.fechaSesion,
+            token: widget.token,
+            pUserName: widget.pUserName,
+            pEmpresa: widget.pEmpresa,
+            pEstacion_Trabajo: widget.pEstacion_Trabajo,
+            fechaSesion: widget.fechaSesion,
             baseUrl: widget.baseUrl,
-            // fechaExpiracion: widget.fechaExpiracion,
-            // despEmpresa: widget.despEmpresa,
-            // despEstacion_Trabajo: widget.despEstacion_Trabajo,
+            fechaExpiracion: widget.fechaExpiracion,
+            despEmpresa: widget.despEmpresa,
+            despEstacion_Trabajo: widget.despEstacion_Trabajo,
           ),
           body: CustomScrollView(controller: _scrollController, slivers: [
+            //SLIVERAPPBAR CON TÍTULO DINÁMICO
             SliverAppBar(
               expandedHeight: 110.0,
               pinned: true,
               floating: true,
+              snap: true,
               elevation: 10,
               shadowColor: Color(0xFF004964),
               backgroundColor: Color(0xFF004964),
@@ -247,6 +251,7 @@ class _LayoutState extends State<Layout> {
                 ),
               ],
             ),
+            //LLAMADA DEL DASHBOARD
             Dashboard(
               isBackgroundSet: widget.isBackgroundSet,
               imagePath: widget.imagePath,
@@ -256,8 +261,17 @@ class _LayoutState extends State<Layout> {
               onScrollToTop: desplazarScrollArriba,
               baseUrl: widget.baseUrl,
               pUserName: widget.pUserName,
+              token: widget.token,
+              pEmpresa: widget.pEmpresa,
+              pEstacion_Trabajo: widget.pEstacion_Trabajo,
+              fechaSesion: widget.fechaSesion,
+              despEmpresa: widget.despEmpresa,
+              despEstacion_Trabajo: widget.despEstacion_Trabajo,
+              temaClaro: widget.temaClaro,
+              fechaExpiracion: widget.fechaExpiracion,
             ),
           ]),
+          //BOTÓN FLOTANTE PARA SUBIR O BAJAR
           floatingActionButton: fabNotifier.buttonState == 0
               ? null // No mostrar el botón
               : FloatingActionButton(

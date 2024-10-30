@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:elementos_asignados/common/FloatingActionButtonNotifier.dart';
 import 'package:elementos_asignados/common/Loading.dart';
 import 'package:elementos_asignados/common/Mensajes.dart';
+import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Layout.dart';
 import 'package:elementos_asignados/models/PaBscUserElementoAsignadoM.dart';
 import 'package:elementos_asignados/models/PaDeleteUserElementoAsignadoM.dart';
@@ -21,6 +22,13 @@ class Desasignador extends StatefulWidget {
   final String pUserName;
   final String baseUrl;
   final List<PaBscUserElementoAsignadoM> elementosAsignados;
+  final int pEmpresa;
+  final int pEstacion_Trabajo;
+  final String token;
+  final DateTime fechaSesion;
+  final DateTime? fechaExpiracion;
+  final String? despEmpresa;
+  final String? despEstacion_Trabajo;
   Desasignador(
       {required this.baseUrl,
       required this.changeLanguage,
@@ -29,7 +37,14 @@ class Desasignador extends StatefulWidget {
       required this.pUserName,
       required this.isBackgroundSet,
       required this.imagePath,
-      required this.temaClaro});
+      required this.temaClaro,
+      required this.pEmpresa,
+      required this.pEstacion_Trabajo,
+      required this.token,
+      required this.fechaSesion,
+      this.fechaExpiracion,
+      required this.despEmpresa,
+      required this.despEstacion_Trabajo});
   @override
   _DesasignadorState createState() => _DesasignadorState();
 }
@@ -129,7 +144,10 @@ class _DesasignadorState extends State<Desasignador> {
           try {
             final response = await http.delete(
               Uri.parse(url),
-              headers: {"Content-Type": "application/json"},
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer ${widget.token}"
+              },
               body: jsonEncode(requestBody),
             );
 
@@ -207,21 +225,18 @@ class _DesasignadorState extends State<Desasignador> {
             return Layout(
               imagePath: widget.imagePath,
               isBackgroundSet: widget.isBackgroundSet,
-              catalogo: null,
               changeLanguage: widget.changeLanguage,
               idiomaDropDown: widget.idiomaDropDown,
               temaClaro: widget.temaClaro,
-              baseUrl: 'http://192.168.10.41:9090/api/',
-              pUserName: 'AUDITOR01',
-              // token: sessionData['token'],
-              // pUserName: sessionData['username'],
-              // pEmpresa: sessionData['empresa'],
-              // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-              // baseUrl: sessionData['urlBase'],
-              // fechaSesion: sessionData['fecha'],
-              // fechaExpiracion: sessionData['fechaExpiracion'],
-              // despEmpresa: sessionData['desEmpresa'],
-              // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+              token: widget.token,
+              pUserName: widget.pUserName,
+              pEmpresa: widget.pEmpresa,
+              pEstacion_Trabajo: widget.pEstacion_Trabajo,
+              baseUrl: widget.baseUrl,
+              fechaSesion: widget.fechaSesion,
+              fechaExpiracion: widget.fechaExpiracion,
+              despEmpresa: widget.despEmpresa,
+              despEstacion_Trabajo: widget.despEstacion_Trabajo,
             );
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -253,6 +268,7 @@ class _DesasignadorState extends State<Desasignador> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
     return Flexible(
       fit: FlexFit.loose,
@@ -264,51 +280,62 @@ class _DesasignadorState extends State<Desasignador> {
               changeLanguage: widget.changeLanguage,
             )
           else ...[
+            //INPUT DE BÚSQUEDA
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 1),
               child: TextField(
                 controller: searchController,
                 onChanged: _filtrarElementos,
                 style: TextStyle(
-                  color: Colors.blue[900],
+                  color: !themeNotifier.temaClaro
+                      ? Colors.white
+                      : Colors.blue[900],
                   fontSize: 16,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Buscar elemento...',
-                  hintStyle: TextStyle(
-                    color: Color(0XFFF1F2937),
-                    fontSize: 15,
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.blue[400],
-                  ),
-                  suffixIcon: searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: Icon(Icons.clear, color: Colors.blue[300]),
-                          onPressed: () {
-                            searchController.clear();
-                            _filtrarElementos('');
-                          },
-                        )
-                      : null,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide:
-                        BorderSide(color: Colors.grey[300]!, width: 1.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide:
-                        BorderSide(color: Colors.blue[400]!, width: 1.5),
-                  ),
-                  filled: true,
-                ),
+                    hintText: 'Buscar elemento...',
+                    hintStyle: TextStyle(
+                      color: !themeNotifier.temaClaro
+                          ? Color.fromARGB(255, 92, 122, 163)
+                          : Color(0XFFF1F2937),
+                      fontSize: 15,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.blue[400],
+                    ),
+                    suffixIcon: searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(Icons.clear, color: Colors.blue[300]),
+                            onPressed: () {
+                              searchController.clear();
+                              _filtrarElementos('');
+                            },
+                          )
+                        : null,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide(
+                          color: !themeNotifier.temaClaro
+                              ? Colors.grey[600]!
+                              : Colors.grey[300]!,
+                          width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide:
+                          BorderSide(color: Colors.blue[400]!, width: 1.5),
+                    ),
+                    filled: true,
+                    fillColor: !themeNotifier.temaClaro
+                        ? Color.fromARGB(255, 24, 31, 43)
+                        : Colors.transparent),
                 cursorColor: Colors.blue[900],
               ),
             ),
+            //CHIP CONTADOR ELEMENTOS ASIGNADOS
             Padding(
               padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
               child: Align(
