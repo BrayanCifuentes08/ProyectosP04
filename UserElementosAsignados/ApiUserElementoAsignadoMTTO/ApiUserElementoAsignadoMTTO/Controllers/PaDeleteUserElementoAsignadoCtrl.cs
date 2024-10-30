@@ -1,6 +1,7 @@
 ﻿using ApiUserElementoAsignadoMTTO.Connection;
 using ApiUserElementoAsignadoMTTO.Model;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -20,7 +21,7 @@ namespace ApiUserElementoAsignadoMTTO.Controllers
             _configuration = configuration;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> eliminarUserElementoAsignado([FromBody] PaDeleteUserElementoAsignadoM model)
         {

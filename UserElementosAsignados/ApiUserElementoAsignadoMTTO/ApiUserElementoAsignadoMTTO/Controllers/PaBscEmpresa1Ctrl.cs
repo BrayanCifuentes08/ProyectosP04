@@ -9,12 +9,13 @@ using System.Data.SqlClient;
 
 namespace ApiUserElementoAsignadoMTTO.Controllers
 {
+
     [ApiController]
-    public class PaBscUserElementoAsignadoCtrl : ControllerBase
+    public class PaBscEmpresa1Ctrl : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public PaBscUserElementoAsignadoCtrl(IConfiguration configuration)
+        public PaBscEmpresa1Ctrl(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -22,9 +23,7 @@ namespace ApiUserElementoAsignadoMTTO.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/[controller]")]
-        public IActionResult obtenerElementosAsignados(
-            [FromQuery] string pUserName
-            )
+        public IActionResult obtenerEmpresas([FromQuery] string pUserName)
         {
             try
             {
@@ -33,19 +32,28 @@ namespace ApiUserElementoAsignadoMTTO.Controllers
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@pUserName", pUserName);
-                   
 
                     // Ejecutar el procedimiento almacenado y obtener los resultados
-                    var resultados = db.Query<PaBscUserElementoAsignadoM>("Pa_bsc_User_Elemento_Asignado", parameters, commandType: CommandType.StoredProcedure);
+                    var resultados = db.Query<PaBscEmpresa1M>("PA_bsc_Empresa_1", parameters, commandType: CommandType.StoredProcedure);
 
 
                     var Resultado = resultados.Select(model => new
                     {
-                        model.UserName,
-                        model.Elemento_Asignado,
-                        model.Descripcion,
-                        model.Fecha_Hora,
-
+                        model.Empresa,
+                        model.Empresa_Nombre,
+                        model.Razon_Social,
+                        model.Empresa_NIT,
+                        model.Empresa_Direccion,
+                        model.Numero_Patronal,
+                        model.Estado,
+                        model.Campo_1,
+                        model.Campo_2,
+                        model.Campo_3,
+                        model.Campo_4,
+                        model.Campo_5,
+                        model.Campo_6,
+                        model.Campo_7,
+                        model.Campo_8
                     });
 
                     return Ok(Resultado);
@@ -58,3 +66,4 @@ namespace ApiUserElementoAsignadoMTTO.Controllers
         }
     }
 }
+

@@ -19,7 +19,7 @@ namespace ApiUserElementoAsignadoMTTO.Controllers
             _configuration = configuration;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [Route("api/[controller]")]
         public IActionResult obtenerElementosNoAsignados()

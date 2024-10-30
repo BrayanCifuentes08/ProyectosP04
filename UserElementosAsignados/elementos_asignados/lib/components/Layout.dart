@@ -278,7 +278,7 @@ class _LayoutState extends State<Layout> {
                     size: 25,
                     color: Colors.white,
                   ),
-                  tooltip: 'Acción del botón flotante',
+                  tooltip: fabNotifier.buttonState == 1 ? 'Subir' : 'Bajar',
                   mini: true,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

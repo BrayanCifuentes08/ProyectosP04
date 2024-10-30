@@ -2745,23 +2745,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dev005\\.nuget\\packages\\": {},
+    "C:\\Users\\dev003\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
+      "projectUniqueName": "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
       "projectName": "ApiUserElementoAsignadoMTTO",
-      "projectPath": "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
-      "packagesPath": "C:\\Users\\dev005\\.nuget\\packages\\",
-      "outputPath": "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\obj\\",
+      "projectPath": "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
+      "packagesPath": "C:\\Users\\dev003\\.nuget\\packages\\",
+      "outputPath": "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\dev005\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dev003\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

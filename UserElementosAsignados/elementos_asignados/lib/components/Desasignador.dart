@@ -3,7 +3,6 @@ import 'package:elementos_asignados/common/FloatingActionButtonNotifier.dart';
 import 'package:elementos_asignados/common/Loading.dart';
 import 'package:elementos_asignados/common/Mensajes.dart';
 import 'package:elementos_asignados/components/Layout.dart';
-
 import 'package:elementos_asignados/models/PaBscUserElementoAsignadoM.dart';
 import 'package:elementos_asignados/models/PaDeleteUserElementoAsignadoM.dart';
 import 'package:flutter/material.dart';
