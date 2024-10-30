@@ -1,54 +1,54 @@
 ﻿using ApiUserElementoAsignadoMTTO.Connection;
+using ApiUserElementoAsignadoMTTO.Model;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
-using ApiUserElementoAsignadoMTTO.Model;
 
 namespace ApiUserElementoAsignadoMTTO.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
-    public class PaInsertUserElementoAsignadoCtrl : ControllerBase
+    public class PaBscApplication1Ctrl : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public PaInsertUserElementoAsignadoCtrl(IConfiguration configuration)
+        public PaBscApplication1Ctrl(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> crearUserElementoAsignado([FromBody] PaInsertUserElementoAsignadoM model)
+        [HttpGet]
+        [Route("api/[controller]")]
+        public IActionResult obtenerAplicaciones([FromQuery] int TAccion, [FromQuery] int TOpcion, [FromQuery] string pFiltro_1)
         {
             try
             {
-
-               
-
                 var connectionString = new Conexion().cadenaSQL();
                 using (IDbConnection db = new SqlConnection(connectionString))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@pUserName", model.UserName);
-                    parameters.Add("@pElemento_Asignado", model.Elemento_Asignado);
-              
+                    parameters.Add("@TAccion", TAccion);
+                    parameters.Add("@TOpcion", TOpcion);
+                    parameters.Add("@pFiltro_1", pFiltro_1);
 
                     // Ejecutar el procedimiento almacenado y obtener los resultados
-                    var resultados = db.Query<PaInsertUserElementoAsignadoM>("Pa_insert_User_Elemento_Asignado", parameters, commandType: CommandType.StoredProcedure);
+                    var resultados = db.Query<PaBscApplication1M>("PA_bsc_Application_1", parameters, commandType: CommandType.StoredProcedure);
 
-                    var resultado = resultados.Select(model => new
+
+                    var Resultado = resultados.Select(model => new
                     {
-                        model.resultado,
-                        model.mensaje,
-
+                        model.Application,
+                        model.Application_Father,
+                        model.Description,
+                        model.Observacion_1,
+                      
                     });
 
-                    return Ok(resultado);
-
+                    return Ok(Resultado);
                 }
             }
             catch (Exception ex)
