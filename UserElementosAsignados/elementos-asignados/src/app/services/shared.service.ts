@@ -17,6 +17,8 @@ export class SharedService {
   private accionSubject = new BehaviorSubject<string>('');
   accion$ = this.accionSubject.asObservable(); 
   private loading = true;
+  private userElementosAsignadosSubject = new BehaviorSubject<UserElementoAsignadoM[]>([]);
+  userElementosAsignados$ = this.userElementosAsignadosSubject.asObservable();
   
   constructor(private apiService: ApiService) {
     if (typeof window !== 'undefined') {
@@ -25,8 +27,6 @@ export class SharedService {
     }
   }
   
-  private userElementosAsignadosSubject = new BehaviorSubject<UserElementoAsignadoM[]>([]);
-  userElementosAsignados$ = this.userElementosAsignadosSubject.asObservable();
 
   setUserElementosAsignados(elementos: UserElementoAsignadoM[]) {
     this.userElementosAsignadosSubject.next(elementos);

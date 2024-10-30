@@ -55,6 +55,8 @@ export class AsignadorComponent {
   }
 
   asignarElementos(): void {
+    const user = this.apiService.getUser();
+    const empresa = this.apiService.getEmpresa();
     console.log("Iniciando la asignación de elementos.");
     if (this.elementosSeleccionados.length === 0) {
       alert("No hay elementos seleccionados para asignar.");
@@ -64,7 +66,7 @@ export class AsignadorComponent {
     console.log("Elementos seleccionados:", this.elementosSeleccionados);
     const asignaciones = this.elementosSeleccionados.map(elemento => {
       const model = {
-        UserName: 'AUDITOR01',
+        UserName: user,
         Elemento_Asignado: elemento.elemento_Asignado,
         mensaje: '',
         resultado: false
@@ -101,7 +103,6 @@ export class AsignadorComponent {
     });
   }
   
-
   // Funcion para seleccionar/deseleccionar todos los elementos
   toggleSelectAll(event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;

@@ -1,0 +1,53 @@
+<!-- Contenedor principal -->
+<div class="mb-12">
+  <div *ngIf="hayElementosCargados" class="mb-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+    <div class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full px-3 py-1 text-base shadow-md">
+      <h4 class="font-semibold flex items-center">
+        No. Elementos asignados:
+        <span class="font-bold ml-1">{{ userElementosAsignados.length }}</span>
+      </h4>
+    </div>
+    <div class="relative mt-2 sm:mt-0">
+      <input
+        type="text"
+        placeholder="Buscar elemento"
+        class="pl-10 pr-4 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700 text-sm w-full sm:w-48 transition-all duration-300 peer shadow-sm hover:shadow-md dark:shadow-gray-900"
+        (input)="filtrarElementos($event)"
+      />
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 dark:text-gray-300 peer-focus:text-indigo-500 dark:peer-focus:text-indigo-400 peer-hover:text-gray-600 dark:peer-hover:text-gray-400 transition-transform duration-200 ease-in-out peer-focus:scale-110"></i>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="flex flex-col justify-center items-center h-64">
+    <div class="w-24 h-24 rounded-full animate-spin border-y-4 border-solid border-blue-500 dark:border-blue-400 border-t-transparent"></div>
+    <p class="mt-4 text-lg text-blue-gray-700 dark:text-gray-300">Cargando datos...</p>
+  </div>
+
+  <!-- Mostrar tarjeta si no hay elementos asignados -->
+  <div *ngIf="!isLoading && !hayElementosCargados" class="p-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-md text-center bg-white dark:bg-gray-700">
+    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">No tienes elementos asignados</h3>
+    <p class="text-gray-600 dark:text-gray-400">Por favor, verifica más tarde.</p>
+  </div>
+
+  <!-- Recuadros de información -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+    <div class="col-span-1" *ngFor="let userElementos of userElementosAsignados; let i = index">
+      <!-- Primer recuadro -->
+      <div class="relative flex flex-col bg-clip-border rounded-xl bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 shadow-md fade-in" [ngClass]="{'fade-in': !isLoading, 'delay-[{{i}}*100]': !isLoading}">
+        <div class="p-4 text-left">
+          <h4 class="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 dark:text-gray-200">{{userElementos.descripcion}}</h4>
+        </div>
+        <div class="border-t border-blue-gray-50 dark:border-gray-600 p-4">
+          <div class="mb-2">
+            <strong class="text-blue-gray-900 dark:text-gray-300">Fecha Hora:</strong>
+            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600 dark:text-gray-400">{{userElementos.fecha_Hora}}</p>
+          </div>
+          <div class="mb-2">
+            <strong class="text-blue-gray-900 dark:text-gray-300">No: Elemento Asignado</strong>
+            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600 dark:text-gray-400">{{userElementos.elemento_Asignado}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

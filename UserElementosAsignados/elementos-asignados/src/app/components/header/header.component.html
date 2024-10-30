@@ -1,6 +1,6 @@
 <div class="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center ">
     <div class="capitalize">
-      <h6 class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-gray-900"> {{ headerText }}</h6>
+      <h6 class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-gray-900 dark:text-white"> {{ headerText }}</h6>
     </div>
     <div class="flex items-center">
       <button class="relative middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30 grid xl:hidden" type="button">
@@ -23,6 +23,17 @@
           </span>
         </button>
       </a>
+      <button (click)="toggleTheme()" 
+      class="relative w-14 h-8 bg-gray-300 dark:bg-indigo-500 rounded-full shadow-inner flex items-center p-1 transition-all duration-200 ease-in-out ml-4">
+        <span class="w-6 h-6 bg-white rounded-full flex items-center justify-center 
+                  transform transition-transform duration-200 ease-in-out 
+                  hover:shadow-[0_0_10px_rgba(255,221,51,0.7)] hover:bg-opacity-80 
+                  hover:scale-105" 
+            [ngClass]="{ 'translate-x-0': !isDarkMode, 'translate-x-6': isDarkMode }">
+        <i *ngIf="!isDarkMode" class="fas fa-sun w-4 h-4 text-yellow-400 transition-colors duration-200 ease-in-out"></i>
+        <i *ngIf="isDarkMode" class="fas fa-moon w-4 h-4 text-indigo-600 transition-colors duration-200 ease-in-out"></i>
+        </span>
+      </button>
     </div>
   </div>
 
