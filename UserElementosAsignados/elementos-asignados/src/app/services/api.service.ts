@@ -75,7 +75,7 @@ export class ApiService {
     const url = `${this.baseUrl}PaBscElementosNoAsignadosCtrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(url, { params: model })
+    return this.http.get<any>(url, { params: model, headers })
     .pipe(
       map(response => response),
     );
@@ -85,7 +85,7 @@ export class ApiService {
     const url = `${this.baseUrl}PaBscUserElementoAsignadoCtrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(url, { params: model })
+    return this.http.get<any>(url, { params: model, headers })
     .pipe(
       map(response => response)
     );
@@ -95,20 +95,72 @@ export class ApiService {
     const url = `${this.baseUrl}PaDeleteUserElementoAsignadoCtrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.delete<any>(url, { body: model })
+    return this.http.delete<any>(url, { body: model, headers })
     .pipe(
       map(response => response)
     );
   }
 
-  insertUserElementoAsignado(model:any): Observable<any>{
+  insertUserElementoAsignado(model: any): Observable<any> {
     const url = `${this.baseUrl}PaInsertUserElementoAsignadoCtrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post<any>(url, model)
-    .pipe(
-      map(response => response)
-    );
+    
+    return this.http.post<any>(url, model, { headers }) // Pasamos headers como opción separada
+      .pipe(
+        map(response => response)
+      );
+}
+
+
+  buscarUser2(model: any): Observable<any> {
+    const url = `${this.baseUrl}PaBscUser2Ctrl`;
+    const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(url, { params: model, headers })
+      .pipe(
+        map(response => response)
+      );
+  }
+
+  buscarEstacionTrabajo(model: any): Observable<any> {
+    const url = `${this.baseUrl}PaBscEstacionTrabajo2Ctrl`;
+    const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(url, {params: model, headers})
+      .pipe(
+        map(response => response)
+      );
+  }
+
+  buscarEmpresa(model: any): Observable<any> {
+    const url = `${this.baseUrl}PaBscEmpresa1Ctrl`;
+    const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(url, { params: model, headers })
+      .pipe(
+        map(response => response)
+      );
+  }
+
+  buscarApplication(model: any): Observable<any> {
+    const url = `${this.baseUrl}PaBscApplication1Ctrl`;
+    const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(url, { params: model, headers })
+      .pipe(
+        map(response => response)
+      );
+  }
+
+  buscarUserDisplay2(model: any): Observable<any> {
+    const url = `${this.baseUrl}PaBscUserDisplay2Ctrl`;
+    const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(url, { params: model, headers })
+      .pipe(
+        map(response => response)
+      );
   }
 
   verificarBaseUrl(urlApi: string): Observable<boolean> {

@@ -12,26 +12,35 @@
     </button>
   </div>
 
-  <!-- Carta de usuario -->
-  <div class="p-6 flex flex-col items-center bg-white/10 rounded-xl mt-6 mx-4">
-    <!-- Avatar del usuario -->
-    <div class="relative w-24 h-24 rounded-full overflow-hidden shadow-lg mb-4">
-      <img src="https://via.placeholder.com/150" alt="Avatar Usuario" class="w-full h-full object-cover">
-      <span class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
-    </div>
-
-    <!-- Nombre del usuario -->
-    <h5 class="text-white text-lg font-semibold mb-2">UserName</h5>
-    
-    <!-- Información del usuario -->
-    <p class="text-blue-200 text-sm text-center mb-4">
-     Informacion Adicional <br>
-      Hora de sesion
-    </p>
-
-    <!-- Botones de acción -->
-    <div class="flex justify-center space-x-4">
-      <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">Cerrar Sesión</button>
-    </div>
+<!-- Carta de usuario -->
+<div class="p-6 flex flex-col items-center bg-white/10 rounded-xl mt-6 mx-4">
+  <!-- Avatar del usuario -->
+  <div class="relative w-24 h-24 rounded-full overflow-hidden shadow-lg mb-4">
+    <img src="https://via.placeholder.com/150" alt="Avatar Usuario" class="w-full h-full object-cover">
+    <span class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
   </div>
+
+  <!-- Nombre del usuario -->
+  <h5 class="text-white text-lg font-semibold mb-2">{{user}}</h5>
+
+  <!-- Información del usuario reorganizada -->
+  <div class="text-gray-300 text-sm text-center mb-4">
+    <p>Información Adicional:</p>
+    <p>
+      <i class="fas fa-sign-in-alt"></i>
+      <strong> Hora de inicio sesión:</strong> {{horaInicioSesionFormatted}}
+    </p>
+    <p *ngIf="usandoHoraPerma">
+      <i class="fas fa-sign-out-alt"></i>
+      <strong> Hora de cierre sesión:</strong> {{fechaVencimientoToken}}
+    </p>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="flex justify-center space-x-4">
+    <button (click)="logout()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">Cerrar Sesión</button>
+  </div>
+</div>
+
+
 </aside>

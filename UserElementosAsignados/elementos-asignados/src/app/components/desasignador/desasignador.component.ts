@@ -36,6 +36,8 @@ export class DesasignadorComponent {
   }
 
   desasignarElementos(): void {
+    const user = this.apiService.getUser();
+    const empresa = this.apiService.getEmpresa();
     if (this.elementosAsignadosSeleccionado.length === 0) {
       alert("No hay elementos seleccionados para desasignar.");
       return;
@@ -43,7 +45,7 @@ export class DesasignadorComponent {
     this.isLoading = true; 
     const desasignaciones = this.elementosAsignadosSeleccionado.map(elemento => {
       const model = {
-        UserName: 'AUDITOR01',
+        UserName: user,
         Elemento_Asignado: elemento.elemento_Asignado,
         mensaje: '',
         resultado: false,

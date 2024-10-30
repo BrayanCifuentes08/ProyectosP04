@@ -13,6 +13,7 @@
     </button>
   
     <button 
+        *ngIf="tieneElementos"
         (click)="desasignarElemento()" 
         [ngClass]="{
             'bg-sky-700 shadow-lg scale-105': mostrarDesasignador, 
@@ -32,8 +33,6 @@
     </button>
   </div>
   
-
-
   <!-- Línea divisoria -->
   <hr class="border-t-2 border-gray-300 mb-6" />
 

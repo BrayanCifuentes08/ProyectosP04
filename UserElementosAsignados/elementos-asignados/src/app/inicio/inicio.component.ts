@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
-import { AsignadorComponent } from "../asignador/asignador.component";
-import { DesasignadorComponent } from "../desasignador/desasignador.component";
-import { CommonModule } from '@angular/common';
-import { UserElementoAsignadoM } from '../../models/user-elemento-asignado';
-import { ApiService } from '../../services/api.service';
-import { SharedService } from '../../services/shared.service';
-import { UtilidadService } from '../../services/utilidad.service';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { AsignadorComponent } from "../components/asignador/asignador.component";
+import { DesasignadorComponent } from "../components/desasignador/desasignador.component";
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { UserElementoAsignadoM } from '../models/user-elemento-asignado';
+import { ApiService } from '../services/api.service';
+import { SharedService } from '../services/shared.service';
+import { UtilidadService } from '../services/utilidad.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio',
@@ -14,22 +15,24 @@ import { UtilidadService } from '../../services/utilidad.service';
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
-export class InicioComponent {
+export default class InicioComponent {
   userElementosAsignados: UserElementoAsignadoM[] = [];
   userElementosAsignadosOriginal: UserElementoAsignadoM[] = [];
   isLoading: boolean = false; // Bandera para mostrar el spinner mientras cargan los datos
-  hayElementosSeleccionados: boolean = false; // Bandera para controlar si se ha seleccionado algún elemento
+  hayElementosCargados: boolean = false;
 
-  constructor(private apiService: ApiService, private sharedService: SharedService, private utilidadService: UtilidadService ) {}
+  constructor(private apiService: ApiService, private sharedService: SharedService, private utilidadService: UtilidadService,  ) {}
 
   ngOnInit(){
-    this.obtenerUserElementosAsignados()
+    this.obtenerUserElementosAsignados();
   }
 
   obtenerUserElementosAsignados(): void {
+    const user = this.apiService.getUser();
+    const empresa = this.apiService.getEmpresa();
     this.isLoading = true;
     const model = {
-      pUserName: 'AUDITOR01',
+      pUserName: user,
     };
     this.apiService.getUserElementoAsignado(model).subscribe({
       next: (data: UserElementoAsignadoM[]) => {
@@ -39,6 +42,8 @@ export class InicioComponent {
           fecha_Hora: this.utilidadService.formatFechaCompleta(new Date(elemento.fecha_Hora)),
         }));
         this.userElementosAsignadosOriginal = [...this.userElementosAsignados];
+        // Establecer la bandera
+        this.hayElementosCargados = this.userElementosAsignados.length > 0;
         this.isLoading = false;
         console.log('Elementos asignados', this.userElementosAsignados);
         this.sharedService.setUserElementosAsignados(this.userElementosAsignados);
@@ -62,6 +67,9 @@ export class InicioComponent {
         elemento.descripcion.toLowerCase().includes(input)
       );
     }
+    this.hayElementosCargados = this.userElementosAsignados.length > 0;
   }
   
+
+ 
 }

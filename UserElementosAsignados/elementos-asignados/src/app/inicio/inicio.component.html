@@ -1,6 +1,6 @@
 <!-- Contenedor principal -->
 <div class="mb-12">
-  <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+  <div *ngIf="hayElementosCargados" class="mb-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4">
     <div class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-base shadow-md">
       <h4 class="font-semibold flex items-center">
         No. Elementos asignados:
@@ -9,19 +9,28 @@
     </div>
     <div class="relative mt-2 sm:mt-0">
       <input
+      
         type="text"
         placeholder="Buscar elemento"
-        class="pl-8 pr-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:border-blue-400 focus:ring-0 text-gray-800 text-sm w-full sm:w-48 peer"
+        class="pl-10 pr-4 py-1.5 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-800 text-sm w-full sm:w-48 transition-all duration-300 peer shadow-sm hover:shadow-md"
         (input)="filtrarElementos($event)"
       />
-      <i class="fa-solid fa-magnifying-glass absolute left-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 peer-focus:text-blue-500 transition-colors duration-200"></i>
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 peer-focus:text-indigo-500 peer-hover:text-gray-600 transition-transform duration-200 ease-in-out peer-focus:scale-110"></i>
     </div>
+    
   </div>
 
   <div *ngIf="isLoading" class="flex flex-col justify-center items-center h-64">
     <div class="w-24 h-24 rounded-full animate-spin border-y-4 border-solid border-blue-500 border-t-transparent"></div>
-    <p class="mt-4 text-lg text-blue-gray-700">Cargando datos...</p> <!-- Texto adicional -->
+    <p class="mt-4 text-lg text-blue-gray-700">Cargando datos...</p>
   </div>
+
+  <!-- Mostrar tarjeta si no hay elementos asignados -->
+  <div *ngIf="!isLoading && !hayElementosCargados" class="p-4 border border-gray-300 rounded-lg shadow-md text-center">
+    <h3 class="text-lg font-semibold text-gray-700">No tienes elementos asignados</h3>
+    <p class="text-gray-600">Por favor, verifica más tarde.</p>
+  </div>
+
   <!-- Recuadros de información -->
   <div  class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
     <div class="col-span-1" *ngFor="let userElementos of userElementosAsignados; let i = index">
