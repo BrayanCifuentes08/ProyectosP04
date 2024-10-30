@@ -1,5 +1,5 @@
 <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4">
-  <div class="inline-flex items-center justify-center bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-base shadow-md">
+  <div class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full px-3 py-1 text-base shadow-md">
     <h4 class="font-semibold flex items-center">
       No. Elementos asignados:
       <span class="font-bold ml-1">{{ elementosNoAsignados.length }}</span>
@@ -9,10 +9,10 @@
     <input
       type="text"
       placeholder="Buscar elemento"
-      class="pl-10 pr-4 py-1.5 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-gray-800 text-sm w-full sm:w-48 transition-all duration-300 peer shadow-sm hover:shadow-md"
+      class="pl-10 pr-4 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700 text-sm w-full sm:w-48 transition-all duration-300 peer shadow-sm hover:shadow-md dark:shadow-gray-900"
       (input)="filtrarElementos($event)"
     />
-    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 peer-focus:text-indigo-500 peer-hover:text-gray-600 transition-transform duration-200 ease-in-out peer-focus:scale-110"></i>
+    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 dark:text-gray-300 peer-focus:text-indigo-500 dark:peer-focus:text-indigo-400 peer-hover:text-gray-600 dark:peer-hover:text-gray-400 transition-transform duration-200 ease-in-out peer-focus:scale-110"></i>
   </div>
 </div>
 
@@ -21,30 +21,30 @@
   
   <!-- Primer recuadro más grande: Lista de elementos seleccionables -->
   <div class="col-span-2 flex flex-col">
-    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md p-6 flex-grow">
+    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white dark:bg-gray-700 text-gray-700 dark:text-white shadow-md p-6 flex-grow">
       <div class="p-4 flex items-center justify-between flex-wrap gap-2">
         <h4 class="antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">
           Seleccionar Elementos
         </h4>
-        <label class="flex items-center gap-2 bg-gray-100 p-1.5 rounded-md hover:bg-blue-100 transition duration-200 ease-in-out cursor-pointer">
+        <label class="flex items-center gap-2 bg-gray-100 dark:bg-gray-600 p-1.5 rounded-md hover:bg-blue-100 transition duration-200 ease-in-out cursor-pointer">
           <input 
             type="checkbox" 
             class="form-checkbox text-blue-600 w-5 h-5" 
             [checked]="isAllSelected()" 
             (change)="toggleSelectAll($event)"
           />
-          <span class="text-sm font-medium text-gray-700">Seleccionar Todos</span>
+          <span class="text-sm font-medium text-gray-700 dark:text-white ">Seleccionar Todos</span>
         </label>
       </div>
 
-      <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow">
+      <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow dark:border-gray-500">
         <div class="grid grid-cols-2 gap-4">
           <div *ngIf="isLoadingDatos" class="col-span-2 flex flex-col justify-center items-center">
             <div class="w-8 h-8 rounded-full animate-spin border-y-4 border-solid border-blue-500 border-t-transparent"></div>
-            <p class="mt-2 text-gray-600">Cargando datos...</p>
+            <p class="mt-2 text-gray-600 dark:text-white">Cargando datos...</p>
           </div>
           <!-- Iterar sobre los elementos no asignados y mostrar su descripción -->
-          <label *ngFor="let elemento of elementosNoAsignados" class="flex items-center p-2 bg-gray-100 rounded-lg hover:bg-blue-100 transition duration-200 ease-in-out">
+          <label *ngFor="let elemento of elementosNoAsignados" class="flex items-center p-2 bg-gray-100 dark:bg-gray-600 rounded-lg hover:bg-blue-100 dark:hover:bg-gray-400 transition duration-200 ease-in-out">
             <input type="checkbox" class="form-checkbox text-blue-600" 
                   [checked]="isSelected(elemento)" (change)="seleccionElemento(elemento, $event)">
             <span class="ml-2">{{ elemento.descripcion }}</span> 
@@ -55,7 +55,7 @@
       <div class="mt-2 flex justify-end">
         <button *ngIf="mostrarBtnLimpiarSeleccion" 
                 (click)="limpiarSelecciones()" 
-                class="text-sm text-gray-700 border border-gray-300 rounded-md px-3 py-1 hover:bg-gray-100 hover:border-gray-500 transition duration-200 ease-in-out">
+                class="text-sm dark:bg-gray-600 text-gray-700  dark:text-white border dark:border-gray-500 border-gray-300 rounded-md px-3 py-1 hover:bg-gray-100 hover:border-gray-500 dark:hover:border-gray-300 transition duration-200 ease-in-out">
           Limpiar Selecciones
         </button>
       </div>
@@ -65,9 +65,9 @@
 
   <!-- Segundo recuadro más grande: Información de los elementos seleccionados -->
   <div class="col-span-2 flex flex-col">
-    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md p-6 flex-grow">
+    <div class="relative flex flex-col bg-clip-border rounded-xl bg-white dark:bg-gray-700 text-gray-700  shadow-md p-6 flex-grow">
       <div class="p-4 text-left">
-        <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-gray-800 mb-2">
+        <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-gray-800 dark:text-white">
           Información de Elementos Seleccionados
         </h4>
       
@@ -105,14 +105,14 @@
       </div>
       
       
-      <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow">
-        <div *ngIf="!hayElementosSeleccionados" class="text-gray-600">
+      <div class="border-t border-blue-gray-50 p-4 overflow-y-auto h-64 flex-grow dark:border-gray-500">
+        <div *ngIf="!hayElementosSeleccionados" class="text-gray-600 dark:text-white ">
           No se ha seleccionado ningún elemento.
         </div>
         <div *ngFor="let elemento of elementosSeleccionados" class="mb-4">
-          <h5 class="font-semibold text-lg">Elemento ID: {{ elemento.elemento_Asignado }}</h5> 
-          <div class="border-t border-blue-gray-200 mt-2">
-            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">Descripción: {{ elemento.descripcion }}</p> 
+          <h5 class="font-semibold text-lg dark:text-white ">Elemento ID: {{ elemento.elemento_Asignado }}</h5> 
+          <div class="border-t border-blue-gray-200 mt-2 dark:border-gray-500">
+            <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600 dark:text-white ">Descripción: {{ elemento.descripcion }}</p> 
           </div>
         </div>
       </div>
@@ -120,11 +120,15 @@
         <button 
           *ngIf="hayElementosSeleccionados"
           (click)="mostrarModalConfirmacion()"
-          class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg active:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-transform duration-200 ease-in-out"
+          class="bg-blue-500 text-white px-2 py-1 rounded shadow-md 
+                 hover:bg-blue-600 hover:scale-105 active:scale-95 focus:outline-none
+                 focus:ring-2 focus:ring-blue-300 transition-transform duration-200 ease-in-out
+                 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-500 dark:shadow-lg"
         >
           Confirmar asignación
         </button>
       </div>
+      
     </div>
   </div>
 </div>

@@ -2,39 +2,45 @@
 <div>
   <div class="flex flex-wrap justify-start sm:space-x-4 sm:space-y-0 space-y-2 mb-6 items-center w-full">
     <button 
-        (click)="asignarElemento()" 
-        [ngClass]="{
-            'bg-sky-700 shadow-lg scale-105': mostrarAsignador, 
-            'bg-blue-500': !mostrarAsignador
-        }" 
-        class="text-white px-2 py-1 rounded hover:bg-sky-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform"
+      (click)="asignarElemento()" 
+      [ngClass]="{
+        'bg-sky-700 shadow-lg scale-105': mostrarAsignador, 
+        'bg-blue-500': !mostrarAsignador
+      }" 
+      class="text-white px-2 py-1 rounded hover:bg-sky-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform 
+             dark:bg-blue-600 dark:hover:bg-blue-700 dark:shadow-lg"
     >
-        Asignar Elemento
+      Asignar Elemento
     </button>
   
     <button 
-        *ngIf="tieneElementos"
-        (click)="desasignarElemento()" 
-        [ngClass]="{
-            'bg-sky-700 shadow-lg scale-105': mostrarDesasignador, 
-            'bg-blue-500': !mostrarDesasignador
-        }" 
-        class="text-white px-2 py-1 rounded hover:bg-sky-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform"
+      *ngIf="tieneElementos"
+      (click)="desasignarElemento()" 
+      [ngClass]="{
+        'bg-sky-700 shadow-lg scale-105': mostrarDesasignador, 
+        'bg-blue-500': !mostrarDesasignador
+      }" 
+      class="text-white px-2 py-1 rounded hover:bg-sky-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform 
+             dark:bg-blue-600 dark:hover:bg-blue-700 dark:shadow-lg"
     >
-        Desasignar Elemento
+      Desasignar Elemento
     </button>
+  
     <button
       *ngIf="!mostrarInicio"
       (click)="volverInicio()"
-      class="bg-gray-800 text-white px-2 py-1 rounded hover:bg-gray-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform flex items-center justify-center gap-2 ml-auto"
+      class="bg-gray-800 text-white px-2 py-1 rounded hover:bg-gray-600 text-xs sm:text-sm w-full sm:w-auto transition-all duration-300 ease-in-out transform 
+             flex items-center justify-center gap-2 ml-auto 
+             dark:bg-gray-700 dark:hover:bg-gray-500 dark:text-gray-200"
     >
-    <i class="fa-solid fa-house ml-1"></i>
+      <i class="fa-solid fa-house ml-1"></i>
       Volver al Inicio
     </button>
   </div>
   
+  
   <!-- Línea divisoria -->
-  <hr class="border-t-2 border-gray-300 mb-6" />
+  <hr class="border-t-2 border-gray-300 dark:border-gray-500 mb-6" />
 
   <!-- Componente de Asignador y Desasignador -->
   <div class="flex justify-between">

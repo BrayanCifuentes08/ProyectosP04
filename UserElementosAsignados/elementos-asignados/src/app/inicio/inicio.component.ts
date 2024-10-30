@@ -67,7 +67,6 @@ export default class InicioComponent {
         elemento.descripcion.toLowerCase().includes(input)
       );
     }
-    this.hayElementosCargados = this.userElementosAsignados.length > 0;
   }
   
 
