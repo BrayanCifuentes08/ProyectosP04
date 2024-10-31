@@ -7,11 +7,12 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { MessagesComponent } from "../../messages/messages.component";
 import { SpinnerComponent } from "../../spinner/spinner.component";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-asignador',
   standalone: true,
-  imports: [CommonModule, MessagesComponent, SpinnerComponent],
+  imports: [CommonModule, MessagesComponent, SpinnerComponent, TranslateModule],
   templateUrl: './asignador.component.html',
   styleUrl: './asignador.component.css'
 })
@@ -31,7 +32,7 @@ export class AsignadorComponent {
   @Output() mensajeExito = new EventEmitter<string>(); 
   @Output() mensajeError = new EventEmitter<string>();
   
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router, private translate: TranslateService) {}
 
   ngOnInit(): void {
     this.obtenerElementosNoAsignados();
@@ -57,13 +58,11 @@ export class AsignadorComponent {
   asignarElementos(): void {
     const user = this.apiService.getUser();
     const empresa = this.apiService.getEmpresa();
-    console.log("Iniciando la asignación de elementos.");
     if (this.elementosSeleccionados.length === 0) {
       alert("No hay elementos seleccionados para asignar.");
       return;
     }
     this.isLoading = true;
-    console.log("Elementos seleccionados:", this.elementosSeleccionados);
     const asignaciones = this.elementosSeleccionados.map(elemento => {
       const model = {
         UserName: user,
@@ -76,8 +75,6 @@ export class AsignadorComponent {
 
     forkJoin(asignaciones).subscribe({
       next: results => {
-        console.log("Resultados de asignación:", results);
-
         const errores = results
           .flat()
           .filter((result: any) => !result.resultado);
@@ -87,10 +84,11 @@ export class AsignadorComponent {
           console.error("Errores:", mensaje);
           this.mensajeError.emit(mensaje); // Emitimos el mensaje de error
         } else {
-          console.log("Elementos asignados correctamente:", results);
           this.elementosSeleccionados = [];
           this.mostrarBtnLimpiarSeleccion = false;
-          this.mensajeExito.emit('Elementos asignados correctamente.');
+          this.translate.get('infoTextos.elementosAsignadosCorrectamente').subscribe(translatedMessage => {
+            this.mensajeExito.emit(translatedMessage);
+          });
         }
         this.onRegresar();
         this.isLoading = false;

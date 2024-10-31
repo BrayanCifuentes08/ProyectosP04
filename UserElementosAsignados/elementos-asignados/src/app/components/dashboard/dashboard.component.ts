@@ -9,12 +9,13 @@ import InicioComponent from '../../inicio/inicio.component';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { UserElementoAsignadoM } from '../../models/user-elemento-asignado';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [InicioComponent, AsignadorComponent, DesasignadorComponent, CommonModule, MessagesComponent],
+  imports: [TranslateModule, InicioComponent, AsignadorComponent, DesasignadorComponent, CommonModule, MessagesComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -22,7 +23,7 @@ export default class DashboardComponent {
   mostrarAsignador: boolean = false;
   mostrarDesasignador: boolean = false;
   mostrarInicio: boolean = true;
-  headerText: string = 'Inicio';
+  headerText: string = 'labels.componenteInicio';
   isVisibleExito: boolean = false;
   mensajeExito: string = ''; 
   isVisibleAlerta: boolean = false;
@@ -41,6 +42,7 @@ export default class DashboardComponent {
   }
 
   ngOnInit(){
+    
     this.sharedService.userElementosAsignados$.subscribe((elementos) => {
       this.elementosAsignadosInicio = elementos;
       this.tieneElementos = elementos.length > 0;;
@@ -91,7 +93,9 @@ export default class DashboardComponent {
       this.mostrarAsignador = true;
       this.mostrarDesasignador = false;
       this.mostrarInicio = false;
-      this.sharedService.changeHeaderText('Asignar');
+    // Cambia el headerText a la clave de traducción
+    this.headerText = 'labels.componenteAsignar';
+    this.sharedService.changeHeaderText(this.headerText);
     }
   }
 
@@ -102,7 +106,9 @@ export default class DashboardComponent {
       this.mostrarDesasignador = true;
       this.mostrarAsignador = false;
       this.mostrarInicio = false;
-      this.sharedService.changeHeaderText('Desasignar');
+    // Cambia el headerText a la clave de traducción
+    this.headerText = 'labels.componenteDesasignar';
+    this.sharedService.changeHeaderText(this.headerText)
     }
   }
 
@@ -135,7 +141,9 @@ export default class DashboardComponent {
     this.mostrarAsignador = false;
     this.mostrarDesasignador = false;
     this.mostrarInicio = true;
-    this.sharedService.changeHeaderText('Inicio');
+    // Cambia el headerText a la clave de traducción
+    this.headerText = 'labels.componenteInicio';
+    this.sharedService.changeHeaderText(this.headerText)
   }
 
   limpiarSessionStorageYRedirigir(): void {
