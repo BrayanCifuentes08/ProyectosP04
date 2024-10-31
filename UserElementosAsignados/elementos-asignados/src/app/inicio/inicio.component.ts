@@ -8,11 +8,12 @@ import { SharedService } from '../services/shared.service';
 import { UtilidadService } from '../services/utilidad.service';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [AsignadorComponent, DesasignadorComponent,CommonModule, TranslateModule],
+  imports: [AsignadorComponent, DesasignadorComponent,CommonModule, TranslateModule, FormsModule],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
@@ -21,6 +22,7 @@ export default class InicioComponent {
   userElementosAsignadosOriginal: UserElementoAsignadoM[] = [];
   isLoading: boolean = false; // Bandera para mostrar el spinner mientras cargan los datos
   hayElementosCargados: boolean = false;
+  searchTerm: string = '';
 
   constructor(private apiService: ApiService, private sharedService: SharedService, private utilidadService: UtilidadService,  ) {}
 
@@ -70,6 +72,10 @@ export default class InicioComponent {
     }
   }
   
-
+  clearInput(inputElement: HTMLInputElement): void {
+    this.searchTerm = ''; // Limpiar el contenido
+    inputElement.focus(); // Volver a enfocar el input
+    this.userElementosAsignados = [...this.userElementosAsignadosOriginal]; // Restaurar todos los elementos
+  }
  
 }

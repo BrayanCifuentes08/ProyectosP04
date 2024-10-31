@@ -7,11 +7,12 @@ import { forkJoin } from 'rxjs';
 import { MessagesComponent } from "../../messages/messages.component";
 import { SpinnerComponent } from "../../spinner/spinner.component";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-desasignador',
   standalone: true,
-  imports: [CommonModule, MessagesComponent, SpinnerComponent, TranslateModule],
+  imports: [CommonModule, MessagesComponent, SpinnerComponent, TranslateModule, FormsModule],
   templateUrl: './desasignador.component.html',
   styleUrl: './desasignador.component.css'
 })
@@ -28,6 +29,7 @@ export class DesasignadorComponent {
   @Output() mensajeExito = new EventEmitter<string>(); 
   @Output() mensajeError = new EventEmitter<string>();
   private elementosAsignadosOriginal: UserElementoAsignadoM[] = [];
+  searchTerm: string = '';
 
   ngOnInit(): void {
     this.sharedService.userElementosAsignados$.subscribe((elementos) => {
@@ -158,4 +160,10 @@ export class DesasignadorComponent {
     }
   }
       
+   
+  clearInput(inputElement: HTMLInputElement): void {
+    this.searchTerm = ''; // Limpiar el contenido
+    inputElement.focus(); // Volver a enfocar el input
+    this.elementosAsignadosInicio = [...this.elementosAsignadosOriginal]; // Restaurar todos los elementos
+  }
 }

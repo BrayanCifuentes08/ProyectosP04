@@ -11,11 +11,24 @@
       <input
         type="text"
         placeholder="{{'labels.buscarElemento' | translate}}"
-        class="pl-10 pr-4 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 text-sm w-full sm:w-48 transition-all duration-300 peer shadow-sm hover:shadow-md dark:shadow-gray-900"
+        class="pl-10 pr-10 py-1.5 rounded-lg border border-gray-400 focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 text-gray-800 dark:text-gray-200 bg-transparent text-sm w-full sm:w-48 transition-all duration-300 peer shadow-sm hover:shadow-md dark:shadow-gray-900"
         (input)="filtrarElementos($event)"
+        [(ngModel)]="searchTerm"
+        #inputBuscar
       />
       <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 dark:text-gray-300 peer-focus:text-indigo-500 dark:peer-focus:text-indigo-400 peer-hover:text-gray-600 dark:peer-hover:text-gray-400 transition-transform duration-200 ease-in-out peer-focus:scale-110"></i>
+      
+      <!-- Icono para limpiar el input -->
+      <button
+        type="button"
+        class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 dark:text-gray-300 hover:text-red-500 transition duration-200 ease-in-out"
+        *ngIf="searchTerm" 
+        (click)="clearInput(inputBuscar)" 
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
+    
     
   </div>
 

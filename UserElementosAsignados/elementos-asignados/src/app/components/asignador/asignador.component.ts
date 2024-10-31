@@ -8,11 +8,12 @@ import { forkJoin } from 'rxjs';
 import { MessagesComponent } from "../../messages/messages.component";
 import { SpinnerComponent } from "../../spinner/spinner.component";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-asignador',
   standalone: true,
-  imports: [CommonModule, MessagesComponent, SpinnerComponent, TranslateModule],
+  imports: [CommonModule, MessagesComponent, SpinnerComponent, TranslateModule, FormsModule],
   templateUrl: './asignador.component.html',
   styleUrl: './asignador.component.css'
 })
@@ -31,7 +32,7 @@ export class AsignadorComponent {
   @Output() regresar = new EventEmitter<void>();
   @Output() mensajeExito = new EventEmitter<string>(); 
   @Output() mensajeError = new EventEmitter<string>();
-  
+  searchTerm: string = '';
   constructor(private apiService: ApiService, private router: Router, private translate: TranslateService) {}
 
   ngOnInit(): void {
@@ -177,4 +178,10 @@ export class AsignadorComponent {
     }
   }
   
+   
+  clearInput(inputElement: HTMLInputElement): void {
+    this.searchTerm = ''; // Limpiar el contenido
+    inputElement.focus(); // Volver a enfocar el input
+    this.elementosNoAsignados = [...this.elementosNoAsignadosOriginal]; // Restaurar todos los elementos
+  }
 }

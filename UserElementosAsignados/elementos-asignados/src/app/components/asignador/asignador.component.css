@@ -1,0 +1,19 @@
+/* Para navegadores web que soportan pseudo-elementos de scroll */
+.scroll-container::-webkit-scrollbar {
+    width: 8px; /* ancho de la barra de desplazamiento */
+  }
+  
+  .scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* color del fondo de la pista */
+    border-radius: 10px; /* bordes redondeados de la pista */
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb {
+    background: #888; /* color del "pulgar" (la parte que arrastras) */
+    border-radius: 10px; /* bordes redondeados del "pulgar" */
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* color del "pulgar" cuando se pasa el mouse sobre él */
+  }
+  
