@@ -26,7 +26,7 @@
         <label class="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 p-1.5 rounded-md hover:bg-blue-100 transition duration-200 ease-in-out cursor-pointer">
           <input 
             type="checkbox" 
-            class="form-checkbox text-blue-600 w-5 h-5" 
+            class="relative w-5 h-5 aspect-square !appearance-none !bg-none checked:!bg-gradient-to-tr checked:!from-sky-400 checked:!to-white bg-white border border-gray-300 shadow-sm rounded !outline-none !ring-0 !text-transparent !ring-offset-0 checked:!border-sky-400 hover:!border-sky-400 cursor-pointer transition-all duration-300 ease-in-out focus-visible:!outline-offset-2 focus-visible:!outline-2 focus-visible:!outline-sky-400/30 focus-visible:border-sky-400 after:w-[35%] after:h-[53%] after:absolute after:opacity-0 after:top-[40%] after:left-[50%] after:-translate-x-2/4 after:-translate-y-2/4 after:rotate-[25deg] after:drop-shadow-[1px_0.5px_1px_rgba(56,149,248,0.5)] after:border-r-[0.20em] after:border-r-white after:border-b-[0.20em] after:border-b-white after:transition-all after:duration-200 after:ease-linear checked:after:opacity-100 checked:after:rotate-45"
             [checked]="isAllSelected()" 
             (change)="toggleSelectAll($event)"
           />
@@ -41,7 +41,8 @@
             <p class="mt-2 text-gray-600 dark:text-white">{{'labels.cargandoDatos' | translate}}...</p>
           </div>
           <label *ngFor="let elemento of elementosAsignadosInicio" class="flex items-center p-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-blue-100 dark:hover:bg-gray-600 transition duration-200 ease-in-out">
-            <input type="checkbox" class="form-checkbox text-blue-600" 
+            <input type="checkbox" 
+            class="relative w-4 h-4 aspect-square !appearance-none !bg-none checked:!bg-gradient-to-tr checked:!from-sky-400 checked:!to-white bg-white border border-gray-300 shadow-sm rounded !outline-none !ring-0 !text-transparent !ring-offset-0 checked:!border-sky-400 hover:!border-sky-400 cursor-pointer transition-all duration-300 ease-in-out focus-visible:!outline-offset-2 focus-visible:!outline-2 focus-visible:!outline-sky-400/30 focus-visible:border-sky-400 after:w-[35%] after:h-[53%] after:absolute after:opacity-0 after:top-[40%] after:left-[50%] after:-translate-x-2/4 after:-translate-y-2/4 after:rotate-[25deg] after:drop-shadow-[1px_0.5px_1px_rgba(56,149,248,0.5)] after:border-r-[0.17em] after:border-r-white after:border-b-[0.17em] after:border-b-white after:transition-all after:duration-200 after:ease-linear checked:after:opacity-100 checked:after:rotate-45" 
             [checked]="isSelected(elemento)" (change)="seleccionElemento(elemento, $event)">
             <span class="ml-2">{{ elemento.descripcion }}</span>
           </label>
