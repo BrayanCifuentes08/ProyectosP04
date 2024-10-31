@@ -250,6 +250,306 @@ class S {
     );
   }
 
+  /// `If you swipe again, you will exit the application.`
+  String get layoutSiVuelvesADeslizar {
+    return Intl.message(
+      'If you swipe again, you will exit the application.',
+      name: 'layoutSiVuelvesADeslizar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Up`
+  String get layoutSubir {
+    return Intl.message(
+      'Up',
+      name: 'layoutSubir',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Down`
+  String get layoutBajar {
+    return Intl.message(
+      'Down',
+      name: 'layoutBajar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connection error`
+  String get dashboardErrorConexion {
+    return Intl.message(
+      'Connection error',
+      name: 'dashboardErrorConexion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The data could not be retrieved. Please check your connection and try again.`
+  String get dashboardNoSePudoRecuperarLaInformacion {
+    return Intl.message(
+      'The data could not be retrieved. Please check your connection and try again.',
+      name: 'dashboardNoSePudoRecuperarLaInformacion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get dashboardReintentar {
+    return Intl.message(
+      'Retry',
+      name: 'dashboardReintentar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assign`
+  String get dashboardAsignar {
+    return Intl.message(
+      'Assign',
+      name: 'dashboardAsignar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assign elements`
+  String get dashboardAsignarElementos {
+    return Intl.message(
+      'Assign elements',
+      name: 'dashboardAsignarElementos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unassign`
+  String get dashboardDesasignar {
+    return Intl.message(
+      'Unassign',
+      name: 'dashboardDesasignar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unassign elements`
+  String get dashboardDesasignarElementos {
+    return Intl.message(
+      'Unassign elements',
+      name: 'dashboardDesasignarElementos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back to home`
+  String get dashboardVolverAlInicio {
+    return Intl.message(
+      'Back to home',
+      name: 'dashboardVolverAlInicio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no assigned elements`
+  String get dashboardNoHayElementosAsignados {
+    return Intl.message(
+      'There are no assigned elements',
+      name: 'dashboardNoHayElementosAsignados',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `has no element assigned to him.`
+  String get dashboardNoTieneNingunElementoAsignado {
+    return Intl.message(
+      'has no element assigned to him.',
+      name: 'dashboardNoTieneNingunElementoAsignado',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refresh`
+  String get dashboardRefrescar {
+    return Intl.message(
+      'Refresh',
+      name: 'dashboardRefrescar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search element...`
+  String get dashboardBuscarElemento {
+    return Intl.message(
+      'Search element...',
+      name: 'dashboardBuscarElemento',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No. of elements assigned:`
+  String get dashboardNoElementosAsignados {
+    return Intl.message(
+      'No. of elements assigned:',
+      name: 'dashboardNoElementosAsignados',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Session`
+  String get dashboardSesion {
+    return Intl.message(
+      'Session',
+      name: 'dashboardSesion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expires`
+  String get dashboardExpira {
+    return Intl.message(
+      'Expires',
+      name: 'dashboardExpira',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Element`
+  String get asignadorElemento {
+    return Intl.message(
+      'Element',
+      name: 'asignadorElemento',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `assigned correctly`
+  String get asignadorAsignadoCorrectamente {
+    return Intl.message(
+      'assigned correctly',
+      name: 'asignadorAsignadoCorrectamente',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No. of unassigned elements:`
+  String get asignadorNoElementosSinAsignar {
+    return Intl.message(
+      'No. of unassigned elements:',
+      name: 'asignadorNoElementosSinAsignar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deselect All`
+  String get asignadorDeseleccionarTodos {
+    return Intl.message(
+      'Deselect All',
+      name: 'asignadorDeseleccionarTodos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select All`
+  String get asignadorSeleccionarTodos {
+    return Intl.message(
+      'Select All',
+      name: 'asignadorSeleccionarTodos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear selections`
+  String get asignadorLimpiarSelecciones {
+    return Intl.message(
+      'Clear selections',
+      name: 'asignadorLimpiarSelecciones',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected elements`
+  String get asignadorElementosSeleccionados {
+    return Intl.message(
+      'Selected elements',
+      name: 'asignadorElementosSeleccionados',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `selected`
+  String get asignadorSeleccionados {
+    return Intl.message(
+      'selected',
+      name: 'asignadorSeleccionados',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Element no.`
+  String get asignadorElementoNo {
+    return Intl.message(
+      'Element no.',
+      name: 'asignadorElementoNo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Assignment`
+  String get asignadorConfirmarAsignacion {
+    return Intl.message(
+      'Confirm Assignment',
+      name: 'asignadorConfirmarAsignacion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `correctly unassigned`
+  String get desasignadorDesasignadoCorrectamente {
+    return Intl.message(
+      'correctly unassigned',
+      name: 'desasignadorDesasignadoCorrectamente',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Unassignment`
+  String get desasignadorConfirmarDesasignacion {
+    return Intl.message(
+      'Confirm Unassignment',
+      name: 'desasignadorConfirmarDesasignacion',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Warning`
   String get mensajesAdvertencia {
     return Intl.message(
@@ -340,11 +640,31 @@ class S {
     );
   }
 
-  /// `Maintenance`
-  String get splashMantenimiento {
+  /// `Do you want to assign this item?`
+  String get mensajesDeseaAsignarEsteElemento {
     return Intl.message(
-      'Maintenance',
-      name: 'splashMantenimiento',
+      'Do you want to assign this item?',
+      name: 'mensajesDeseaAsignarEsteElemento',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to unassign this item?`
+  String get mensajesDeseaDesasignarEsteElemento {
+    return Intl.message(
+      'Do you want to unassign this item?',
+      name: 'mensajesDeseaDesasignarEsteElemento',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assigned Elements`
+  String get splashElementosAsignados {
+    return Intl.message(
+      'Assigned Elements',
+      name: 'splashElementosAsignados',
       desc: '',
       args: [],
     );
@@ -445,6 +765,26 @@ class S {
     return Intl.message(
       'Loading data...',
       name: 'loadingCargando',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Template`
+  String get seleccionFondoSeleccionarPlantilla {
+    return Intl.message(
+      'Select Template',
+      name: 'seleccionFondoSeleccionarPlantilla',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove Background`
+  String get seleccionFondoQuitarFondo {
+    return Intl.message(
+      'Remove Background',
+      name: 'seleccionFondoQuitarFondo',
       desc: '',
       args: [],
     );

@@ -2,7 +2,6 @@
   "@@locale": "es",
   "locale": "es",
 
-
   "loginDebeIngresarElUsuario":                                "Debe ingresar el usuario",
   "loginDebeIngresarLaContrasena":                             "Debe ingresar la contraseña",
   "loginIngresarURL":                                          "Ingrese aquí su URL",
@@ -13,34 +12,63 @@
   "loginConfirmar":                                            "Confirmar",
   "loginIniciarSesion":                                        "Iniciar Sesión",
   "loginUsuario":                                              "Usuario",
-  "loginIngresaUsuario": "Ingresa tu usuario",
-  "loginContrasena": "Contraseña",
-  "loginIngresaContrasena": "Ingresa tu contraseña",
-  "loginGuardarSesion": "Guardar Sesión",
-  "loginSeleccionarEstacionTrabajo" : "Seleccione una estación de trabajo",
-  "loginSeleccionarEmpresa": "Seleccione una empresa",
-  "loginSeleccionarAplicacion": "Seleccione una aplicación",
-  "loginSeleccionarDisplay": "Seleccione Displays",
+  "loginIngresaUsuario":                                       "Ingresa tu usuario",
+  "loginContrasena":                                           "Contraseña",
+  "loginIngresaContrasena":                                    "Ingresa tu contraseña",
+  "loginGuardarSesion":                                        "Guardar Sesión",
+  "loginSeleccionarEstacionTrabajo" :                          "Seleccione una estación de trabajo",
+  "loginSeleccionarEmpresa":                                   "Seleccione una empresa",
+  "loginSeleccionarAplicacion":                                "Seleccione una aplicación",
+  "loginSeleccionarDisplay":                                   "Seleccione Displays",
   "loginIngresar":                                             "Ingresar",
 
+  "layoutSiVuelvesADeslizar":                                  "Si vuelves a deslizar, saldrás de la aplicación.",
+  "layoutSubir":                                               "Subir",
+  "layoutBajar":                                               "Bajar",
 
+  "dashboardErrorConexion":                                    "Error de conexión",
+  "dashboardNoSePudoRecuperarLaInformacion":                   "No se pudo recuperar la información. Por favor, revise su conexión e intente nuevamente.",
+  "dashboardReintentar":                                       "Reintentar",
+  "dashboardAsignar":                                          "Asignar",
+  "dashboardAsignarElementos":                                 "Asignar elementos",
+  "dashboardDesasignar":                                       "Desasignar",
+  "dashboardDesasignarElementos":                              "Desasignar elementos",
+  "dashboardVolverAlInicio":                                   "Volver al inicio",
+  "dashboardNoHayElementosAsignados":                          "No hay elementos asignados",
+  "dashboardNoTieneNingunElementoAsignado":                    "no tiene ningún elemento asignado.",
+  "dashboardRefrescar":                                        "Refrescar",
+  "dashboardBuscarElemento":                                   "Buscar elemento...",
+  "dashboardNoElementosAsignados":                             "No. elementos asignados:",
+  "dashboardSesion":                                           "Sesión",
+  "dashboardExpira":                                           "Expira",
 
+  "asignadorElemento":                                         "Elemento",
+  "asignadorAsignadoCorrectamente":                            "asignado correctamente",
+  "asignadorNoElementosSinAsignar":                            "No. elementos sin asignar:",
+  "asignadorDeseleccionarTodos":                               "Deseleccionar Todos",
+  "asignadorSeleccionarTodos":                                 "Seleccionar Todos",
+  "asignadorLimpiarSelecciones":                               "Limpiar selecciones",
+  "asignadorElementosSeleccionados":                           "Elementos seleccionados",
+  "asignadorSeleccionados":                                    "seleccionados",
+  "asignadorElementoNo":                                       "Elemento no.",
+  "asignadorConfirmarAsignacion":                              "Confirmar Asignación",
 
-
-
-  "mensajesAdvertencia":                                          "Advertencia",
-  "mensajesAceptar":                                              "Aceptar",
-  "mensajesConfirmarCreacion":                                    "Confirmar creación:",
-  "mensajesConfimar":                                             "Confirmar",
-  "mensajesCancelar": "Cancelar",
-  "mensajesCerrarSesion": "Cerrar sesión",
-  "mensajesUsuario": "Usuario",
-  "mensajesSesionGuardadaEl": "Sesión guardada el",
-  "mensajesSesionExpiraEl": "Sesión expira el",
+  "desasignadorDesasignadoCorrectamente":                      "desasignado correctamente",
+  "desasignadorConfirmarDesasignacion":                        "Confirmar Desasignación",
   
+  "mensajesAdvertencia":                                       "Advertencia",
+  "mensajesAceptar":                                           "Aceptar",
+  "mensajesConfirmarCreacion":                                 "Confirmar creación:",
+  "mensajesConfimar":                                          "Confirmar",
+  "mensajesCancelar":                                          "Cancelar",
+  "mensajesCerrarSesion":                                      "Cerrar sesión",
+  "mensajesUsuario":                                           "Usuario",
+  "mensajesSesionGuardadaEl":                                  "Sesión guardada el",
+  "mensajesSesionExpiraEl":                                    "Sesión expira el",
+  "mensajesDeseaAsignarEsteElemento":                          "¿Desea asignar este elemento?",
+  "mensajesDeseaDesasignarEsteElemento":                       "¿Desea desasignar este elemento?",
 
-
-  "splashMantenimiento":                                       "Mantenimiento",
+  "splashElementosAsignados":                                  "Elementos Asignados",
                   
   "inicioBienvenido":                                          "Bienvenido al Sistema de Mantenimiento de Catálogos",
   "inicioCerrarSesion":                                        "Cerrar Sesión",
@@ -53,6 +81,8 @@
   "drawerIdioma":                                              "Idioma",
   "drawerPlantilla":                                           "PLANTILLA",
                   
-  "loadingCargando":                                           "Cargando datos..."
+  "loadingCargando":                                           "Cargando datos...",
   
+  "seleccionFondoSeleccionarPlantilla":                        "Seleccionar Plantilla",
+  "seleccionFondoQuitarFondo":                                 "Quitar Fondo"
 }

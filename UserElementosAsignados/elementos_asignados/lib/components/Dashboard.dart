@@ -203,7 +203,7 @@ class _DashboardState extends State<Dashboard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Error de conexión',
+                            S.of(context).dashboardErrorConexion,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -212,7 +212,9 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            'No se pudo recuperar la información. Por favor, revise su conexión e intente nuevamente.',
+                            S
+                                .of(context)
+                                .dashboardNoSePudoRecuperarLaInformacion,
                             style:
                                 TextStyle(fontSize: 14, color: Colors.black87),
                             textAlign: TextAlign.center,
@@ -224,7 +226,7 @@ class _DashboardState extends State<Dashboard> {
                               _getUserElementosAsignados();
                             },
                             child: Text(
-                              'Reintentar',
+                              S.of(context).dashboardReintentar,
                               style: TextStyle(color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
@@ -261,16 +263,18 @@ class _DashboardState extends State<Dashboard> {
                                 isDesasignarElemento = true;
                                 mostrarGridElementosUsuario = isAsignarElemento;
                                 if (mostrarGridElementosUsuario) {
+                                  searchController.clear();
                                   _getUserElementosAsignados();
                                   accionService
                                       .setAccion(S.of(context).inicioInicio);
                                 } else if (!isAsignarElemento) {
-                                  accionService.setAccion("Asignar");
+                                  accionService.setAccion(
+                                      S.of(context).dashboardAsignar);
                                 }
                               });
                             },
                             child: Text(
-                              'Asignar elementos',
+                              S.of(context).dashboardAsignarElementos,
                               style: TextStyle(color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
@@ -289,16 +293,18 @@ class _DashboardState extends State<Dashboard> {
                                   mostrarGridElementosUsuario =
                                       isDesasignarElemento;
                                   if (mostrarGridElementosUsuario) {
+                                    searchController.clear();
                                     _getUserElementosAsignados();
                                     accionService
                                         .setAccion(S.of(context).inicioInicio);
                                   } else if (!isDesasignarElemento) {
-                                    accionService.setAccion("Desasignar");
+                                    accionService.setAccion(
+                                        S.of(context).dashboardDesasignar);
                                   }
                                 });
                               },
                               child: Text(
-                                'Desasignar elementos',
+                                S.of(context).dashboardDesasignarElementos,
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
@@ -310,7 +316,8 @@ class _DashboardState extends State<Dashboard> {
                           if (_elementosAsignados.isNotEmpty &&
                                   !isDesasignarElemento ||
                               _elementosAsignados.isNotEmpty &&
-                                  !isAsignarElemento)
+                                  !isAsignarElemento ||
+                              _elementosAsignados.isEmpty && !isAsignarElemento)
                             ElevatedButton.icon(
                               onPressed: () async {
                                 setState(() {
@@ -327,7 +334,7 @@ class _DashboardState extends State<Dashboard> {
                                           idiomaDropDown: widget.idiomaDropDown,
                                           temaClaro: themeNotifier.temaClaro,
                                           baseUrl: widget.baseUrl,
-                                          pUserName: 'AUDITOR01',
+                                          pUserName: widget.pUserName,
                                           token: widget.token,
                                           pEmpresa: widget.pEmpresa,
                                           pEstacion_Trabajo:
@@ -355,7 +362,7 @@ class _DashboardState extends State<Dashboard> {
                                   color: Colors.white,
                                   size: 15), // Ícono de casa
                               label: Text(
-                                'Volver al inicio',
+                                S.of(context).dashboardVolverAlInicio,
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
@@ -384,7 +391,7 @@ class _DashboardState extends State<Dashboard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'No hay elementos asignados',
+                            S.of(context).dashboardNoHayElementosAsignados,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -393,7 +400,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            '${widget.pUserName} no tiene ningún elemento asignado.',
+                            '${widget.pUserName} ${S.of(context).dashboardNoTieneNingunElementoAsignado}',
                             style:
                                 TextStyle(fontSize: 14, color: Colors.black87),
                             textAlign: TextAlign.center,
@@ -405,7 +412,7 @@ class _DashboardState extends State<Dashboard> {
                               _getUserElementosAsignados();
                             },
                             child: Text(
-                              'Refrescar',
+                              S.of(context).dashboardRefrescar,
                               style: TextStyle(color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
@@ -433,7 +440,7 @@ class _DashboardState extends State<Dashboard> {
                         fontSize: 16,
                       ),
                       decoration: InputDecoration(
-                          hintText: 'Buscar elemento...',
+                          hintText: S.of(context).dashboardBuscarElemento,
                           hintStyle: TextStyle(
                             color: !themeNotifier.temaClaro
                                 ? Color.fromARGB(255, 92, 122, 163)
@@ -486,7 +493,7 @@ class _DashboardState extends State<Dashboard> {
                       alignment: Alignment.centerLeft,
                       child: Chip(
                         label: Text(
-                          'No. elementos asignados: ${_elementosAsignados.length}',
+                          '${S.of(context).dashboardNoElementosAsignados} ${_elementosAsignados.length}',
                           style: TextStyle(
                             color: !themeNotifier.temaClaro
                                 ? Colors.white60
@@ -614,13 +621,13 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             SizedBox(height: 10),
-            Text('Sesión: $sessionStart',
+            Text('${S.of(context).dashboardSesion}: $sessionStart',
                 style: TextStyle(
                     color: !themeNotifier.temaClaro
                         ? Colors.white
                         : Colors.black)),
             if (sessionEnd != null)
-              Text('Expira: $sessionEnd',
+              Text('${S.of(context).dashboardExpira}: $sessionEnd',
                   style: TextStyle(
                       color: !themeNotifier.temaClaro
                           ? Colors.white

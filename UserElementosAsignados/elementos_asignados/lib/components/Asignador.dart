@@ -4,6 +4,7 @@ import 'package:elementos_asignados/common/Loading.dart';
 import 'package:elementos_asignados/common/Mensajes.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Layout.dart';
+import 'package:elementos_asignados/generated/l10n.dart';
 import 'package:elementos_asignados/models/PaBscElementosNoAsignadosM.dart';
 import 'package:elementos_asignados/models/PaInsertUserElementoAsignadoM.dart';
 import 'package:flutter/material.dart';
@@ -205,14 +206,13 @@ class _AsignadorState extends State<Asignador> {
                   errorOccurred = false;
                   _mostrarMensajeScaffold(
                       context,
-                      "Elemento ${elemento!.descripcion} asignado correctamente",
+                      "${S.of(context).asignadorElemento} ${elemento!.descripcion} ${S.of(context).asignadorAsignadoCorrectamente}",
                       MdiIcons.checkboxMarkedCircle,
                       Color(0xFFF15803D),
                       Color(0xFFF15803D),
                       Color(0xFFFDCFCE7),
                       Duration(seconds: 2));
                 }
-
                 if (!_infoAsignacion[0].resultado) {
                   errorOccurred = true;
                   _mostrarMensajeScaffold(
@@ -327,7 +327,7 @@ class _AsignadorState extends State<Asignador> {
                   fontSize: 16,
                 ),
                 decoration: InputDecoration(
-                    hintText: 'Buscar elemento...',
+                    hintText: S.of(context).dashboardBuscarElemento,
                     hintStyle: TextStyle(
                       color: !themeNotifier.temaClaro
                           ? Color.fromARGB(255, 92, 122, 163)
@@ -376,7 +376,7 @@ class _AsignadorState extends State<Asignador> {
                 alignment: Alignment.centerLeft,
                 child: Chip(
                   label: Text(
-                    'No. elementos sin asignar: ${_elementosNoAsignados.length}',
+                    '${S.of(context).asignadorNoElementosSinAsignar} ${_elementosNoAsignados.length}',
                     style: TextStyle(
                       color: !themeNotifier.temaClaro
                           ? Colors.white60
@@ -423,12 +423,13 @@ class _AsignadorState extends State<Asignador> {
               ),
               child: Column(
                 children: [
+                  //LISTA DE CHECKBOXES
                   CheckboxListTile(
                     title: Text(
                       _seleccionados.values
                               .every((seleccionado) => seleccionado)
-                          ? 'Deseleccionar Todos'
-                          : 'Seleccionar Todos',
+                          ? S.of(context).asignadorDeseleccionarTodos
+                          : S.of(context).asignadorSeleccionarTodos,
                       style: TextStyle(
                           fontSize: 14,
                           color: !themeNotifier.temaClaro
@@ -524,7 +525,7 @@ class _AsignadorState extends State<Asignador> {
                           });
                         },
                         child: Text(
-                          'Limpiar selecciones',
+                          S.of(context).asignadorLimpiarSelecciones,
                           style: TextStyle(
                               color: !themeNotifier.temaClaro
                                   ? Colors.white70
@@ -563,7 +564,7 @@ class _AsignadorState extends State<Asignador> {
                           children: [
                             //TEXTO ELEMENTOS SELECCIONADOS
                             Text(
-                              'Elementos seleccionados',
+                              S.of(context).asignadorElementosSeleccionados,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -575,7 +576,7 @@ class _AsignadorState extends State<Asignador> {
                             //CHIP DE CONTADOR DE SELECCIONADOS
                             Chip(
                               label: Text(
-                                '${_seleccionados.values.where((seleccionado) => seleccionado).length} seleccionados',
+                                '${_seleccionados.values.where((seleccionado) => seleccionado).length} ${S.of(context).asignadorSeleccionados}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -627,7 +628,7 @@ class _AsignadorState extends State<Asignador> {
                                 ),
                                 SizedBox(height: 5),
                                 Text(
-                                  'Elemento no. ${_elementosNoAsignados[index].elementoAsignado}',
+                                  '${S.of(context).asignadorElementoNo} ${_elementosNoAsignados[index].elementoAsignado}',
                                   style: TextStyle(
                                       color: !themeNotifier.temaClaro
                                           ? Colors.white70
@@ -662,18 +663,18 @@ class _AsignadorState extends State<Asignador> {
                         onPressed: () {
                           _mostrarAlerta(
                               context,
-                              "Confirmar",
-                              "¿Desea Asignar este elemento?",
+                              S.of(context).mensajesConfimar,
+                              S.of(context).mensajesDeseaAsignarEsteElemento,
                               FontAwesomeIcons.circleExclamation,
                               Color(0xFFFEAB308),
                               1,
-                              "Asignar", () async {
+                              S.of(context).dashboardAsignar, () async {
                             await _postUserAsignarElemento();
                             fabNotifier.setButtonState(0);
                           }, null, null);
                         },
                         child: Text(
-                          'Confirmar Asignación',
+                          S.of(context).asignadorConfirmarAsignacion,
                           style: TextStyle(color: Colors.white),
                         ),
                         style: ElevatedButton.styleFrom(

@@ -22,6 +22,56 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "asignadorAsignadoCorrectamente":
+            MessageLookupByLibrary.simpleMessage("assigned correctly"),
+        "asignadorConfirmarAsignacion":
+            MessageLookupByLibrary.simpleMessage("Confirm Assignment"),
+        "asignadorDeseleccionarTodos":
+            MessageLookupByLibrary.simpleMessage("Deselect All"),
+        "asignadorElemento": MessageLookupByLibrary.simpleMessage("Element"),
+        "asignadorElementoNo":
+            MessageLookupByLibrary.simpleMessage("Element no."),
+        "asignadorElementosSeleccionados":
+            MessageLookupByLibrary.simpleMessage("Selected elements"),
+        "asignadorLimpiarSelecciones":
+            MessageLookupByLibrary.simpleMessage("Clear selections"),
+        "asignadorNoElementosSinAsignar":
+            MessageLookupByLibrary.simpleMessage("No. of unassigned elements:"),
+        "asignadorSeleccionados":
+            MessageLookupByLibrary.simpleMessage("selected"),
+        "asignadorSeleccionarTodos":
+            MessageLookupByLibrary.simpleMessage("Select All"),
+        "dashboardAsignar": MessageLookupByLibrary.simpleMessage("Assign"),
+        "dashboardAsignarElementos":
+            MessageLookupByLibrary.simpleMessage("Assign elements"),
+        "dashboardBuscarElemento":
+            MessageLookupByLibrary.simpleMessage("Search element..."),
+        "dashboardDesasignar": MessageLookupByLibrary.simpleMessage("Unassign"),
+        "dashboardDesasignarElementos":
+            MessageLookupByLibrary.simpleMessage("Unassign elements"),
+        "dashboardErrorConexion":
+            MessageLookupByLibrary.simpleMessage("Connection error"),
+        "dashboardExpira": MessageLookupByLibrary.simpleMessage("Expires"),
+        "dashboardNoElementosAsignados":
+            MessageLookupByLibrary.simpleMessage("No. of elements assigned:"),
+        "dashboardNoHayElementosAsignados":
+            MessageLookupByLibrary.simpleMessage(
+                "There are no assigned elements"),
+        "dashboardNoSePudoRecuperarLaInformacion":
+            MessageLookupByLibrary.simpleMessage(
+                "The data could not be retrieved. Please check your connection and try again."),
+        "dashboardNoTieneNingunElementoAsignado":
+            MessageLookupByLibrary.simpleMessage(
+                "has no element assigned to him."),
+        "dashboardRefrescar": MessageLookupByLibrary.simpleMessage("Refresh"),
+        "dashboardReintentar": MessageLookupByLibrary.simpleMessage("Retry"),
+        "dashboardSesion": MessageLookupByLibrary.simpleMessage("Session"),
+        "dashboardVolverAlInicio":
+            MessageLookupByLibrary.simpleMessage("Back to home"),
+        "desasignadorConfirmarDesasignacion":
+            MessageLookupByLibrary.simpleMessage("Confirm Unassignment"),
+        "desasignadorDesasignadoCorrectamente":
+            MessageLookupByLibrary.simpleMessage("correctly unassigned"),
         "drawerIdioma": MessageLookupByLibrary.simpleMessage("Language"),
         "drawerManetenimientoMayus":
             MessageLookupByLibrary.simpleMessage("MAINTENANCE"),
@@ -36,6 +86,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "inicioInicio": MessageLookupByLibrary.simpleMessage("Home"),
         "inicioLaSesionExpira":
             MessageLookupByLibrary.simpleMessage("The session expires:"),
+        "layoutBajar": MessageLookupByLibrary.simpleMessage("Down"),
+        "layoutSiVuelvesADeslizar": MessageLookupByLibrary.simpleMessage(
+            "If you swipe again, you will exit the application."),
+        "layoutSubir": MessageLookupByLibrary.simpleMessage("Up"),
         "loadingCargando":
             MessageLookupByLibrary.simpleMessage("Loading data..."),
         "locale": MessageLookupByLibrary.simpleMessage("en"),
@@ -78,12 +132,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "mensajesConfimar": MessageLookupByLibrary.simpleMessage("Confirm"),
         "mensajesConfirmarCreacion":
             MessageLookupByLibrary.simpleMessage("Confirm creation:"),
+        "mensajesDeseaAsignarEsteElemento":
+            MessageLookupByLibrary.simpleMessage(
+                "Do you want to assign this item?"),
+        "mensajesDeseaDesasignarEsteElemento":
+            MessageLookupByLibrary.simpleMessage(
+                "Do you want to unassign this item?"),
         "mensajesSesionExpiraEl":
             MessageLookupByLibrary.simpleMessage("Session expires on"),
         "mensajesSesionGuardadaEl":
             MessageLookupByLibrary.simpleMessage("Session saved on"),
         "mensajesUsuario": MessageLookupByLibrary.simpleMessage("UserName"),
-        "splashMantenimiento":
-            MessageLookupByLibrary.simpleMessage("Maintenance")
+        "seleccionFondoQuitarFondo":
+            MessageLookupByLibrary.simpleMessage("Remove Background"),
+        "seleccionFondoSeleccionarPlantilla":
+            MessageLookupByLibrary.simpleMessage("Select Template"),
+        "splashElementosAsignados":
+            MessageLookupByLibrary.simpleMessage("Assigned Elements")
       };
 }

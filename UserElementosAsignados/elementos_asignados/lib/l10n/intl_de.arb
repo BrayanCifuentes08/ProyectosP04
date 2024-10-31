@@ -22,6 +22,40 @@
   "loginSeleccionarDisplay":                                   "Wählen Sie Displays",
   "loginIngresar":                                             "Beitreten",
 
+  "layoutSiVuelvesADeslizar":                                  "Wenn Sie erneut wischen, wird die Anwendung beendet.",
+  "layoutSubir":                                               "Hochladen",
+  "layoutBajar":                                               "Herunterladen",
+
+  "dashboardErrorConexion":                                    "Verbindungsfehler",
+  "dashboardNoSePudoRecuperarLaInformacion":                   "Die Daten konnten nicht abgerufen werden. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+  "dashboardReintentar":                                       "Wiederholung",
+  "dashboardAsignar":                                          "zuweisen",
+  "dashboardAsignarElementos":                                 "Elemente zuordnen",
+  "dashboardDesasignar":                                       "Aufheben der Zuweisung",
+  "dashboardDesasignarElementos":                              "Elemente nicht zuordnen",
+  "dashboardVolverAlInicio":                                   "Zurück zum Anfang",
+  "dashboardNoHayElementosAsignados":                          "Keine Elemente zugeordnet",
+  "dashboardNoTieneNingunElementoAsignado":                    "ist kein Element zugewiesen.",
+  "dashboardRefrescar":                                        "Aktualisieren",
+  "dashboardBuscarElemento":                                   "Element suchen...",
+  "dashboardNoElementosAsignados":                             "Nr. zugewiesene Elemente:",
+  "dashboardSesion":                                           "Sitzung",
+  "dashboardExpira":                                           "Abgelaufen",
+
+  "asignadorElemento":                                         "Element",
+  "asignadorAsignadoCorrectamente":                            "korrekt zugeordnet",
+  "asignadorNoElementosSinAsignar":                            "Anzahl der nicht zugewiesenen Posten:",
+  "asignadorDeseleccionarTodos":                               "Alle abwählen",
+  "asignadorSeleccionarTodos":                                 "Alle auswählen",
+  "asignadorLimpiarSelecciones":                               "Auswahlen löschen",
+  "asignadorElementosSeleccionados":                           "Ausgewählte Elemente",
+  "asignadorSeleccionados":                                    "ausgewählt",
+  "asignadorElementoNo":                                       "Element Nr.",
+  "asignadorConfirmarAsignacion":                              "Bestätigung der Zuweisung",
+
+  "desasignadorDesasignadoCorrectamente":                      "richtig zugeordnet",
+  "desasignadorConfirmarDesasignacion":                        "De-Entwertung bestätigen",
+
   "mensajesAdvertencia":                                       "Warnung",
   "mensajesAceptar":                                           "Akzeptieren",
   "mensajesConfirmarCreacion":                                 "Erstellung bestätigen:",
@@ -31,8 +65,10 @@
   "mensajesUsuario":                                           "Benutzername",
   "mensajesSesionGuardadaEl":                                  "Sitzung gespeichert am",
   "mensajesSesionExpiraEl":                                    "Sitzung läuft ab am",
+  "mensajesDeseaAsignarEsteElemento":                          "Möchten Sie diese Position zuweisen?",
+  "mensajesDeseaDesasignarEsteElemento":                       "Möchten Sie die Zuweisung dieses Artikels aufheben?",
 
-  "splashMantenimiento":                                       "Wartung",
+  "splashElementosAsignados":                                  "Zugewiesene Elemente",
 
   "inicioBienvenido":                                          "Willkommen beim Katalogpflegesystem",
   "inicioCerrarSesion":                                        "Abmelden",
@@ -45,6 +81,8 @@
   "drawerIdioma":                                              "Sprache",
   "drawerPlantilla":                                           "TEMPLATE",
 
-  "loadingCargando":                                           "Daten werden geladen..."
-
+  "loadingCargando":                                           "Daten werden geladen...",
+  
+  "seleccionFondoSeleccionarPlantilla":                        "Vorlage auswählen",
+  "seleccionFondoQuitarFondo":                                 "Hintergrund entfernen"
 }

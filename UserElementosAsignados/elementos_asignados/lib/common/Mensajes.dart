@@ -168,7 +168,7 @@ class Mensajes {
               ),
               SizedBox(width: 5),
               Flexible(
-                  child: Text("Advertencia",
+                  child: Text(S.of(context).mensajesAdvertencia,
                       style: TextStyle(
                         color: titleColor,
                         fontWeight: FontWeight.bold,
