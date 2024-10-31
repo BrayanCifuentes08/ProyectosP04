@@ -21,34 +21,69 @@
   "loginSeleccionarAplicacion":                                "Sélectionnez une application",
   "loginSeleccionarDisplay":                                   "Sélectionnez les affichages",
   "loginIngresar":                                             "Rejoindre",
+
+  "layoutSiVuelvesADeslizar":                                  "Un nouveau glissement permet de quitter l'application.",
+  "layoutSubir":                                               "Haut",
+  "layoutBajar":                                               "Télécharger",
+
+  "dashboardErrorConexion":                                    "Erreur de connexion",
+  "dashboardNoSePudoRecuperarLaInformacion":                   "Les données n'ont pas pu être récupérées. Veuillez vérifier votre connexion et réessayer.",
+  "dashboardReintentar":                                       "Réessayer",
+  "dashboardAsignar":                                          "Attribuer",
+  "dashboardAsignarElementos":                                 "Attribuer des éléments",
+  "dashboardDesasignar":                                       "Désaffecter",
+  "dashboardDesasignarElementos":                              "Désaffecter des éléments",
+  "dashboardVolverAlInicio":                                   "Haut de page",
+  "dashboardNoHayElementosAsignados":                          "Aucun élément attribué",
+  "dashboardNoTieneNingunElementoAsignado":                    "n'a pas d'élément assigné.",
+  "dashboardRefrescar":                                        "Rafraîchir",
+  "dashboardBuscarElemento":                                   "Élément de recherche...",
+  "dashboardNoElementosAsignados":                             "Aucun élément n'a été attribué :",
+  "dashboardSesion":                                           "Session",
+  "dashboardExpira":                                           "Expiration",
+
+  "asignadorElemento":                                         "L'élément",
+  "asignadorAsignadoCorrectamente":                            "est correctement attribué",
+  "asignadorNoElementosSinAsignar":                            "Nombre d'éléments non alloués :",
+  "asignadorDeseleccionarTodos":                               "Désélectionner tout",
+  "asignadorSeleccionarTodos":                                 "Sélectionner tout",
+  "asignadorLimpiarSelecciones":                               "Effacer les sélections",
+  "asignadorElementosSeleccionados":                           "Éléments sélectionnés",
+  "asignadorSeleccionados":                                    "sélectionné",
+  "asignadorElementoNo":                                       "Élément non.",
+  "asignadorConfirmarAsignacion":                              "Confirmer l'affectation",
+
+  "desasignadorDesasignadoCorrectamente":                      "correctement désalloué",
+  "desasignadorConfirmarDesasignacion":                        "Confirmer la désinscription",
+
+  "mensajesAdvertencia":                                       "Avertissement",
+  "mensajesAceptar":                                           "Accepter",
+  "mensajesConfirmarCreacion":                                 "Confirmer la création :",
+  "mensajesConfimar":                                          "Confirmer",
+  "mensajesCancelar":                                          "Annuler",
+  "mensajesCerrarSesion":                                      "Déconnexion",
+  "mensajesUsuario":                                           "Nom d'utilisateur",
+  "mensajesSesionGuardadaEl":                                  "Session enregistrée le",
+  "mensajesSesionExpiraEl":                                    "La session expire le",
+  "mensajesDeseaAsignarEsteElemento":                          "Souhaitez-vous attribuer ce poste ?",
+  "mensajesDeseaDesasignarEsteElemento":                       "Souhaitez-vous annuler l'attribution de ce poste ?",
+
+  "splashElementosAsignados":                                  "Éléments attribués",
+
+  "inicioBienvenido":                                          "Bienvenue dans le système de mise à jour du catalogue",
+  "inicioCerrarSesion":                                        "Se déconnecter",
+  "inicioHoraDeInicioSesion":                                  "Heure de début de la session:",
+  "inicioLaSesionExpira":                                      "La session expire:",
+  "inicioInicio":                                              "Accueil",
+
+  "drawerMantenimiento":                                       "Entretien",
+  "drawerManetenimientoMayus":                                 "ENTRETIEN",
+  "drawerIdioma":                                              "Langue",
+  "drawerPlantilla":                                           "TEMPLATE",
+                  
+  "loadingCargando":                                           "Chargement des données...",
   
-
-
-  "mensajesAdvertencia":                                          "Avertissement",
-  "mensajesAceptar":                                              "Accepter",
-  "mensajesConfirmarCreacion": "Confirmer la création :",
-  "mensajesConfimar":                                             "Confirmer",
-  "mensajesCancelar": "Annuler",
-  "mensajesCerrarSesion": "Déconnexion",
-  "mensajesUsuario": "Nom d'utilisateur",
-  "mensajesSesionGuardadaEl": "Session enregistrée le",
-  "mensajesSesionExpiraEl": "La session expire le",
-  
-
-  "splashMantenimiento":                     "Entretien",
-
-  "inicioBienvenido":                        "Bienvenue dans le système de mise à jour du catalogue",
-  "inicioCerrarSesion":                      "Se déconnecter",
-  "inicioHoraDeInicioSesion":                "Heure de début de la session:",
-  "inicioLaSesionExpira":                    "La session expire:",
-  "inicioInicio":                            "Accueil",
-
-  "drawerMantenimiento":                     "Entretien",
-  "drawerManetenimientoMayus":               "ENTRETIEN",
-  "drawerIdioma":                            "Langue",
-  "drawerPlantilla":                         "TEMPLATE",
-
-  "loadingCargando":                         "Chargement des données..."
-  
+  "seleccionFondoSeleccionarPlantilla":                        "Sélectionner un modèle",
+  "seleccionFondoQuitarFondo":                                 "Supprimer l'arrière-plan"
  }
  

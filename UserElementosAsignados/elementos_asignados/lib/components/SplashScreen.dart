@@ -1,5 +1,6 @@
 import 'package:elementos_asignados/components/Layout.dart';
 import 'package:elementos_asignados/components/Login.dart';
+import 'package:elementos_asignados/generated/l10n.dart';
 import 'package:elementos_asignados/services/LoginService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -151,14 +152,12 @@ class _SplashScreenState extends State<SplashScreen>
                       width: logoSize,
                       color: Colors.white, // Cambiar el color del logo a blanco
                     ),
-
                     SizedBox(
                         height:
                             screenSize.height * 0.05), // Ajustar el espaciado
-
                     // Título responsive
                     Text(
-                      "Elementos Asignados",
+                      S.of(context).splashElementosAsignados,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,

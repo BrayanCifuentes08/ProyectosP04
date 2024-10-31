@@ -122,7 +122,7 @@ class _LayoutState extends State<Layout> {
       _backGestureCount++;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Si vuelves a deslizar, saldrás de la aplicación."),
+          content: Text(S.of(context).layoutSiVuelvesADeslizar),
           backgroundColor: Colors.grey,
         ),
       );
@@ -292,7 +292,9 @@ class _LayoutState extends State<Layout> {
                     size: 25,
                     color: Colors.white,
                   ),
-                  tooltip: fabNotifier.buttonState == 1 ? 'Subir' : 'Bajar',
+                  tooltip: fabNotifier.buttonState == 1
+                      ? S.of(context).layoutSubir
+                      : S.of(context).layoutBajar,
                   mini: true,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

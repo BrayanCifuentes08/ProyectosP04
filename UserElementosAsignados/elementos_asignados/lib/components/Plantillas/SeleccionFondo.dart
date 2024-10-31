@@ -1,3 +1,4 @@
+import 'package:elementos_asignados/generated/l10n.dart';
 import 'package:elementos_asignados/services/PreferenciasService.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -63,7 +64,8 @@ class _SeleccionFondoState extends State<SeleccionFondo> {
     int itemCount = isBackgroundSet ? 8 : 7;
 
     return Scaffold(
-      appBar: AppBar(title: Text("Seleccionar Plantilla")),
+      appBar:
+          AppBar(title: Text(S.of(context).seleccionFondoSeleccionarPlantilla)),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -96,7 +98,7 @@ class _SeleccionFondoState extends State<SeleccionFondo> {
                 color: Colors.red[300],
                 child: Center(
                   child: Text(
-                    "Quitar Fondo",
+                    S.of(context).seleccionFondoQuitarFondo,
                     style: TextStyle(color: Colors.white, fontSize: 16),
                     textAlign: TextAlign.center,
                   ),

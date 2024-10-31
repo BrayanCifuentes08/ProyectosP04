@@ -4,6 +4,7 @@ import 'package:elementos_asignados/components/Plantillas/PlantillaImagen.dart';
 import 'package:elementos_asignados/components/Plantillas/SeleccionFondo.dart';
 import 'package:elementos_asignados/components/SplashScreen.dart';
 import 'package:elementos_asignados/generated/l10n.dart';
+import 'package:elementos_asignados/services/LoginService.dart';
 // import 'package:elementos_asignados/services/LoginService.dart';
 import 'package:elementos_asignados/services/PreferenciasService.dart';
 import 'package:elementos_asignados/services/Shared.dart';
@@ -36,12 +37,12 @@ class _MyAppState extends State<MyApp> {
   bool _isBackgroundSet = false;
   bool _temaClaro = false;
   final PreferenciasService _preferencesService = PreferenciasService();
-  // final LoginService _loginService = LoginService();
+  final LoginService _loginService = LoginService();
 
   @override
   void initState() {
     super.initState();
-    _loadPreferences(); //cambir por _checkSession cuando se agregue login
+    _checkSession();
   }
 
   @override
@@ -49,30 +50,27 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  // Future<void> _checkSession() async {
-  //   final sessionData = await _loginService.getUserSession();
-  //   final tokenExpirationString = sessionData['tokenExpiration'] as String?;
-  //   if (tokenExpirationString != null) {
-  //     final tokenExpiration = DateTime.parse(tokenExpirationString);
-  //     if (DateTime.now().isAfter(tokenExpiration)) {
-  //       // Si la sesión ha expirado, redirigir al usuario
-  //       Navigator.of(context).pushReplacementNamed('/inicio');
-  //     } else {
-  //       // Si la sesión es válida, cargar las preferencias de fondo
-  //       _loadPreferences();
-  //     }
-  //   } else {
-  //     // Si no hay datos de sesión, cargar las preferencias de fondo
-  //     _loadPreferences();
-  //   }
-  // }
+  Future<void> _checkSession() async {
+    final sessionData = await _loginService.getUserSession();
+    final tokenExpirationString = sessionData['tokenExpiration'] as String?;
+    if (tokenExpirationString != null) {
+      final tokenExpiration = DateTime.parse(tokenExpirationString);
+      if (DateTime.now().isAfter(tokenExpiration)) {
+        // Si la sesión ha expirado, redirigir al usuario
+        Navigator.of(context).pushReplacementNamed('/inicio');
+      } else {
+        _loadPreferences();
+      }
+    } else {
+      _loadPreferences();
+    }
+  }
 
   void _loadPreferences() async {
     final imagePath = await _preferencesService.getBackgroundImage();
     final isSet = await _preferencesService.isBackgroundSet();
     final temaClaro = await _preferencesService.getTemaClaro();
-    print(
-        'Loaded background image path: $imagePath'); // Agregado para depuración
+    print('Loaded background image path: $imagePath');
     setState(() {
       _backgroundImagePath = imagePath ?? _backgroundImagePath;
       _isBackgroundSet = isSet;
@@ -136,37 +134,6 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ],
               ),
-          // '/mantenimiento': (context) => Stack(
-          //       children: [
-          //         Mantenimiento(
-          //           imagePath: _backgroundImagePath,
-          //           isBackgroundSet: _isBackgroundSet,
-          //           catalogo: null,
-          //           changeLanguage: _changeLanguage,
-          //           idiomaDropDown: _locale,
-          //           temaClaro: _temaClaro,
-          //           token: '',
-          //           pUserName: '',
-          //           pEmpresa: 1,
-          //           pEstacion_Trabajo: 1,
-          //           baseUrl: '',
-          //           fechaSesion: DateTime.now(),
-          //           fechaExpiracion: null,
-          //           despEmpresa: '',
-          //           despEstacion_Trabajo: '',
-          //         ),
-          //       ],
-          //     ),
-          // '/login': (context) => Stack(children: [
-          //       BackgroundImage(imagePath: _backgroundImagePath),
-          //       LoginScreen(
-          //         changeLanguage: _changeLanguage,
-          //         seleccionarIdioma: _locale,
-          //         idiomaDropDown: _locale,
-          //         imagePath: _backgroundImagePath,
-          //         isBackgroundSet: _isBackgroundSet,
-          //       )
-          //     ]),
           '/selectBackground': (context) => SeleccionFondo(
                 onSelectBackground: _changeBackgroundImage,
               ),

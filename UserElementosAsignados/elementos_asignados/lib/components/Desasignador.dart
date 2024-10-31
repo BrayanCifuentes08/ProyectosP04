@@ -4,6 +4,7 @@ import 'package:elementos_asignados/common/Loading.dart';
 import 'package:elementos_asignados/common/Mensajes.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Layout.dart';
+import 'package:elementos_asignados/generated/l10n.dart';
 import 'package:elementos_asignados/models/PaBscUserElementoAsignadoM.dart';
 import 'package:elementos_asignados/models/PaDeleteUserElementoAsignadoM.dart';
 import 'package:flutter/material.dart';
@@ -169,7 +170,7 @@ class _DesasignadorState extends State<Desasignador> {
                   errorOccurred = false;
                   _mostrarMensajeScaffold(
                       context,
-                      "Elemento  ${elemento!.descripcion} desasignado correctamente",
+                      "${S.of(context).asignadorElemento} ${elemento!.descripcion} ${S.of(context).desasignadorDesasignadoCorrectamente}",
                       MdiIcons.checkboxMarkedCircle,
                       Color(0xFFF15803D),
                       Color(0xFFF15803D),
@@ -293,7 +294,7 @@ class _DesasignadorState extends State<Desasignador> {
                   fontSize: 16,
                 ),
                 decoration: InputDecoration(
-                    hintText: 'Buscar elemento...',
+                    hintText: S.of(context).dashboardBuscarElemento,
                     hintStyle: TextStyle(
                       color: !themeNotifier.temaClaro
                           ? Color.fromARGB(255, 92, 122, 163)
@@ -342,30 +343,42 @@ class _DesasignadorState extends State<Desasignador> {
                 alignment: Alignment.centerLeft,
                 child: Chip(
                   label: Text(
-                    'No. elementos asignados: ${widget.elementosAsignados.length}',
+                    '${S.of(context).dashboardNoElementosAsignados} ${widget.elementosAsignados.length}',
                     style: TextStyle(
-                      color: Color(0XFFF1F2937),
+                      color: !themeNotifier.temaClaro
+                          ? Colors.white60
+                          : Color(0XFFF1F2937),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  backgroundColor: Color(0xFFFE5E7EB),
+                  backgroundColor: !themeNotifier.temaClaro
+                      ? Colors.grey.shade800
+                      : Color(0xFFFE5E7EB),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                          color: !themeNotifier.temaClaro
+                              ? Colors.grey.shade800
+                              : Color(0xFFFE5E7EB))),
                   avatar: Icon(
                     Icons.info,
-                    color: Color(0XFFF1F2937),
+                    color: !themeNotifier.temaClaro
+                        ? Colors.white60
+                        : Color(0XFFF1F2937),
                     size: 18,
                   ),
                 ),
               ),
             ),
+            //CONTAINER CON GRIDVIEW PARA SELECCIONAR ELEMENTOS
             Container(
               height: 400,
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: !themeNotifier.temaClaro
+                    ? Color.fromARGB(255, 36, 46, 63)
+                    : Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -377,14 +390,18 @@ class _DesasignadorState extends State<Desasignador> {
               ),
               child: Column(
                 children: [
+                  //LISTA DE CHECKBOXES
                   CheckboxListTile(
                     title: Text(
                       _seleccionados.values
                               .every((seleccionado) => seleccionado)
-                          ? 'Deseleccionar Todos'
-                          : 'Seleccionar Todos',
-                      style:
-                          TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                          ? S.of(context).asignadorDeseleccionarTodos
+                          : S.of(context).asignadorSeleccionarTodos,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: !themeNotifier.temaClaro
+                              ? Colors.white
+                              : Colors.grey.shade600),
                     ),
                     value: _seleccionados.values
                         .every((seleccionado) => seleccionado),
@@ -415,14 +432,20 @@ class _DesasignadorState extends State<Desasignador> {
                         return Container(
                           decoration: BoxDecoration(
                             color: _seleccionados[elemento.descripcion] == true
-                                ? Colors.blue[50]
-                                : Colors.grey[100],
+                                ? !themeNotifier.temaClaro
+                                    ? const Color.fromARGB(255, 70, 106, 146)
+                                    : Colors.blue[50]
+                                : !themeNotifier.temaClaro
+                                    ? Color.fromARGB(255, 47, 59, 82)
+                                    : Colors.grey[100],
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color:
                                   _seleccionados[elemento.descripcion] == true
                                       ? Colors.blue
-                                      : Colors.grey[300]!,
+                                      : !themeNotifier.temaClaro
+                                          ? Color.fromARGB(255, 24, 31, 43)
+                                          : Colors.grey[300]!,
                             ),
                           ),
                           child: CheckboxListTile(
@@ -430,7 +453,9 @@ class _DesasignadorState extends State<Desasignador> {
                               elemento.descripcion,
                               style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black87,
+                                  color: !themeNotifier.temaClaro
+                                      ? Colors.white
+                                      : Colors.black87,
                                   overflow: TextOverflow.ellipsis),
                             ),
                             value:
@@ -455,6 +480,7 @@ class _DesasignadorState extends State<Desasignador> {
                       }),
                     ),
                   ),
+                  //TEXT BUTTON PARA LIMPIAR SELENCCIONES
                   if (_seleccionados.values.any((seleccionado) => seleccionado))
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
@@ -468,8 +494,11 @@ class _DesasignadorState extends State<Desasignador> {
                             });
                           },
                           child: Text(
-                            'Limpiar selecciones',
-                            style: TextStyle(color: Colors.blueGrey),
+                            S.of(context).asignadorLimpiarSelecciones,
+                            style: TextStyle(
+                                color: !themeNotifier.temaClaro
+                                    ? Colors.white70
+                                    : Colors.blueGrey),
                           ),
                         ),
                       ),
@@ -479,12 +508,15 @@ class _DesasignadorState extends State<Desasignador> {
             ),
           ],
           SizedBox(height: 20),
+          //CONTAINER DE SELECCIONADOS+
           _seleccionados.values.any((seleccionado) => seleccionado)
               ? Column(children: [
                   Container(
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: !themeNotifier.temaClaro
+                          ? Color.fromARGB(255, 36, 46, 63)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -500,17 +532,21 @@ class _DesasignadorState extends State<Desasignador> {
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              //TEXTO ELEMENTOS SELECCIONADOS
                               Text(
-                                'Elementos seleccionados',
+                                S.of(context).asignadorElementosSeleccionados,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color: !themeNotifier.temaClaro
+                                      ? Colors.white
+                                      : Colors.black87,
                                 ),
                               ),
+                              //CHIP DE CONTADOR DE SELECCIONADOS
                               Chip(
                                 label: Text(
-                                  '${_seleccionados.values.where((seleccionado) => seleccionado).length} seleccionados',
+                                  '${_seleccionados.values.where((seleccionado) => seleccionado).length} ${S.of(context).asignadorSeleccionados}',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -520,8 +556,12 @@ class _DesasignadorState extends State<Desasignador> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 4),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(
+                                        color: !themeNotifier.temaClaro
+                                            ? Colors.grey.shade800
+                                            : Color.fromARGB(
+                                                255, 207, 207, 207))),
                                 avatar: Icon(
                                   Icons.check_circle,
                                   color: Colors.white,
@@ -529,8 +569,12 @@ class _DesasignadorState extends State<Desasignador> {
                                 ),
                               ),
                             ]),
-                        Divider(color: Colors.grey[300]),
+                        Divider(
+                            color: !themeNotifier.temaClaro
+                                ? Colors.grey[700]
+                                : Colors.grey[300]),
                         SizedBox(height: 10),
+                        //LISTA DE SELECCIONADOS CON INFORMACIÓN
                         ..._seleccionados.entries.map((entry) {
                           String descripcion = entry.key;
                           bool seleccionado = entry.value;
@@ -546,16 +590,24 @@ class _DesasignadorState extends State<Desasignador> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.black87,
+                                    color: !themeNotifier.temaClaro
+                                        ? Colors.white
+                                        : Colors.black87,
                                   ),
                                 ),
                                 SizedBox(height: 5),
                                 Text(
-                                  'Elemento no. ${widget.elementosAsignados[index].elementoAsignado}',
-                                  style: TextStyle(color: Colors.black54),
+                                  '${S.of(context).asignadorElementoNo} ${widget.elementosAsignados[index].elementoAsignado}',
+                                  style: TextStyle(
+                                      color: !themeNotifier.temaClaro
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 15),
-                                Divider(color: Colors.grey[300]),
+                                Divider(
+                                    color: !themeNotifier.temaClaro
+                                        ? Colors.grey[700]
+                                        : Colors.grey[300]),
                               ],
                             );
                           } else {
@@ -578,18 +630,18 @@ class _DesasignadorState extends State<Desasignador> {
                         onPressed: () {
                           _mostrarAlerta(
                               context,
-                              "Confirmar",
-                              "¿Desea Desasignar este elemento?",
+                              S.of(context).mensajesConfimar,
+                              S.of(context).mensajesDeseaDesasignarEsteElemento,
                               FontAwesomeIcons.circleExclamation,
                               Color(0xFFFEAB308),
                               1,
-                              "Desasignar", () async {
+                              S.of(context).dashboardDesasignar, () async {
                             await _deleteUserAsignarElemento();
                             fabNotifier.setButtonState(0);
                           }, null, null);
                         },
                         child: Text(
-                          'Confirmar Desasignación',
+                          S.of(context).desasignadorConfirmarDesasignacion,
                           style: TextStyle(color: Colors.white),
                         ),
                         style: ElevatedButton.styleFrom(

@@ -22,6 +22,58 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "asignadorAsignadoCorrectamente":
+            MessageLookupByLibrary.simpleMessage("est correctement attribué"),
+        "asignadorConfirmarAsignacion":
+            MessageLookupByLibrary.simpleMessage("Confirmer l\'affectation"),
+        "asignadorDeseleccionarTodos":
+            MessageLookupByLibrary.simpleMessage("Désélectionner tout"),
+        "asignadorElemento": MessageLookupByLibrary.simpleMessage("L\'élément"),
+        "asignadorElementoNo":
+            MessageLookupByLibrary.simpleMessage("Élément non."),
+        "asignadorElementosSeleccionados":
+            MessageLookupByLibrary.simpleMessage("Éléments sélectionnés"),
+        "asignadorLimpiarSelecciones":
+            MessageLookupByLibrary.simpleMessage("Effacer les sélections"),
+        "asignadorNoElementosSinAsignar": MessageLookupByLibrary.simpleMessage(
+            "Nombre d\'éléments non alloués :"),
+        "asignadorSeleccionados":
+            MessageLookupByLibrary.simpleMessage("sélectionné"),
+        "asignadorSeleccionarTodos":
+            MessageLookupByLibrary.simpleMessage("Sélectionner tout"),
+        "dashboardAsignar": MessageLookupByLibrary.simpleMessage("Attribuer"),
+        "dashboardAsignarElementos":
+            MessageLookupByLibrary.simpleMessage("Attribuer des éléments"),
+        "dashboardBuscarElemento":
+            MessageLookupByLibrary.simpleMessage("Élément de recherche..."),
+        "dashboardDesasignar":
+            MessageLookupByLibrary.simpleMessage("Désaffecter"),
+        "dashboardDesasignarElementos":
+            MessageLookupByLibrary.simpleMessage("Désaffecter des éléments"),
+        "dashboardErrorConexion":
+            MessageLookupByLibrary.simpleMessage("Erreur de connexion"),
+        "dashboardExpira": MessageLookupByLibrary.simpleMessage("Expiration"),
+        "dashboardNoElementosAsignados": MessageLookupByLibrary.simpleMessage(
+            "Aucun élément n\'a été attribué :"),
+        "dashboardNoHayElementosAsignados":
+            MessageLookupByLibrary.simpleMessage("Aucun élément attribué"),
+        "dashboardNoSePudoRecuperarLaInformacion":
+            MessageLookupByLibrary.simpleMessage(
+                "Les données n\'ont pas pu être récupérées. Veuillez vérifier votre connexion et réessayer."),
+        "dashboardNoTieneNingunElementoAsignado":
+            MessageLookupByLibrary.simpleMessage(
+                "n\'a pas d\'élément assigné."),
+        "dashboardRefrescar":
+            MessageLookupByLibrary.simpleMessage("Rafraîchir"),
+        "dashboardReintentar":
+            MessageLookupByLibrary.simpleMessage("Réessayer"),
+        "dashboardSesion": MessageLookupByLibrary.simpleMessage("Session"),
+        "dashboardVolverAlInicio":
+            MessageLookupByLibrary.simpleMessage("Haut de page"),
+        "desasignadorConfirmarDesasignacion":
+            MessageLookupByLibrary.simpleMessage("Confirmer la désinscription"),
+        "desasignadorDesasignadoCorrectamente":
+            MessageLookupByLibrary.simpleMessage("correctement désalloué"),
         "drawerIdioma": MessageLookupByLibrary.simpleMessage("Langue"),
         "drawerManetenimientoMayus":
             MessageLookupByLibrary.simpleMessage("ENTRETIEN"),
@@ -37,6 +89,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "inicioInicio": MessageLookupByLibrary.simpleMessage("Accueil"),
         "inicioLaSesionExpira":
             MessageLookupByLibrary.simpleMessage("La session expire:"),
+        "layoutBajar": MessageLookupByLibrary.simpleMessage("Télécharger"),
+        "layoutSiVuelvesADeslizar": MessageLookupByLibrary.simpleMessage(
+            "Un nouveau glissement permet de quitter l\'application."),
+        "layoutSubir": MessageLookupByLibrary.simpleMessage("Haut"),
         "loadingCargando":
             MessageLookupByLibrary.simpleMessage("Chargement des données..."),
         "locale": MessageLookupByLibrary.simpleMessage("fr"),
@@ -81,12 +137,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "mensajesConfimar": MessageLookupByLibrary.simpleMessage("Confirmer"),
         "mensajesConfirmarCreacion":
             MessageLookupByLibrary.simpleMessage("Confirmer la création :"),
+        "mensajesDeseaAsignarEsteElemento":
+            MessageLookupByLibrary.simpleMessage(
+                "Souhaitez-vous attribuer ce poste ?"),
+        "mensajesDeseaDesasignarEsteElemento":
+            MessageLookupByLibrary.simpleMessage(
+                "Souhaitez-vous annuler l\'attribution de ce poste ?"),
         "mensajesSesionExpiraEl":
             MessageLookupByLibrary.simpleMessage("La session expire le"),
         "mensajesSesionGuardadaEl":
             MessageLookupByLibrary.simpleMessage("Session enregistrée le"),
         "mensajesUsuario":
             MessageLookupByLibrary.simpleMessage("Nom d\'utilisateur"),
-        "splashMantenimiento": MessageLookupByLibrary.simpleMessage("Entretien")
+        "seleccionFondoQuitarFondo":
+            MessageLookupByLibrary.simpleMessage("Supprimer l\'arrière-plan"),
+        "seleccionFondoSeleccionarPlantilla":
+            MessageLookupByLibrary.simpleMessage("Sélectionner un modèle"),
+        "splashElementosAsignados":
+            MessageLookupByLibrary.simpleMessage("Éléments attribués")
       };
 }
