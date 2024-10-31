@@ -66,7 +66,6 @@ export class SharedService {
     }
   }
 
-  //Metodo para controlar el sidebar
   alternarSidebar(open: boolean) {
     this.sidebarOpenSubject.next(open);
   }

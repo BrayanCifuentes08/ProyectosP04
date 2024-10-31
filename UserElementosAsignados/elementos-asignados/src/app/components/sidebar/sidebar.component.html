@@ -1,15 +1,39 @@
-<aside class="bg-gradient-to-br from-gray-800 to-gray-900 -translate-x-80 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0">
+<div *ngIf="sidebarAbierto" class="fixed inset-0 z-40 backdrop-blur-sm bg-black/30" (click)="cerrarSidebar()"></div>
+<aside class=" bg-gradient-to-br from-gray-800 to-gray-900 -translate-x-80 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0"
+        [ngClass]="{ 'translate-x-0': sidebarAbierto, '-translate-x-80': !sidebarAbierto }">
+
   <div class="relative border-b border-white/20">
-    <a class="flex items-center gap-4 py-6 px-8" href="#/">
-      <h6 class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white">Desarrollo Moderno de Software</h6>
+    <a class="flex justify-center items-center gap-4 py-6 px-8">
+      <img src="images/logoDmosoftCarga.png" alt="DMOSOFT" 
+           class="w-[64px] h-auto md:w-[90px] md:h-auto pointer-events-none select-none" 
+           draggable="false" ondragstart="return false;"/>  
     </a>
-    <button class="middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-white hover:bg-white/10 active:bg-white/30 absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden" type="button">
-      <span class="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5 text-white">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </span>
-    </button>
+    
+    <button
+    class="middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-white hover:bg-white/10 active:bg-white/30 absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
+    type="button"
+    (click)="cerrarSidebar()"
+  >
+    <span
+      class="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2.5"
+        stroke="currentColor"
+        aria-hidden="true"
+        class="h-5 w-5 text-white"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        ></path>
+      </svg>
+    </span>
+  </button>
   </div>
 
 <!-- Carta de usuario -->
@@ -25,22 +49,70 @@
 
   <!-- Información del usuario reorganizada -->
   <div class="text-gray-300 text-sm text-center mb-4">
-    <p>Información Adicional:</p>
+    <p>{{'labels.informacionAdicional' | translate}}:</p>
     <p>
       <i class="fas fa-sign-in-alt"></i>
-      <strong> Hora de inicio sesión:</strong> {{horaInicioSesionFormatted}}
+      <strong> {{'labels.horaInicioSesion' | translate}}:</strong> {{horaInicioSesionFormatted}}
     </p>
     <p *ngIf="usandoHoraPerma">
       <i class="fas fa-sign-out-alt"></i>
-      <strong> Hora de cierre sesión:</strong> {{fechaVencimientoToken}}
+      <strong> {{'labels.horaCierreSesion' | translate}}:</strong> {{fechaVencimientoToken}}
     </p>
   </div>
 
   <!-- Botones de acción -->
   <div class="flex justify-center space-x-4">
-    <button (click)="logout()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">Cerrar Sesión</button>
+    <button (click)="logout()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">{{'labelsLogin.cerrarSesion' | translate}}</button>
   </div>
 </div>
 
+<!-- Botón para cambiar idiomas -->
+<div class="absolute bottom-4 w-full px-2">
+
+  <!-- Dropdown de idiomas -->
+  <div *ngIf="idiomaDropdownAbierto" class="mb-2 bg-gradient-to-br from-gray-800 to-gray-900 rounded-md shadow-md shadow-slate-600" [ngClass]="{ 'opacity-100 scale-100': idiomaDropdownAbierto }">
+    <ul class="py-2 text-white text-xs md:text-sm">
+      <li class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-800" (click)="seleccionarIdioma('es')"
+        [ngClass]="{ 'text-white font-bold': idiomaSeleccionado === 'es' }"> 
+        <img src="images/es.png" alt="Bandera" class="w-4 h-3 mr-2" /> Español
+      </li>
+      <li class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-800" (click)="seleccionarIdioma('en')"
+          [ngClass]="{ 'text-white font-bold': idiomaSeleccionado === 'en' }"> 
+          <img src="images/us.png" alt="Bandera" class="w-4 h-3 mr-2" /> English
+      </li>
+      <li class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-800" (click)="seleccionarIdioma('fr')"
+          [ngClass]="{ 'text-white font-bold': idiomaSeleccionado === 'fr' }"> 
+          <img src="images/fr.png" alt="Bandera" class="w-4 h-3 mr-2" /> Français
+      </li>
+      <li class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-800" (click)="seleccionarIdioma('de')"
+          [ngClass]="{ 'text-white font-bold': idiomaSeleccionado === 'de' }"> 
+          <img src="images/de.png" alt="Bandera" class="w-4 h-3 mr-2" /> German
+      </li>
+    </ul>
+  </div>
+
+  <button (click)="alternarDropdownIdioma()"
+    class="w-full py-2 flex justify-between items-center bg-gradient-to-br from-gray-800 to-gray-900 text-white font-semibold rounded-md shadow-lg hover:shadow-gray-700 transition duration-300"
+  >
+    <div class="flex items-center gap-1">
+      <img [src]="getFlagUrl(idiomaSeleccionado)" alt="Bandera" class="w-4 h-3 ml-2 mr-1" />
+      <span class="text-xs md:text-sm">
+        {{ idiomaSeleccionado === 'es' ? 'Español' : 
+           idiomaSeleccionado === 'en' ? 'English' : 
+           idiomaSeleccionado === 'fr' ? 'Français' : 
+           idiomaSeleccionado === 'de' ? 'German' : 
+           'Seleccionar Idioma' }}
+      </span>
+    </div>
+    <i class="fas fa-chevron-down text-xs md:text-sm transition-transform mr-2"
+      [ngClass]="{ 'rotate-180': idiomaDropdownAbierto }"></i>
+  </button>
+  <p
+  aria-disabled="true"
+    class="block antialiased font-sans text-sm leading-normal text-white font-black uppercase opacity-75 mt-2"
+  >
+   {{'labels.cambiarIdioma' | translate}}
+  </p>
+</div>
 
 </aside>

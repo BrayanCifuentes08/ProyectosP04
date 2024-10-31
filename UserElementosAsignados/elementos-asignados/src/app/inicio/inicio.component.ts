@@ -7,11 +7,12 @@ import { ApiService } from '../services/api.service';
 import { SharedService } from '../services/shared.service';
 import { UtilidadService } from '../services/utilidad.service';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [AsignadorComponent, DesasignadorComponent,CommonModule],
+  imports: [AsignadorComponent, DesasignadorComponent,CommonModule, TranslateModule],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })

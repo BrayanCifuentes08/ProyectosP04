@@ -6,11 +6,12 @@ import { ApiService } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
 import { MessagesComponent } from "../../messages/messages.component";
 import { SpinnerComponent } from "../../spinner/spinner.component";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-desasignador',
   standalone: true,
-  imports: [CommonModule, MessagesComponent, SpinnerComponent],
+  imports: [CommonModule, MessagesComponent, SpinnerComponent, TranslateModule],
   templateUrl: './desasignador.component.html',
   styleUrl: './desasignador.component.css'
 })
@@ -19,7 +20,7 @@ export class DesasignadorComponent {
   elementosAsignadosSeleccionado: UserElementoAsignadoM[] = [];
   hayElementosSeleccionados: boolean = false; 
   @Output() regresar = new EventEmitter<void>();
-  constructor(private sharedService: SharedService, private apiService: ApiService){}
+  constructor(private sharedService: SharedService, private apiService: ApiService, private translate: TranslateService){}
   isLoading: boolean = false;
   isVisibleModal: boolean = false;
   mensajeModal: string = ''; 
@@ -55,10 +56,6 @@ export class DesasignadorComponent {
   
     forkJoin(desasignaciones).subscribe({
       next: results => {
-        console.log("Resultados de desasignación:", results); // Log completo para inspección
-  
-        // Ajuste para manejar el array dentro de array en la respuesta
-
         const errores = results
           .flat()
           .filter((result: any) => !result.resultado);
@@ -70,11 +67,12 @@ export class DesasignadorComponent {
           this.mensajeError.emit(mensaje); // Emitimos el mensaje de error
           this.onRegresar();
         } else {
-          console.log("Elementos desasignados correctamente:", results);
           this.elementosAsignadosSeleccionado = [];
           this.onRegresar();
           this.mostrarBtnLimpiarSeleccion = false;
-          this.mensajeExito.emit('Elementos desasignados correctamente.');
+          this.translate.get('infoTextos.elementosDesasignadosCorrectamente').subscribe(translatedMessage => {
+            this.mensajeExito.emit(translatedMessage);
+          });
         }
       },
       error: error => {

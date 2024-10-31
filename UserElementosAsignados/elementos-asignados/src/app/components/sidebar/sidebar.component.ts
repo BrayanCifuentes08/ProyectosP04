@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
+import { TraduccionService } from '../../services/traduccion.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
@@ -17,7 +20,18 @@ export class SidebarComponent {
   usandoHoraPerma: boolean = false;
   tooltipVisible: boolean = false;
   tiempoRestante: string = '';
-  constructor(private router: Router, private apiService: ApiService){
+  dropdownAbierto = false;
+  idiomaDropdownAbierto: boolean = false;
+  idiomaSeleccionado: string = 'es';
+  @Output() opcionSeleccionadaCatalogo  = new EventEmitter<string | null>();
+  opcionSeleccionadaDropdown: string | null = null;
+  @Output() sidebarToggle = new EventEmitter<boolean>();
+  isSidebarVisible: boolean = false;
+  sidebarAbierto: boolean = false;
+
+  
+  constructor(private router: Router, private apiService: ApiService, private traduccionService: TraduccionService, private sharedService: SharedService){
+    this.idiomaSeleccionado = this.traduccionService.getIdiomaActual();
     this.horaInicioSesionFormatted = localStorage.getItem('horaInicioSesionFormatted');
       // Recuperar valores del localStorage
       this.horaInicioSesionFormatted = localStorage.getItem('horaInicioSesionFormatted');
@@ -36,6 +50,9 @@ export class SidebarComponent {
   ngOnInit(){
     this.fechaVencimientoToken = localStorage.getItem('fechaVencimientoToken');
     this.user = this.apiService.getUser();
+    this.sharedService.sidebarOpen$.subscribe(open => {
+      this.sidebarAbierto = open;
+    });
   }
 
   logout(): void {
@@ -83,4 +100,34 @@ export class SidebarComponent {
   pad(n: number): string {
     return n < 10 ? '0' + n : '' + n;
   }  
+
+  alternarDropdownIdioma() {
+    this.idiomaDropdownAbierto = !this.idiomaDropdownAbierto;
+  }
+
+  seleccionarIdioma(language: string) {
+    this.traduccionService.cambiarIdioma(language); // Cambia el idioma
+    console.log('Idioma seleccionado:', language);
+    this.idiomaSeleccionado = language;
+    this.idiomaDropdownAbierto = false; 
+  }
+
+  getFlagUrl(idioma: string): string {
+    if (idioma === 'en') {
+      return 'images/us.png';
+    } else if (idioma === 'es') {
+      return 'images/es.png';
+    } else if (idioma === 'fr') {
+      return 'images/fr.png';
+    } else if (idioma === 'de'){
+      return 'images/de.png'
+    }
+    return 'images/default.png'; // Bandera por defecto si el idioma no es reconocido
+  }
+
+  cerrarSidebar() {
+    this.sidebarAbierto = false;
+    this.sharedService.alternarSidebar(false);
+  }
+  
 }
