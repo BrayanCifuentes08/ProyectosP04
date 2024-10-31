@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:elementos_asignados/common/FloatingActionButtonNotifier.dart';
 import 'package:elementos_asignados/common/Loading.dart';
 import 'package:elementos_asignados/common/Mensajes.dart';
+import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Layout.dart';
 import 'package:elementos_asignados/models/PaBscElementosNoAsignadosM.dart';
 import 'package:elementos_asignados/models/PaInsertUserElementoAsignadoM.dart';
@@ -20,6 +21,13 @@ class Asignador extends StatefulWidget {
   final String pUserName;
   final String baseUrl;
   final bool temaClaro;
+  final int pEmpresa;
+  final int pEstacion_Trabajo;
+  final String token;
+  final DateTime fechaSesion;
+  final DateTime? fechaExpiracion;
+  final String? despEmpresa;
+  final String? despEstacion_Trabajo;
 
   Asignador(
       {required this.baseUrl,
@@ -28,7 +36,14 @@ class Asignador extends StatefulWidget {
       required this.pUserName,
       required this.isBackgroundSet,
       required this.imagePath,
-      required this.temaClaro});
+      required this.temaClaro,
+      required this.pEmpresa,
+      required this.pEstacion_Trabajo,
+      required this.token,
+      required this.fechaSesion,
+      this.fechaExpiracion,
+      required this.despEmpresa,
+      required this.despEstacion_Trabajo});
   @override
   _AsignadorState createState() => _AsignadorState();
 }
@@ -103,8 +118,10 @@ class _AsignadorState extends State<Asignador> {
     Uri uri = Uri.parse(url).replace();
 
     try {
-      final response =
-          await http.get(uri, headers: {"Content-Type": "application/json"});
+      final response = await http.get(uri, headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${widget.token}"
+      });
 
       if (response.statusCode == 200) {
         // respuesta JSON a lista
@@ -167,7 +184,10 @@ class _AsignadorState extends State<Asignador> {
           try {
             final response = await http.post(
               Uri.parse(url),
-              headers: {"Content-Type": "application/json"},
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer ${widget.token}"
+              },
               body: jsonEncode(requestBody),
             );
 
@@ -239,21 +259,18 @@ class _AsignadorState extends State<Asignador> {
             return Layout(
               imagePath: widget.imagePath,
               isBackgroundSet: widget.isBackgroundSet,
-              catalogo: null,
               changeLanguage: widget.changeLanguage,
               idiomaDropDown: widget.idiomaDropDown,
               temaClaro: widget.temaClaro,
-              baseUrl: 'http://192.168.10.41:9090/api/',
-              pUserName: 'AUDITOR01',
-              // token: sessionData['token'],
-              // pUserName: sessionData['username'],
-              // pEmpresa: sessionData['empresa'],
-              // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-              // baseUrl: sessionData['urlBase'],
-              // fechaSesion: sessionData['fecha'],
-              // fechaExpiracion: sessionData['fechaExpiracion'],
-              // despEmpresa: sessionData['desEmpresa'],
-              // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+              token: widget.token,
+              pUserName: widget.pUserName,
+              pEmpresa: widget.pEmpresa,
+              pEstacion_Trabajo: widget.pEstacion_Trabajo,
+              baseUrl: widget.baseUrl,
+              fechaSesion: widget.fechaSesion,
+              fechaExpiracion: widget.fechaExpiracion,
+              despEmpresa: widget.despEmpresa,
+              despEstacion_Trabajo: widget.despEstacion_Trabajo,
             );
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -285,6 +302,7 @@ class _AsignadorState extends State<Asignador> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
     return Flexible(
       fit: FlexFit.loose,
@@ -296,51 +314,62 @@ class _AsignadorState extends State<Asignador> {
               changeLanguage: widget.changeLanguage,
             )
           else ...[
+            //INPUT DE BÚSQUEDA
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 1),
               child: TextField(
                 controller: searchController,
                 onChanged: _filtrarElementos,
                 style: TextStyle(
-                  color: Colors.blue[900],
+                  color: !themeNotifier.temaClaro
+                      ? Colors.white
+                      : Colors.blue[900],
                   fontSize: 16,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Buscar elemento...',
-                  hintStyle: TextStyle(
-                    color: Color(0XFFF1F2937),
-                    fontSize: 15,
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.blue[400],
-                  ),
-                  suffixIcon: searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: Icon(Icons.clear, color: Colors.blue[300]),
-                          onPressed: () {
-                            searchController.clear();
-                            _filtrarElementos('');
-                          },
-                        )
-                      : null,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide:
-                        BorderSide(color: Colors.grey[300]!, width: 1.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide:
-                        BorderSide(color: Colors.blue[400]!, width: 1.5),
-                  ),
-                  filled: true,
-                ),
+                    hintText: 'Buscar elemento...',
+                    hintStyle: TextStyle(
+                      color: !themeNotifier.temaClaro
+                          ? Color.fromARGB(255, 92, 122, 163)
+                          : Color(0XFFF1F2937),
+                      fontSize: 15,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.blue[400],
+                    ),
+                    suffixIcon: searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(Icons.clear, color: Colors.blue[300]),
+                            onPressed: () {
+                              searchController.clear();
+                              _filtrarElementos('');
+                            },
+                          )
+                        : null,
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide(
+                          color: !themeNotifier.temaClaro
+                              ? Colors.grey[600]!
+                              : Colors.grey[300]!,
+                          width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide:
+                          BorderSide(color: Colors.blue[400]!, width: 1.5),
+                    ),
+                    filled: true,
+                    fillColor: !themeNotifier.temaClaro
+                        ? Color.fromARGB(255, 24, 31, 43)
+                        : Colors.transparent),
                 cursorColor: Colors.blue[900],
               ),
             ),
+            //CHIP DE CONTADOR DE ELEMENTOS SIN ASIGNAR
             Padding(
               padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
               child: Align(
@@ -349,28 +378,40 @@ class _AsignadorState extends State<Asignador> {
                   label: Text(
                     'No. elementos sin asignar: ${_elementosNoAsignados.length}',
                     style: TextStyle(
-                      color: Color(0XFFF1F2937),
+                      color: !themeNotifier.temaClaro
+                          ? Colors.white60
+                          : Color(0XFFF1F2937),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  backgroundColor: Color(0xFFFE5E7EB),
+                  backgroundColor: !themeNotifier.temaClaro
+                      ? Colors.grey.shade800
+                      : Color(0xFFFE5E7EB),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                          color: !themeNotifier.temaClaro
+                              ? Colors.grey.shade800
+                              : Color(0xFFFE5E7EB))),
                   avatar: Icon(
                     Icons.info,
-                    color: Color(0XFFF1F2937),
+                    color: !themeNotifier.temaClaro
+                        ? Colors.white60
+                        : Color(0XFFF1F2937),
                     size: 18,
                   ),
                 ),
               ),
             ),
+            //CONTAINER CON GRIDVIEW PARA SELECCIONAR ELEMENTOS
             Container(
               height: 400,
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: !themeNotifier.temaClaro
+                    ? Color.fromARGB(255, 36, 46, 63)
+                    : Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -388,8 +429,11 @@ class _AsignadorState extends State<Asignador> {
                               .every((seleccionado) => seleccionado)
                           ? 'Deseleccionar Todos'
                           : 'Seleccionar Todos',
-                      style:
-                          TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: !themeNotifier.temaClaro
+                              ? Colors.white
+                              : Colors.grey.shade600),
                     ),
                     value: _seleccionados.values
                         .every((seleccionado) => seleccionado),
@@ -420,14 +464,20 @@ class _AsignadorState extends State<Asignador> {
                         return Container(
                           decoration: BoxDecoration(
                             color: _seleccionados[elemento.descripcion] == true
-                                ? Colors.blue[50]
-                                : Colors.grey[100],
+                                ? !themeNotifier.temaClaro
+                                    ? const Color.fromARGB(255, 70, 106, 146)
+                                    : Colors.blue[50]
+                                : !themeNotifier.temaClaro
+                                    ? Color.fromARGB(255, 47, 59, 82)
+                                    : Colors.grey[100],
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color:
                                   _seleccionados[elemento.descripcion] == true
                                       ? Colors.blue
-                                      : Colors.grey[300]!,
+                                      : !themeNotifier.temaClaro
+                                          ? Color.fromARGB(255, 24, 31, 43)
+                                          : Colors.grey[300]!,
                             ),
                           ),
                           child: CheckboxListTile(
@@ -435,7 +485,9 @@ class _AsignadorState extends State<Asignador> {
                               elemento.descripcion,
                               style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black87,
+                                  color: !themeNotifier.temaClaro
+                                      ? Colors.white
+                                      : Colors.black87,
                                   overflow: TextOverflow.ellipsis),
                             ),
                             value:
@@ -460,6 +512,7 @@ class _AsignadorState extends State<Asignador> {
                       }),
                     ),
                   ),
+                  //TEXT BUTTON PARA LIMPIAR SELENCCIONES
                   if (_seleccionados.values.any((seleccionado) => seleccionado))
                     Align(
                       alignment: Alignment.centerLeft, // Alinear a la izquierda
@@ -472,7 +525,10 @@ class _AsignadorState extends State<Asignador> {
                         },
                         child: Text(
                           'Limpiar selecciones',
-                          style: TextStyle(color: Colors.blueGrey),
+                          style: TextStyle(
+                              color: !themeNotifier.temaClaro
+                                  ? Colors.white70
+                                  : Colors.blueGrey),
                         ),
                       ),
                     ),
@@ -481,12 +537,15 @@ class _AsignadorState extends State<Asignador> {
             ),
           ],
           SizedBox(height: 20),
+          //CONTAINER DE SELECCIONADOS
           _seleccionados.values.any((seleccionado) => seleccionado)
               ? Column(children: [
                   Container(
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: !themeNotifier.temaClaro
+                          ? Color.fromARGB(255, 36, 46, 63)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -502,14 +561,18 @@ class _AsignadorState extends State<Asignador> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            //TEXTO ELEMENTOS SELECCIONADOS
                             Text(
                               'Elementos seleccionados',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color: !themeNotifier.temaClaro
+                                    ? Colors.white
+                                    : Colors.black87,
                               ),
                             ),
+                            //CHIP DE CONTADOR DE SELECCIONADOS
                             Chip(
                               label: Text(
                                 '${_seleccionados.values.where((seleccionado) => seleccionado).length} seleccionados',
@@ -522,8 +585,12 @@ class _AsignadorState extends State<Asignador> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 4),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide(
+                                      color: !themeNotifier.temaClaro
+                                          ? Colors.grey.shade800
+                                          : Color.fromARGB(
+                                              255, 207, 207, 207))),
                               avatar: Icon(
                                 Icons.check_circle,
                                 color: Colors.white,
@@ -532,8 +599,12 @@ class _AsignadorState extends State<Asignador> {
                             ),
                           ],
                         ),
-                        Divider(color: Colors.grey[300]),
+                        Divider(
+                            color: !themeNotifier.temaClaro
+                                ? Colors.grey[700]
+                                : Colors.grey[300]),
                         SizedBox(height: 10),
+                        //LISTA DE SELECCIONADOS CON INFORMACIÓN
                         ..._seleccionados.entries.map((entry) {
                           String descripcion = entry.key;
                           bool seleccionado = entry.value;
@@ -549,16 +620,24 @@ class _AsignadorState extends State<Asignador> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.black87,
+                                    color: !themeNotifier.temaClaro
+                                        ? Colors.white
+                                        : Colors.black87,
                                   ),
                                 ),
                                 SizedBox(height: 5),
                                 Text(
                                   'Elemento no. ${_elementosNoAsignados[index].elementoAsignado}',
-                                  style: TextStyle(color: Colors.black54),
+                                  style: TextStyle(
+                                      color: !themeNotifier.temaClaro
+                                          ? Colors.white70
+                                          : Colors.black54),
                                 ),
                                 SizedBox(height: 15),
-                                Divider(color: Colors.grey[300]),
+                                Divider(
+                                    color: !themeNotifier.temaClaro
+                                        ? Colors.grey[700]
+                                        : Colors.grey[300]),
                               ],
                             );
                           } else {
@@ -569,10 +648,12 @@ class _AsignadorState extends State<Asignador> {
                     ),
                   ),
                   SizedBox(height: 20),
+                  //COMPONENTE DE CARGA
                   if (_cargandoPost)
                     LoadingComponent(
                         color: Colors.blue,
                         changeLanguage: widget.changeLanguage),
+                  //BOTON CONFIRMAR ASIGNACION
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Padding(

@@ -1,4 +1,5 @@
 import 'package:elementos_asignados/components/Layout.dart';
+import 'package:elementos_asignados/components/Login.dart';
 import 'package:elementos_asignados/services/LoginService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animacionController;
   late Animation<double> _animacion;
-  // late LoginService _loginService;
+  late LoginService _loginService;
 
   @override
   void initState() {
@@ -48,41 +49,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animacionController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return Layout(
-                imagePath: widget.imagePath,
-                isBackgroundSet: widget.isBackgroundSet,
-                catalogo: null,
-                changeLanguage: widget.changeLanguage,
-                idiomaDropDown: widget.idiomaDropDown,
-                temaClaro: widget.temaClaro,
-                baseUrl: 'http://192.168.10.41:9090/api/',
-                pUserName: 'AUDITOR01',
-                // token: sessionData['token'],
-                // pUserName: sessionData['username'],
-                // pEmpresa: sessionData['empresa'],
-                // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-                // baseUrl: sessionData['urlBase'],
-                // fechaSesion: sessionData['fecha'],
-                // fechaExpiracion: sessionData['fechaExpiracion'],
-                // despEmpresa: sessionData['desEmpresa'],
-                // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
-              );
-            },
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-          ),
-        );
-        // _loginService = LoginService();
+        _loginService = LoginService();
 
-        // _checkSession();
+        _checkSession();
       }
     });
   }
@@ -93,63 +62,61 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  // Future<void> _checkSession() async {
-  // final sessionData = await _loginService.getUserSession();
+  Future<void> _checkSession() async {
+    final sessionData = await _loginService.getUserSession();
 
-  // Redirige dependiendo si hay un token guardado o no
-  // if (sessionData['token'] != '') {
-  //   Navigator.of(context).pushReplacement(
-  //     PageRouteBuilder(
-  //       pageBuilder: (context, animation, secondaryAnimation) {
-  //         return Layout(
-  //           imagePath: widget.imagePath,
-  //           isBackgroundSet: widget.isBackgroundSet,
-  //           catalogo: null,
-  //           changeLanguage: widget.changeLanguage,
-  //           idiomaDropDown: widget.idiomaDropDown,
-  //           temaClaro: widget.temaClaro,
-  //           baseUrl: 'http://192.168.10.41:9090/api/',
-  //           // token: sessionData['token'],
-  //           // pUserName: sessionData['username'],
-  //           // pEmpresa: sessionData['empresa'],
-  //           // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-  //           // baseUrl: sessionData['urlBase'],
-  //           // fechaSesion: sessionData['fecha'],
-  //           // fechaExpiracion: sessionData['fechaExpiracion'],
-  //           // despEmpresa: sessionData['desEmpresa'],
-  //           // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
-  //         );
-  //       },
-  //       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //         return FadeTransition(
-  //           opacity: animation,
-  //           child: child,
-  //         );
-  //       },
-  //     ),
-  //   );
-  // } else {
-  // Navigator.of(context).pushReplacement(
-  //   PageRouteBuilder(
-  //     pageBuilder: (context, animation, secondaryAnimation) {
-  //       return LoginScreen(
-  //         changeLanguage: widget.changeLanguage,
-  //         seleccionarIdioma: widget.idiomaDropDown,
-  //         idiomaDropDown: widget.idiomaDropDown,
-  //         imagePath: widget.imagePath,
-  //         isBackgroundSet: widget.isBackgroundSet,
-  //       );
-  //     },
-  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //       return FadeTransition(
-  //         opacity: animation,
-  //         child: child,
-  //       );
-  //     },
-  //   ),
-  // );
-  //   }
-  // }
+    //Redirige dependiendo si hay un token guardado o no
+    if (sessionData['token'] != '') {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return Layout(
+              imagePath: widget.imagePath,
+              isBackgroundSet: widget.isBackgroundSet,
+              changeLanguage: widget.changeLanguage,
+              idiomaDropDown: widget.idiomaDropDown,
+              temaClaro: widget.temaClaro,
+              token: sessionData['token'],
+              pUserName: sessionData['username'],
+              pEmpresa: sessionData['empresa'],
+              pEstacion_Trabajo: sessionData['estacionTrabajo'],
+              baseUrl: sessionData['urlBase'],
+              fechaSesion: sessionData['fecha'],
+              fechaExpiracion: sessionData['fechaExpiracion'],
+              despEmpresa: sessionData['desEmpresa'],
+              despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return LoginScreen(
+              changeLanguage: widget.changeLanguage,
+              seleccionarIdioma: widget.idiomaDropDown,
+              idiomaDropDown: widget.idiomaDropDown,
+              imagePath: widget.imagePath,
+              isBackgroundSet: widget.isBackgroundSet,
+            );
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

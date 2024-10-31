@@ -22,16 +22,16 @@ class Dashboard extends StatefulWidget {
   final Function onScrollToDown;
   final Function onScrollToTop;
   Locale idiomaDropDown;
-  // final bool temaClaro;
-  // final String token;
+  final bool temaClaro;
+  final String token;
   final String pUserName;
-  // final int pEmpresa;
-  // final int pEstacion_Trabajo;
+  final int pEmpresa;
+  final int pEstacion_Trabajo;
   String baseUrl;
-  // final DateTime fechaSesion;
-  // final DateTime? fechaExpiracion;
-  // final String? despEmpresa;
-  // final String? despEstacion_Trabajo;
+  final DateTime fechaSesion;
+  final DateTime? fechaExpiracion;
+  final String? despEmpresa;
+  final String? despEstacion_Trabajo;
 
   Dashboard({
     required this.isBackgroundSet,
@@ -41,14 +41,15 @@ class Dashboard extends StatefulWidget {
     required this.onScrollToDown,
     required this.onScrollToTop,
     required this.baseUrl,
-    // required this.token,
+    required this.token,
     required this.pUserName,
-    // required this.pEmpresa,
-    // required this.pEstacion_Trabajo,
-    // required this.fechaSesion,
-    // required this.despEmpresa,
-    // required this.despEstacion_Trabajo,
-    // this.fechaExpiracion,
+    required this.pEmpresa,
+    required this.pEstacion_Trabajo,
+    required this.fechaSesion,
+    required this.despEmpresa,
+    required this.despEstacion_Trabajo,
+    this.fechaExpiracion,
+    required this.temaClaro,
   });
   @override
   _DashboardState createState() => _DashboardState();
@@ -71,6 +72,7 @@ class _DashboardState extends State<Dashboard> {
     _getUserElementosAsignados();
   }
 
+  //FUNCIÓN PARA OBTENER ELEMENTOS ASIGNADOS DEL USUARIO
   Future<void> _getUserElementosAsignados() async {
     // Verifica que el widget esté montado antes de realizar cualquier acción.
     if (!mounted) return;
@@ -91,8 +93,10 @@ class _DashboardState extends State<Dashboard> {
     Uri uri = Uri.parse(url).replace(queryParameters: parametrosString);
 
     try {
-      final response =
-          await http.get(uri, headers: {"Content-Type": "application/json"});
+      final response = await http.get(uri, headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${widget.token}"
+      });
 
       if (response.statusCode == 200) {
         // respuesta JSON a lista
@@ -131,6 +135,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  //METODO FILTRAR ELEMENTOS
   void _filtrarElementos(String query) {
     setState(() {
       elementosFiltrados = _elementosAsignados
@@ -140,6 +145,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  //WIDGET PRINCIPAL
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
@@ -149,7 +155,6 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
       padding: const EdgeInsets.all(0),
       child: SingleChildScrollView(
-        // Agregar SingleChildScrollView
         child: Container(
           constraints: BoxConstraints(
             minHeight:
@@ -184,6 +189,7 @@ class _DashboardState extends State<Dashboard> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                //TARJETA EN CASO DE ERROR
                 if (isRequestError)
                   Card(
                     elevation: 3,
@@ -229,60 +235,22 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                   ),
-                // Verifica si no hay elementos asignados
-                if (isEmptyAsignados)
-                  Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    color: Colors.blueAccent.shade100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'No hay elementos asignados',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue.shade900,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            '${widget.pUserName} no tiene ningún elemento asignado.',
-                            style:
-                                TextStyle(fontSize: 14, color: Colors.black87),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Llamar la función para reintentar la solicitud
-                              _getUserElementosAsignados();
-                            },
-                            child: Text(
-                              'Refrescar',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blueAccent,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (!isEmptyAsignados && !isRequestError)
+                // WRAP DE TARJETA DE USUARIO Y BOTONES DE ASIGNAR Y DESASIGNAR
+                if (!isRequestError)
                   Wrap(
                     spacing: 1,
                     runSpacing: 1,
                     alignment: WrapAlignment.start,
                     children: [
                       // Tarjeta de Usuario
-                      _buildUserCard(widget.pUserName, '10:00 AM', '12:00 PM'),
+                      _buildUserCard(
+                        widget.pUserName,
+                        DateFormat('dd/MM/yy').format(widget.fechaSesion),
+                        widget.fechaExpiracion != null
+                            ? DateFormat('dd/MM/yy')
+                                .format(widget.fechaExpiracion!)
+                            : null,
+                      ),
                       Column(
                         children: [
                           ElevatedButton(
@@ -355,22 +323,21 @@ class _DashboardState extends State<Dashboard> {
                                           imagePath: widget.imagePath,
                                           isBackgroundSet:
                                               widget.isBackgroundSet,
-                                          catalogo: null,
                                           changeLanguage: widget.changeLanguage,
                                           idiomaDropDown: widget.idiomaDropDown,
                                           temaClaro: themeNotifier.temaClaro,
-                                          baseUrl:
-                                              'http://192.168.10.41:9090/api/',
+                                          baseUrl: widget.baseUrl,
                                           pUserName: 'AUDITOR01',
-                                          // token: sessionData['token'],
-                                          // pUserName: sessionData['username'],
-                                          // pEmpresa: sessionData['empresa'],
-                                          // pEstacion_Trabajo: sessionData['estacionTrabajo'],
-                                          // baseUrl: sessionData['urlBase'],
-                                          // fechaSesion: sessionData['fecha'],
-                                          // fechaExpiracion: sessionData['fechaExpiracion'],
-                                          // despEmpresa: sessionData['desEmpresa'],
-                                          // despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+                                          token: widget.token,
+                                          pEmpresa: widget.pEmpresa,
+                                          pEstacion_Trabajo:
+                                              widget.pEstacion_Trabajo,
+                                          fechaSesion: widget.fechaSesion,
+                                          fechaExpiracion:
+                                              widget.fechaExpiracion,
+                                          despEmpresa: widget.despEmpresa,
+                                          despEstacion_Trabajo:
+                                              widget.despEstacion_Trabajo,
                                         );
                                       },
                                       transitionsBuilder: (context, animation,
@@ -403,7 +370,56 @@ class _DashboardState extends State<Dashboard> {
                   thickness: 2,
                   color: Colors.grey,
                 ),
-                if (mostrarGridElementosUsuario && !isRequestError)
+                //TARJETA INDICANDO QUE NO TIENE ELEMENTOS EL USUARIO
+                if (isEmptyAsignados && isAsignarElemento)
+                  Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    color: Colors.blueAccent.shade100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'No hay elementos asignados',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade900,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${widget.pUserName} no tiene ningún elemento asignado.',
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.black87),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Llamar la función para reintentar la solicitud
+                              _getUserElementosAsignados();
+                            },
+                            child: Text(
+                              'Refrescar',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                //INPUT DE BUSQUEDA
+                if (mostrarGridElementosUsuario &&
+                    !isRequestError &&
+                    !isEmptyAsignados)
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 1.0, horizontal: 1),
@@ -411,47 +427,59 @@ class _DashboardState extends State<Dashboard> {
                       controller: searchController,
                       onChanged: _filtrarElementos,
                       style: TextStyle(
-                        color: Colors.blue[900],
+                        color: !themeNotifier.temaClaro
+                            ? Colors.white
+                            : Colors.blue[900],
                         fontSize: 16,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Buscar elemento...',
-                        hintStyle: TextStyle(
-                          color: Color(0XFFF1F2937),
-                          fontSize: 15,
-                        ),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.blue[400],
-                        ),
-                        suffixIcon: searchController.text.isNotEmpty
-                            ? IconButton(
-                                icon:
-                                    Icon(Icons.clear, color: Colors.blue[300]),
-                                onPressed: () {
-                                  searchController.clear();
-                                  _filtrarElementos('');
-                                },
-                              )
-                            : null,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide:
-                              BorderSide(color: Colors.grey[300]!, width: 1.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide:
-                              BorderSide(color: Colors.blue[400]!, width: 1.5),
-                        ),
-                        filled: true,
-                      ),
+                          hintText: 'Buscar elemento...',
+                          hintStyle: TextStyle(
+                            color: !themeNotifier.temaClaro
+                                ? Color.fromARGB(255, 92, 122, 163)
+                                : Color(0XFFF1F2937),
+                            fontSize: 15,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.blue[400],
+                          ),
+                          suffixIcon: searchController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(Icons.clear,
+                                      color: Colors.blue[300]),
+                                  onPressed: () {
+                                    searchController.clear();
+                                    _filtrarElementos('');
+                                  },
+                                )
+                              : null,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide(
+                                color: !themeNotifier.temaClaro
+                                    ? Colors.grey[600]!
+                                    : Colors.grey[300]!,
+                                width: 1.5),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide(
+                                color: Colors.blue[400]!, width: 1.5),
+                          ),
+                          filled: true,
+                          fillColor: !themeNotifier.temaClaro
+                              ? Color.fromARGB(255, 24, 31, 43)
+                              : Colors.transparent),
                       cursorColor: Colors.blue[900],
                     ),
                   ),
-                if (mostrarGridElementosUsuario && !isRequestError)
+                //CHIP DE NO. ELEMENTOS ASIGNADOS
+                if (mostrarGridElementosUsuario &&
+                    !isRequestError &&
+                    !isEmptyAsignados)
                   Padding(
                     padding: const EdgeInsets.only(top: 1.0, bottom: 5.0),
                     child: Align(
@@ -460,29 +488,42 @@ class _DashboardState extends State<Dashboard> {
                         label: Text(
                           'No. elementos asignados: ${_elementosAsignados.length}',
                           style: TextStyle(
-                            color: Color(0XFFF1F2937),
+                            color: !themeNotifier.temaClaro
+                                ? Colors.white60
+                                : Color(0XFFF1F2937),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        backgroundColor: Color(0xFFFE5E7EB),
+                        backgroundColor: !themeNotifier.temaClaro
+                            ? Colors.grey.shade800
+                            : Color(0xFFFE5E7EB),
                         padding:
                             EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(
+                                color: !themeNotifier.temaClaro
+                                    ? Colors.grey.shade800
+                                    : Color(0xFFFE5E7EB))),
                         avatar: Icon(
                           Icons.info,
-                          color: Color(0XFFF1F2937),
+                          color: !themeNotifier.temaClaro
+                              ? Colors.white60
+                              : Color(0XFFF1F2937),
                           size: 18,
                         ),
                       ),
                     ),
                   ),
+                //COMPONENTE DE CARGA
                 if (_cargando)
                   LoadingComponent(
                       color: Colors.blue,
                       changeLanguage: widget.changeLanguage),
-                if (mostrarGridElementosUsuario && !isRequestError)
+                //GRID VIEW DE ELEMENTOS ASIGNADOS AL USUARIO
+                if (mostrarGridElementosUsuario &&
+                    !isRequestError &&
+                    !isEmptyAsignados)
                   Flexible(
                     fit: FlexFit.loose,
                     child: GridView.builder(
@@ -501,6 +542,7 @@ class _DashboardState extends State<Dashboard> {
                       },
                     ),
                   ),
+                //LLAMADA DE SECCIÓN PARA ASIGNAR ELEMENTOS
                 if (isAsignarElemento == false)
                   Asignador(
                     baseUrl: widget.baseUrl,
@@ -510,7 +552,15 @@ class _DashboardState extends State<Dashboard> {
                     isBackgroundSet: widget.isBackgroundSet,
                     imagePath: widget.imagePath,
                     temaClaro: themeNotifier.temaClaro,
+                    pEmpresa: widget.pEmpresa,
+                    pEstacion_Trabajo: widget.pEstacion_Trabajo,
+                    token: widget.token,
+                    fechaSesion: widget.fechaSesion,
+                    fechaExpiracion: widget.fechaExpiracion,
+                    despEmpresa: widget.despEmpresa,
+                    despEstacion_Trabajo: widget.despEstacion_Trabajo,
                   ),
+                //LLAMADA DE SECCIÓN PARA DESASIGNAR ELEMENTOS
                 if (isDesasignarElemento == false)
                   Desasignador(
                     baseUrl: widget.baseUrl,
@@ -521,6 +571,13 @@ class _DashboardState extends State<Dashboard> {
                     isBackgroundSet: widget.isBackgroundSet,
                     imagePath: widget.imagePath,
                     temaClaro: themeNotifier.temaClaro,
+                    pEmpresa: widget.pEmpresa,
+                    pEstacion_Trabajo: widget.pEstacion_Trabajo,
+                    token: widget.token,
+                    fechaSesion: widget.fechaSesion,
+                    fechaExpiracion: widget.fechaExpiracion,
+                    despEmpresa: widget.despEmpresa,
+                    despEstacion_Trabajo: widget.despEstacion_Trabajo,
                   )
               ],
             ),
@@ -531,8 +588,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   // Tarjeta para mostrar la información del usuario
-  Widget _buildUserCard(String name, String sessionStart, String sessionEnd) {
+  Widget _buildUserCard(String name, String sessionStart, String? sessionEnd) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Card(
+      color: !themeNotifier.temaClaro
+          ? Color.fromARGB(255, 43, 56, 75)
+          : Colors.white,
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -549,11 +610,21 @@ class _DashboardState extends State<Dashboard> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: !themeNotifier.temaClaro ? Colors.white : Colors.black,
               ),
             ),
             SizedBox(height: 10),
-            Text('Sesión: $sessionStart'),
-            Text('Expira: $sessionEnd'),
+            Text('Sesión: $sessionStart',
+                style: TextStyle(
+                    color: !themeNotifier.temaClaro
+                        ? Colors.white
+                        : Colors.black)),
+            if (sessionEnd != null)
+              Text('Expira: $sessionEnd',
+                  style: TextStyle(
+                      color: !themeNotifier.temaClaro
+                          ? Colors.white
+                          : Colors.black)),
           ],
         ),
       ),
@@ -563,23 +634,26 @@ class _DashboardState extends State<Dashboard> {
   // Tarjeta para los elementos asignados al usuario
   Widget _buildAssignedItemCard(
       String itemName, DateTime fechaHora, IconData icon) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     final String formattedDate =
         DateFormat('dd/MM/yyyy, HH:mm').format(fechaHora);
 
     return Card(
+      color: !themeNotifier.temaClaro
+          ? Color.fromARGB(255, 43, 56, 75)
+          : Colors.white,
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0), // Reducimos el padding
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon,
-                size: 36, color: Colors.green), // Tamaño del ícono reducido
-            SizedBox(height: 8), // Espacio reducido
+            Icon(icon, size: 36, color: Colors.green),
+            SizedBox(height: 8),
             Tooltip(
               message: itemName,
               child: Text(
@@ -587,20 +661,23 @@ class _DashboardState extends State<Dashboard> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: !themeNotifier.temaClaro ? Colors.white : Colors.black,
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2, // Limita a dos líneas
               ),
             ),
-            SizedBox(height: 8), // Espacio reducido
+            SizedBox(height: 8),
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
                 formattedDate,
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.grey[700],
+                  color: !themeNotifier.temaClaro
+                      ? Colors.white60
+                      : Colors.grey[700],
                 ),
                 textAlign: TextAlign.center,
               ),
