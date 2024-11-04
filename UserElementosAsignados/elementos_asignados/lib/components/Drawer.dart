@@ -1,9 +1,11 @@
 // import 'package:dropdown_button2/dropdown_button2.dart';
 // import 'package:elementos_asignados/common/Mensajes.dart';
+import 'package:elementos_asignados/common/IdiomaNotifier.dart';
 import 'package:elementos_asignados/common/Mensajes.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/generated/l10n.dart';
 import 'package:elementos_asignados/services/PreferenciasService.dart';
+import 'package:elementos_asignados/services/Shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -59,7 +61,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final idiomaNotifier = Provider.of<IdiomaNotifier>(context);
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final accionService = Provider.of<AccionService>(context);
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
@@ -157,6 +161,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
             ),
             SizedBox(height: 330),
+            //SECCION CAMBIO IDIOMA
             ListTile(
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -224,14 +229,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 MaterialStateProperty.all<bool>(true),
                           ),
                         ),
-                        value: widget.idiomaDropDown,
+                        value: idiomaNotifier.idiomaSeleccionado,
                         onChanged: (Locale? newLocale) {
                           if (newLocale != null) {
                             setState(() {
                               _idiomaActual = newLocale;
+                              idiomaNotifier.cambiarIdioma(newLocale);
+
                               widget.idiomaDropDown = _idiomaActual;
                             });
                             widget.changeLanguage(newLocale);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              accionService
+                                  .setAccion("${S.of(context).inicioInicio}");
+                            });
                           }
                         },
                         items: [
@@ -334,6 +345,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 ],
               ),
             ),
+            //SECCION PARA PLANTILLA
             ListTile(
               leading: Container(
                 padding: EdgeInsets.all(8.0),

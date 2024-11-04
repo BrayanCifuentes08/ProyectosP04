@@ -1,4 +1,5 @@
 import 'package:elementos_asignados/common/FloatingActionButtonNotifier.dart';
+import 'package:elementos_asignados/common/IdiomaNotifier.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
 import 'package:elementos_asignados/components/Plantillas/PlantillaImagen.dart';
 import 'package:elementos_asignados/components/Plantillas/SeleccionFondo.dart';
@@ -20,6 +21,7 @@ void main() {
         ChangeNotifierProvider(
             create: (context) => FloatingActionButtonNotifier()),
         ChangeNotifierProvider(create: (context) => AccionService()),
+        ChangeNotifierProvider(create: (context) => IdiomaNotifier()),
       ],
       child: MyApp(),
     ),
