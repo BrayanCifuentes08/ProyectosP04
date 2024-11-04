@@ -7,7 +7,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 })
 export class ApiService {
   
-  private baseUrl: string = 'http://192.168.10.41:9090/api/';
+  private baseUrl: string = 'http://192.168.10.33:9090/api/';
   constructor(private http: HttpClient) { }
   private usuario: string = ''
   private estacion: any = null;

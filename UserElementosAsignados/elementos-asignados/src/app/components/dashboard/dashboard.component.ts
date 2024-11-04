@@ -42,7 +42,6 @@ export default class DashboardComponent {
   }
 
   ngOnInit(){
-    
     this.sharedService.userElementosAsignados$.subscribe((elementos) => {
       this.elementosAsignadosInicio = elementos;
       this.tieneElementos = elementos.length > 0;;

@@ -30,7 +30,8 @@
         "btnConfirmarAsignacion": "Confirmar asignación",
         "btnConfirmarDesasignacion": "Confirmar desasignación",
         "btnCancelar": "Cancelar",
-        "btnConfirmar": "Confirmar"
+        "btnConfirmar": "Confirmar",
+        "kbdTeclaEnter":  "Enter"
 
     },
     "infoTextos": {

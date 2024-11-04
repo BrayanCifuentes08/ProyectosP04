@@ -30,7 +30,8 @@
         "btnConfirmarAsignacion": "Confirmer l'attribution",
         "btnConfirmarDesasignacion": "Confirmer la désignation",
         "btnCancelar": "Annuler",
-        "btnConfirmar": "Confirmer"
+        "btnConfirmar": "Confirmer",
+        "kbdTeclaEnter":  "Entrée"
     },
     "infoTextos": {
         "noHayElementosAsignados": "Vous n'avez aucun élément assigné",
