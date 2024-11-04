@@ -30,7 +30,8 @@
         "btnConfirmarAsignacion": "Confirm assignment",
         "btnConfirmarDesasignacion": "Confirm unassignment",
         "btnCancelar": "Cancel",
-        "btnConfirmar": "Confirm"
+        "btnConfirmar": "Confirm",
+        "kbdTeclaEnter":  "Intro"
     },
     "infoTextos": {
         "noHayElementosAsignados": "You have no assigned elements",

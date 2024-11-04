@@ -30,12 +30,11 @@ export class HeaderComponent {
     this.usuario = this.apiService.getUser();
     }
     this.sharedService.currentHeaderText.subscribe((texto) => {
-      if (texto) {
-        this.headerText = this.traduccionService.traducirTexto(texto);
-      }
+      this.headerText = texto || 'labels.componenteInicio';
     });
     //Inicializar tema oscuro
     this.sharedService.inicializacionTema();
+    console.log("texto header: ", this.headerText)
   }
 
   //*Seccion de funciones para el modo de la interfaz

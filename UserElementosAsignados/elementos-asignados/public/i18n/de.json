@@ -31,7 +31,8 @@
         "btnConfirmarAsignacion": "Zuweisung bestätigen",
         "btnConfirmarDesasignacion": "Bestätigen Sie die Abbestellung",
         "btnCancelar": "Abbrechen",
-        "btnConfirmar": "Bestätigen"
+        "btnConfirmar": "Bestätigen",
+        "kbdTeclaEnter":  "Eingabe"
     },
     "infoTextos": {
        "noHayElementosAsignados": "Sie haben keine zugewiesenen Elemente",
