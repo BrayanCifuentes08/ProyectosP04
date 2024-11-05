@@ -10,5 +10,6 @@ BEGIN
 		[dbo].[tbl_User_Elemento_Asignado] uea 
 		ON ea.Elemento_Asignado = uea.Elemento_Asignado 
 	WHERE 
-		uea.Elemento_Asignado IS NULL;
+		uea.Elemento_Asignado IS NULL
 END
+
