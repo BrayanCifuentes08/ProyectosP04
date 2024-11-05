@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui'; // Importa el paquete necesario para ImageFilter
 import 'package:animated_background/animated_background.dart';
+import 'package:elementos_asignados/common/IdiomaNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:elementos_asignados/common/ThemeNotifier.dart';
@@ -43,7 +44,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
   late Locale _idiomaDropDown;
-  String baseUrl = 'http://192.168.10.41:9090/api/';
+  String baseUrl = 'http://192.168.10.33:9090/api/';
   String token = "";
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _userController = TextEditingController();
@@ -625,6 +626,7 @@ class _LoginScreenState extends State<LoginScreen>
             : null)
         : null;
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final idiomaNotifier = Provider.of<IdiomaNotifier>(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -1444,13 +1446,15 @@ class _LoginScreenState extends State<LoginScreen>
                                                     dropdownColor: temaClaro
                                                         ? Colors.grey[200]
                                                         : Colors.grey[800],
-                                                    value: _idiomaDropDown,
+                                                    value: idiomaNotifier
+                                                        .idiomaSeleccionado,
                                                     onChanged:
                                                         (Locale? newLocale) {
                                                       if (newLocale != null) {
                                                         setState(() {
-                                                          _idiomaDropDown =
-                                                              newLocale;
+                                                          idiomaNotifier
+                                                              .cambiarIdioma(
+                                                                  newLocale);
                                                         });
                                                         widget.changeLanguage(
                                                             newLocale);
