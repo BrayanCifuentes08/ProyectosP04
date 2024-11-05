@@ -507,7 +507,7 @@
               <!-- Contenido del Acordeón con scroll interno -->
               <div class="accordion-content" [ngClass]="{ open: sectionOpen === 'estaciones' }">
                 <div class="max-h-56 overflow-y-auto">
-                  <ul class="list-none p-0">
+                  <ul class="list-none p-0 pl-8">
                     <li
                       *ngFor="let estacion of estacionTrabajo"
                       (click)="seleccionarItem('estaciones', estacion)"
@@ -515,7 +515,7 @@
                         'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white':
                           seleccionados['estaciones'] === estacion
                       }"
-                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-200 hover:text-gray-500 text-sm rounded-md transition-colors duration-200"
+                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-200 dark:hover:text-gray-600 text-sm rounded-md transition-colors duration-200"
                     >
                       {{ estacion.descripcion }}
                     </li>
@@ -554,14 +554,14 @@
 
               <div class="accordion-content" [ngClass]="{ open: sectionOpen === 'empresas' }">
                 <div class="max-h-56 overflow-y-auto">
-                  <ul class="list-none p-0">
+                  <ul class="list-none p-0 pl-8">
                     <li
                       *ngFor="let empresa of empresa"
                       (click)="seleccionarItem('empresas', empresa)"
                       [ngClass]="{
                         'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': seleccionados['empresas'] === empresa
                       }"
-                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300 text-sm rounded-md transition-colors duration-200"
+                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300  dark:hover:text-gray-600 text-sm rounded-md transition-colors duration-200"
                     >
                       {{ empresa.empresa_Nombre }}
                     </li>
@@ -601,14 +601,14 @@
 
               <div class="accordion-content" [ngClass]="{ open: sectionOpen === 'aplicaciones' }">
                 <div class="max-h-56 overflow-y-auto">
-                  <ul class="list-none p-0">
+                  <ul class="list-none p-0 pl-8">
                     <li
                       *ngFor="let app of application1"
                       (click)="onAplicacionSeleccionada(app)"
                       [ngClass]="{
                         'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': aplicacionSeleccionada === app
                       }"
-                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300 text-sm rounded-md transition-colors duration-200"
+                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300  dark:hover:text-gray-600 text-sm rounded-md transition-colors duration-200"
                     >
                       {{ app.description }}
                     </li>
@@ -663,14 +663,14 @@
                     <span>{{ "labelsLogin.noDisplaysDisponibles" | translate }}</span>
                   </div>
                   <!-- Mostrar lista de displays si hay disponibles -->
-                  <ul *ngIf="userDisplay2.length > 0" class="list-none p-0">
+                  <ul *ngIf="userDisplay2.length > 0" class="list-none p-0 pl-8">
                     <li
                       *ngFor="let display of userDisplay2"
                       (click)="seleccionarItem('displays', display)"
                       [ngClass]="{
                         'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': seleccionados['displays'] === display
                       }"
-                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300 text-sm rounded-md transition-colors duration-200"
+                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300  dark:hover:text-gray-600 text-sm rounded-md transition-colors duration-200"
                     >
                       {{ display.name }}
                     </li>

@@ -37,9 +37,7 @@ export default class DashboardComponent {
   tieneElementos: boolean = false; 
   elementosAsignadosInicio: UserElementoAsignadoM[] = [];
 
-  constructor(private router: Router, private sharedService: SharedService,private apiService: ApiService,@Inject(PLATFORM_ID) private platformId: Object ){
-
-  }
+  constructor(private router: Router, private sharedService: SharedService,private apiService: ApiService,@Inject(PLATFORM_ID) private platformId: Object ){}
 
   ngOnInit(){
     this.sharedService.userElementosAsignados$.subscribe((elementos) => {
