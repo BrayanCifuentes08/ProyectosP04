@@ -1330,7 +1330,6 @@ class _LoginScreenState extends State<LoginScreen>
                                             },
                                           )
                                         : Container(), // Si no hay items, no se muestra el Dropdown
-
                                     SizedBox(height: 5),
                                     //Botón Ingresar
                                     if (_selectedEstacionTrabajo != null &&
