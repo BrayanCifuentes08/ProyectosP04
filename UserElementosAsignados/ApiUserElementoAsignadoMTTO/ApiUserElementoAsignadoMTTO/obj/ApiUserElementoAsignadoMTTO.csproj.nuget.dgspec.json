@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj": {}
+    "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj": {}
   },
   "projects": {
-    "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj": {
+    "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
+        "projectUniqueName": "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
         "projectName": "ApiUserElementoAsignadoMTTO",
-        "projectPath": "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
-        "packagesPath": "C:\\Users\\dev003\\.nuget\\packages\\",
-        "outputPath": "C:\\Practicas\\Apis\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\obj\\",
+        "projectPath": "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO.csproj",
+        "packagesPath": "C:\\Users\\dev005\\.nuget\\packages\\",
+        "outputPath": "C:\\Repositorios Proyectos\\ProyectosP04\\UserElementosAsignados\\ApiUserElementoAsignadoMTTO\\ApiUserElementoAsignadoMTTO\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\dev003\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dev005\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
