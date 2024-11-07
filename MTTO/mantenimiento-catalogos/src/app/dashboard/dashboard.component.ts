@@ -45,9 +45,11 @@ export default class DashboardComponent implements OnInit {
   descripciones:            string[] = []; // Para almacenar las descripciones
   descripcionesTipoCanalDistribucion: string[] = [];
   descripcionesCanalDistribucion:     string[] = [];
+  descripcionesElementoAsignado:     string[] = [];
   accionConfirmar:                    { catalogo: string, accion: Accion } | null = null;
   tiposCanalDistribucionData:         any[] = [];
   canalDistribucionData:              any[] = [];
+  elementoAsignadoData:                   any[] = [];
   registros:                          any[] = [];
 
   constructor(private sharedService: SharedService, private apiService: ApiService){}
@@ -92,6 +94,10 @@ export default class DashboardComponent implements OnInit {
           this.obtenerCanalDistribucion(1);  
         return;
       
+        case 'Elemento Asignado':
+          this.obtenerElementoAsignado(1);  
+        return;
+
       default:
         this.descripciones.push('Catálogo no definido');
         break;
@@ -187,6 +193,8 @@ export default class DashboardComponent implements OnInit {
           this.obtenerTipoCanalDistribucion(4);
         } else if (catalogo === 'Canal Distribucion') {
           this.obtenerCanalDistribucion(4); 
+        } else if ((catalogo === 'Elemento Asignado')){
+          this.obtenerElementoAsignado(4);
         }
         this.mostrarMensajeExito('Registro eliminado con éxito.');
         break;
@@ -195,6 +203,8 @@ export default class DashboardComponent implements OnInit {
           this.obtenerTipoCanalDistribucion(3); 
         } else if (catalogo === 'Canal Distribucion') {
           this.obtenerCanalDistribucion(3); 
+        } else if ((catalogo === 'Elemento Asignado')){
+          this.obtenerElementoAsignado(3);
         }
         this.mostrarMensajeExito('Registro actualizado con éxito.');
         break;
@@ -203,6 +213,8 @@ export default class DashboardComponent implements OnInit {
           this.obtenerTipoCanalDistribucion(2);
         } else if (catalogo === 'Canal Distribucion') {
           this.obtenerCanalDistribucion(2);
+        } else if ((catalogo === 'Elemento Asignado')){
+          this.obtenerElementoAsignado(2);
         }
         this.mostrarMensajeExito('Registro agregado con éxito.');
         break;
@@ -401,6 +413,94 @@ export default class DashboardComponent implements OnInit {
         }
     });
   }
+
+  obtenerElementoAsignado(accion: number) {
+    const user = this.apiService.getUser();
+    const empresa = this.apiService.getEmpresa();
+    const model: any = {
+        accion: accion,
+        pCriterioBusqueda: '',
+        pElementoAsignado: 0,
+        pIdElemento: 0,
+        pUserName: user,
+        pEmpresa: empresa,
+        pDescripcion: '',
+        pEstado: 0,
+        pFecha_Hora: '',
+    };
+
+    // Captura los valores de los inputs
+    const inputs: HTMLCollectionOf<HTMLInputElement> = document.getElementsByTagName('input');
+
+    for (let input of Array.from(inputs)) {
+        switch (input.name) {
+            case 'descripcion':
+                model.pDescripcion = input.value;
+                break;
+            case 'criterioBusqueda':
+                model.pCriterioBusqueda = input.value;
+                break;
+            case 'tipoCanalDistribucion':
+                model.pTipoCanalDistribucion = Number(input.value);
+                break;
+            case 'estado':
+              model.pEstado = input.checked ? 1 : 0;
+                break;
+            case 'bodega':
+                model.pBodega = Number(input.value);
+                break;
+            case 'userName':
+                model.pUserName = input.value || user;
+                break;
+            case 'fecha_Hora':
+                if (input.value) {
+                    const fechaInput = new Date(input.value);
+                    if (!isNaN(fechaInput.getTime())) {
+                        model.pFecha_Hora = fechaInput.toISOString(); // Solo convertir si es una fecha válida
+                    } else {
+                        console.warn('Valor de fecha inválido:', input.value);
+                        model.pFecha_Hora = ''; // O asigna un valor predeterminado si lo prefieres
+                    }
+                } else {
+                    model.pFecha_Hora = ''; // Si está vacío, asigna una cadena vacía o un valor predeterminado
+                }
+                break; 
+            default:
+                break;
+        }
+    }
+
+    this.cargando = true;
+    this.errorMessage = null;
+    // Llama a la API con los datos capturados
+    this.apiService.getElementosAsignados(model).subscribe({
+        next: (data: any) => {
+            console.log('Datos recibidos:', data);
+            this.cargando = false;
+
+            if (data && data.resultado === false) {
+                // Si hay un error de la base de datos (resultado: false)
+                this.mostrarMensajeAlerta(data.mensaje);
+            } else if (data && data.length > 0) {
+                this.elementoAsignadoData = data;
+                this.registros = this.elementoAsignadoData; 
+                this.descripcionesElementoAsignado = this.elementoAsignadoData.map(
+                  (registro) => registro.descripcion || ''
+                );
+                
+                this.mostrarBtnGuardar = false;
+            } else {
+                console.warn('No se encontraron registros.');
+                this.limpiarInputs();
+            }
+        },
+        error: (error) => {
+            this.cargando = false;
+            console.error('Error al obtener el elemento asignado:', error);
+            this.mostrarMensajeAlerta('Hubo un error al obtener los registros. Inténtalo de nuevo.');
+        }
+    });
+  }
   
   getDescripciones(): string[] {
     if (this.catalogoSeleccionado === 'Canal Distribucion') {
@@ -491,6 +591,7 @@ export default class DashboardComponent implements OnInit {
           return true;
         };
 
+        //Cambiar logica para bloquear los inputs necesarios para cada catalogo
         const estadoInputsTipoCanal = allInputsEmpty()
           ? estadoInputsTipoCanalDistribucionInsert
           : estadoInputsTipoCanalDistribucionUpdate;
