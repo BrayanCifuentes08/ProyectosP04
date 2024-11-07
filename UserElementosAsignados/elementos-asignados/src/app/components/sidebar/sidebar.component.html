@@ -51,11 +51,11 @@
   <div class="text-gray-300 text-sm text-center mb-4">
     <p>{{'labels.informacionAdicional' | translate}}:</p>
     <p>
-      <i class="fas fa-sign-out-alt"></i>
+      <i class="fas fa-sign-out-alt text-green-600"></i>
       <strong> {{'labels.horaInicioSesion' | translate}}:</strong> {{horaInicioSesionFormatted}}
     </p>
     <p *ngIf="usandoHoraPerma">
-      <i class="fas fa-sign-in-alt"></i>
+      <i class="fas fa-sign-in-alt text-red-600"></i>
       <strong> {{'labels.horaCierreSesion' | translate}}:</strong> {{fechaVencimientoToken}}
     </p>
   </div>
