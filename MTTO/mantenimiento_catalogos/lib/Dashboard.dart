@@ -10,8 +10,9 @@ import 'package:mantenimiento_catalogos/common/ThemeNotifier.dart';
 import 'package:mantenimiento_catalogos/components/Mantenimiento.dart';
 import 'package:mantenimiento_catalogos/generated/l10n.dart';
 import 'package:mantenimiento_catalogos/models/ModeloInputs.dart';
-import 'package:mantenimiento_catalogos/models/PaBscCanalDistribucionM.dart';
-import 'package:mantenimiento_catalogos/models/PaBscTipoCanalDistribucionM.dart';
+import 'package:mantenimiento_catalogos/models/PaCrudCanalDistribucionM.dart';
+import 'package:mantenimiento_catalogos/models/PaCrudElementoAsignadoM.dart';
+import 'package:mantenimiento_catalogos/models/PaCrudTipoCanalDistribucionM.dart';
 import 'package:mantenimiento_catalogos/services/Shared.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -67,7 +68,6 @@ class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 }
-
 class _DashboardState extends State<Dashboard> {
   List<String> descripciones = [];
   List<Widget> dynamicInputs = [];
@@ -77,8 +77,9 @@ class _DashboardState extends State<Dashboard> {
   String? _opcionSeleccionada;
   Map<String, TextEditingController> controllers = {};
   Map<String, FocusNode> focusNodes = {};
-  List<PaBscTipoCanalDistribucionM> _tipoCanalDistribucion = [];
-  List<PaBscCanalDistribucionM> _canalDistribucion = [];
+  List<PaCrudTipoCanalDistribucionM> _tipoCanalDistribucion = [];
+  List<PaCrudCanalDistribucionM> _canalDistribucion = [];
+  List<PaCrudElementoAsignadoM> _elementoAsignado = [];
   bool _cargando = false;
   late AccionService accionService;
   List<Map<String, dynamic>> datosDinamicos = [];
@@ -144,6 +145,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  //Método para mostrar un Mensaje al Usuario de retroalimentación
   void _mostrarMensajeScaffold(
     BuildContext context,
     String mensaje,
@@ -236,6 +238,11 @@ class _DashboardState extends State<Dashboard> {
           registros.addAll(_canalDistribucion);
         }
         break;
+      case 'Elemento Asignado':
+        await _getElementoAsignado(1);
+        if (_elementoAsignado.isNotEmpty) {
+          registros.addAll(_elementoAsignado);
+        }
       default:
         descripciones.add('Catálogo no definido');
         setState(() {});
@@ -249,7 +256,7 @@ class _DashboardState extends State<Dashboard> {
         // Obtener descripción y otros datos según el catálogo
         switch (catalogo) {
           case 'Tipo Canal Distribucion':
-            descripcion = (modelo as PaBscTipoCanalDistribucionM).descripcion;
+            descripcion = (modelo as PaCrudTipoCanalDistribucionM).descripcion;
             if (descripcion != null) {
               descripciones.add(descripcion);
               datos['fechaHora'] =
@@ -259,7 +266,17 @@ class _DashboardState extends State<Dashboard> {
             }
             break;
           case 'Canal Distribucion':
-            descripcion = (modelo as PaBscCanalDistribucionM).descripcion;
+            descripcion = (modelo as PaCrudCanalDistribucionM).descripcion;
+            if (descripcion != null) {
+              descripciones.add(descripcion);
+              datos['fechaHora'] =
+                  DateFormat('dd/MM/yyyy, HH:mm').format(modelo.fechaHora!);
+              datos['userName'] = modelo.userName ?? '';
+              datosDinamicos.add(datos); // Agregar el nuevo mapa a la lista
+            }
+            break;
+          case 'Elemento Asignado':
+            descripcion = (modelo as PaCrudElementoAsignadoM).descripcion;
             if (descripcion != null) {
               descripciones.add(descripcion);
               datos['fechaHora'] =
@@ -318,6 +335,7 @@ class _DashboardState extends State<Dashboard> {
           ? Icon(Icons.lock, color: Colors.grey) // Ícono de candado bloqueado
           : null, // No mostrar nada si el campo no está bloqueado
     );
+
     if (tipoCampo == "bool") {
       return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -917,6 +935,18 @@ class _DashboardState extends State<Dashboard> {
             await _getCanalDistribucion(2);
           }, null, null);
           break;
+        case 'Elemento Asignado':
+          _mostrarAlerta(
+              context,
+              S.of(context).dashboardConfirmar,
+              S.of(context).dashboardDeseaInsertarEsteRegistro,
+              FontAwesomeIcons.circleExclamation,
+              Color(0xFFFEAB308),
+              1,
+              S.of(context).dashboardInsertar, () async {
+            await _getElementoAsignado(2);
+          }, null, null);
+          break;
         default:
           setState(() {});
           return;
@@ -949,6 +979,18 @@ class _DashboardState extends State<Dashboard> {
             1,
             S.of(context).dashboardActualizar, () async {
           await _getCanalDistribucion(3);
+        }, null, null);
+        break;
+      case 'Elemento Asignado':
+        _mostrarAlerta(
+            context,
+            S.of(context).dashboardConfirmar,
+            S.of(context).dashboardDeseaActualizarEsteRegistro,
+            FontAwesomeIcons.circleExclamation,
+            Color(0xFFFEAB308),
+            1,
+            S.of(context).dashboardActualizar, () async {
+          await _getElementoAsignado(3);
         }, null, null);
         break;
       default:
@@ -985,6 +1027,18 @@ class _DashboardState extends State<Dashboard> {
           await _getCanalDistribucion(4);
         }, null, null);
         break;
+      case 'Elemento Asignado':
+        _mostrarAlerta(
+            context,
+            S.of(context).dashboardConfirmar,
+            S.of(context).dashboardDeseaEliminarEsteRegistro,
+            FontAwesomeIcons.circleExclamation,
+            Color(0xFFFEAB308),
+            1,
+            S.of(context).dashboardEliminar, () async {
+          await _getElementoAsignado(4);
+        }, null, null);
+        break;
       default:
         setState(() {});
         return;
@@ -1013,7 +1067,7 @@ class _DashboardState extends State<Dashboard> {
     DateTime? fechaHora = valorInputFechaHora != null
         ? DateTime.tryParse(valorInputFechaHora)
         : null;
-    String url = '${widget.baseUrl}PaBscTipoCanalDistribucionCtrl';
+    String url = '${widget.baseUrl}PaCrudTipoCanalDistribucionCtrl';
 
     Map<String, String?> queryParams = {
       "accion": accion.toString(),
@@ -1025,7 +1079,6 @@ class _DashboardState extends State<Dashboard> {
       if (valorInputDescripcion != null && valorInputDescripcion.isNotEmpty)
         "pDescripcion": valorInputDescripcion,
       if (estado != null) "pEstado": estado?.toString(),
-      if (fechaHora != null) "pFecha_Hora": fechaHora?.toIso8601String(),
       "pUserName": widget.pUserName,
     };
     print(queryParams);
@@ -1061,9 +1114,9 @@ class _DashboardState extends State<Dashboard> {
           }
           // Ajusta según la estructura de tu respuesta
           if (decodedResponse['datos'] != null) {
-            List<PaBscTipoCanalDistribucionM> tipoCanalDistribucion =
+            List<PaCrudTipoCanalDistribucionM> tipoCanalDistribucion =
                 (decodedResponse['datos'] as List)
-                    .map((data) => PaBscTipoCanalDistribucionM.fromJson(data))
+                    .map((data) => PaCrudTipoCanalDistribucionM.fromJson(data))
                     .toList();
             setState(() {
               _tipoCanalDistribucion = tipoCanalDistribucion;
@@ -1092,9 +1145,9 @@ class _DashboardState extends State<Dashboard> {
               return; // Salir del método si hay un error
             }
           }
-          List<PaBscTipoCanalDistribucionM> tipoCanalDistribucion =
+          List<PaCrudTipoCanalDistribucionM> tipoCanalDistribucion =
               decodedResponse
-                  .map((data) => PaBscTipoCanalDistribucionM.fromJson(data))
+                  .map((data) => PaCrudTipoCanalDistribucionM.fromJson(data))
                   .toList();
           setState(() {
             _tipoCanalDistribucion = tipoCanalDistribucion;
@@ -1173,7 +1226,7 @@ class _DashboardState extends State<Dashboard> {
     DateTime? fechaHora = valorInputFechaHora != null
         ? DateTime.tryParse(valorInputFechaHora)
         : null;
-    String url = '${widget.baseUrl}PaBscCanalDistribucionCtrl';
+    String url = '${widget.baseUrl}PaCrudCanalDistribucionCtrl';
 
     Map<String, String?> queryParams = {
       "accion": accion.toString(),
@@ -1221,9 +1274,9 @@ class _DashboardState extends State<Dashboard> {
           }
           // Ajusta según la estructura de tu respuesta
           if (decodedResponse['datos'] != null) {
-            List<PaBscCanalDistribucionM> canalDistribucion =
+            List<PaCrudCanalDistribucionM> canalDistribucion =
                 (decodedResponse['datos'] as List)
-                    .map((data) => PaBscCanalDistribucionM.fromJson(data))
+                    .map((data) => PaCrudCanalDistribucionM.fromJson(data))
                     .toList();
             setState(() {
               _canalDistribucion = canalDistribucion;
@@ -1252,11 +1305,167 @@ class _DashboardState extends State<Dashboard> {
               return; // Salir del método si hay un error
             }
           }
-          List<PaBscCanalDistribucionM> canalDistribucion = decodedResponse
-              .map((data) => PaBscCanalDistribucionM.fromJson(data))
+          List<PaCrudCanalDistribucionM> canalDistribucion = decodedResponse
+              .map((data) => PaCrudCanalDistribucionM.fromJson(data))
               .toList();
           setState(() {
             _canalDistribucion = canalDistribucion;
+          });
+        } else {
+          print('Formato de respuesta inesperado.');
+        }
+        if (accion == 2 || accion == 3 || accion == 4) {
+          _opcionSeleccionada = "";
+          controllers.clear();
+          controllers.forEach((key, controller) {
+            controller.clear(); // Esto vacía el texto de cada controlador
+          });
+          generarRegistros(widget.catalogo ?? '');
+          if (accion == 4) {
+            widget.searchController.clear();
+            _mostrarMensajeScaffold(
+                context,
+                "Registro eliminado correctamente",
+                MdiIcons.checkboxMarkedCircle,
+                Color(0xFFF15803D),
+                Duration(seconds: 4));
+          }
+          if (accion == 3) {
+            _mostrarMensajeScaffold(
+                context,
+                "Registro actualizado correctamente",
+                MdiIcons.checkboxMarkedCircle,
+                Color(0xFFF15803D),
+                Duration(seconds: 4));
+          }
+          if (accion == 2) {
+            _mostrarMensajeScaffold(
+                context,
+                "Registro ingresado correctamente",
+                MdiIcons.checkboxMarkedCircle,
+                Color(0xFFF15803D),
+                Duration(seconds: 4));
+          }
+        }
+      } else {
+        print('Error: ${response.body}');
+        print('Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    } finally {
+      setState(() {
+        _cargando = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
+    }
+  }
+
+  //Función para catálogo ElementoAsignado
+  Future<void> _getElementoAsignado(int accion) async {
+    setState(() {
+      _cargando = true; // Establecer isLoading a true al inicio de la carga
+    });
+
+    String? valorInputElementoId = controllers['Elemento Id']?.text ?? null;
+    String? valorInputDescripcion = controllers['Descripción']?.text ?? null;
+    String? valorInputEstado = controllers['Estado']?.text ?? null;
+    String? valorInputFechaHora = controllers['Fecha y Hora']?.text ?? null;
+    String? valorInputElementoAsignado =
+        controllers['Elemento Asignado']?.text ?? null;
+    int? estado =
+        valorInputEstado != null ? int.tryParse(valorInputEstado) : null;
+    DateTime? fechaHora = valorInputFechaHora != null
+        ? DateTime.tryParse(valorInputFechaHora)
+        : null;
+
+    String url = '${widget.baseUrl}PaCrudElementoAsignadoCtrl';
+
+    Map<String, String?> queryParams = {
+      "accion": accion.toString(),
+      "pCriterioBusqueda": widget.searchController.text,
+      if (valorInputElementoId != null)
+        "pElementoAsignado": valorInputElementoAsignado,
+      "pElementoId": valorInputElementoId,
+      "pUserName": widget.pUserName,
+      "pEmpresa": widget.pEmpresa.toString(),
+      if (valorInputDescripcion != null && valorInputDescripcion.isNotEmpty)
+        "pDescripcion": valorInputDescripcion,
+      if (estado != null) "pEstado": estado.toString(),
+      if (fechaHora != null) "pFecha_Hora": fechaHora.toIso8601String(),
+    };
+    print(queryParams);
+    Map<String, String> parametrosString = queryParams
+        .map((key, value) => MapEntry(key, value ?? ''))
+      ..removeWhere((key, value) => value.isEmpty);
+
+    Uri uri = Uri.parse(url).replace(queryParameters: parametrosString);
+
+    try {
+      final response = await http.get(uri, headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${widget.token}"
+      });
+
+      if (response.statusCode == 200) {
+        final decodedResponse = json.decode(response.body);
+        // Verifica si la respuesta es un Map
+        if (decodedResponse is Map) {
+          if (decodedResponse['resultado'] == false) {
+            // Muestra el mensaje en un AlertDialog
+            _mostrarAlerta(
+                context,
+                S.of(context).dashboardError,
+                decodedResponse['mensaje'],
+                FontAwesomeIcons.circleExclamation,
+                Colors.red.shade700,
+                0,
+                S.of(context).dashboardAceptar,
+                null,
+                null,
+                null);
+            return; // Salir del método si hay un error
+          }
+          // Ajusta según la estructura de tu respuesta
+          if (decodedResponse['datos'] != null) {
+            List<PaCrudElementoAsignadoM> elementoAsignado =
+                (decodedResponse['datos'] as List)
+                    .map((data) => PaCrudElementoAsignadoM.fromJson(data))
+                    .toList();
+            setState(() {
+              _elementoAsignado = elementoAsignado;
+            });
+          } else {
+            print('No se encontraron datos en la respuesta.');
+          }
+        } else if (decodedResponse is List) {
+          if (decodedResponse.isNotEmpty && decodedResponse[0] is Map) {
+            var responseMap = decodedResponse[0];
+            if (responseMap['resultado'] == false) {
+              _mostrarAlerta(
+                  context,
+                  S.of(context).dashboardError,
+                  responseMap['mensaje'],
+                  FontAwesomeIcons.circleExclamation,
+                  Colors.red.shade700,
+                  0,
+                  S.of(context).dashboardAceptar,
+                  null,
+                  null,
+                  null);
+              widget.searchController.clear();
+              _getElementoAsignado(1);
+              setState(() {});
+              return; // Salir del método si hay un error
+            }
+          }
+          List<PaCrudElementoAsignadoM> elementoAsignado = decodedResponse
+              .map((data) => PaCrudElementoAsignadoM.fromJson(data))
+              .toList();
+          setState(() {
+            _elementoAsignado = elementoAsignado;
           });
         } else {
           print('Formato de respuesta inesperado.');
@@ -1740,14 +1949,14 @@ class _DashboardState extends State<Dashboard> {
                                               for (var modelo in registros) {
                                                 switch (widget.catalogo) {
                                                   case 'Tipo Canal Distribucion':
-                                                    if ((modelo as PaBscTipoCanalDistribucionM)
+                                                    if ((modelo as PaCrudTipoCanalDistribucionM)
                                                             .descripcion ==
                                                         selectedValue) {
                                                       registro = modelo;
                                                     }
                                                     break;
                                                   case 'Canal Distribucion':
-                                                    if ((modelo as PaBscCanalDistribucionM)
+                                                    if ((modelo as PaCrudCanalDistribucionM)
                                                             .descripcion ==
                                                         selectedValue) {
                                                       registro = modelo;

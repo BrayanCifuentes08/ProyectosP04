@@ -1,11 +1,10 @@
-CREATE OR ALTER PROCEDURE Pa_bsc_CanalDistribucion(
+CREATE OR ALTER PROCEDURE paCrudCanalDistribucion(
     @accion                 INT,
     @pCriterioBusqueda      VARCHAR(100) = NULL,
     @pTipoCanalDistribucion SMALLINT     = NULL,
     @pBodega                SMALLINT     = NULL,
     @pDescripcion           VARCHAR(200) = NULL,
     @pEstado                TINYINT      = NULL,
-    @pFecha_Hora            DATETIME     = NULL,
     @pUserName              VARCHAR(30)  = NULL
 )
 AS
