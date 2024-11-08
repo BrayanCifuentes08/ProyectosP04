@@ -12,12 +12,12 @@ import { ApiService } from '../services/api.service';
   styleUrl: './inicio.component.css'
 })
 export default class InicioComponent {
-  usuario: string =''
+  usuario:                   string =''
   horaInicioSesionFormatted: string | null = null;
-  fechaVencimientoToken: string | null = null;
-  usandoHoraPerma: boolean = false;
-  tooltipVisible: boolean = false;
-  tiempoRestante: string = '';
+  fechaVencimientoToken:     string | null = null;
+  usandoHoraPerma:           boolean = false;
+  tooltipVisible:            boolean = false;
+  tiempoRestante:            string = '';
 
   constructor(
     private router: Router,

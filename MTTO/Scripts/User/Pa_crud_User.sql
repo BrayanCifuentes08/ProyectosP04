@@ -1,8 +1,9 @@
-CREATE OR ALTER PROCEDURE Pa_crud_User(
+--Ejecutar por cambio de nombre
+CREATE OR ALTER PROCEDURE paCrudUser(
     @accion                 INT,
     @pCriterioBusqueda      VARCHAR(100) = NULL,
 	@pUserName              VARCHAR(30)  = NULL,
-    @pDescripcion           VARCHAR(200) = NULL,
+    @pName					VARCHAR(200) = NULL,
     @pEstado                TINYINT      = NULL,
     @pFecha_Hora            DATETIME     = NULL
 )
@@ -10,7 +11,7 @@ AS
 BEGIN
     DECLARE @Mensaje VARCHAR(255);
     DECLARE @Resultado BIT;
-	DECLARE @NuevoTipoCanalDistribucion SMALLINT;
+	DECLARE @NuevoUserName SMALLINT;
 
     -- 1. Verificación de parámetros obligatorios
     IF @pUserName IS NULL AND @accion IN (3, 4)
@@ -28,6 +29,8 @@ BEGIN
             SELECT 
                 UserName,
                 [Name],
+				Estado,
+				Fecha_Hora,
                 @Mensaje AS Mensaje,
                 1 AS Resultado -- Operación exitosa
             FROM tbl_User;
@@ -43,6 +46,8 @@ BEGIN
 		 SELECT 
                 UserName,
                 [Name],
+				Estado,
+				Fecha_Hora,
                 @Mensaje AS Mensaje,
                 1 AS Resultado -- Operación exitosa
             FROM tbl_User
@@ -62,7 +67,7 @@ BEGIN
     BEGIN
 
         -- 2. Generar nuevo valor para @pTipoCanalDistribucion
-        SELECT @NuevoTipoCanalDistribucion = ISNULL(MAX(TipoCanalDistribucion), 0) + 1 FROM TipoCanalDistribucion;
+        SELECT @NuevoUserName = ISNULL(MAX(TipoCanalDistribucion), 0) + 1 FROM TipoCanalDistribucion;
 
 
         -- INSERT

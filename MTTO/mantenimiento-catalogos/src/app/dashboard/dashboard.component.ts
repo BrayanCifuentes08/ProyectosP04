@@ -36,21 +36,21 @@ export default class DashboardComponent implements OnInit {
   isVisualizandoCatalogo:   boolean = false;
   isVisualizandoRegistro:   boolean = false;
   isAgregandoRegistro:      boolean = false;
-  mensajeAlerta = ''; 
-  mensajeModal =  '';  
-  mensajeExito =  '';
+  mensajeAlerta:            string = ''; 
+  mensajeModal:             string =  '';  
+  mensajeExito:             string =  '';
   catalogoSeleccionado:     string | null = null; // Almacena el catalogo seleccionado
   errorMessage:             string | null = null; 
   opcionSeleccionada:       string | null = null; 
   descripciones:            string[] = []; // Para almacenar las descripciones
   descripcionesTipoCanalDistribucion: string[] = [];
   descripcionesCanalDistribucion:     string[] = [];
-  descripcionesElementoAsignado:     string[] = [];
-  accionConfirmar:                    { catalogo: string, accion: Accion } | null = null;
+  descripcionesElementoAsignado:      string[] = [];
   tiposCanalDistribucionData:         any[] = [];
   canalDistribucionData:              any[] = [];
-  elementoAsignadoData:                   any[] = [];
+  elementoAsignadoData:               any[] = [];
   registros:                          any[] = [];
+  accionConfirmar:                    { catalogo: string, accion: Accion } | null = null;
 
   constructor(private sharedService: SharedService, private apiService: ApiService){}
 

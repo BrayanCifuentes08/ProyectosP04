@@ -18,13 +18,13 @@ import LoadingScreenComponent from '../../loading-screen/loading-screen.componen
   styleUrl: './layout.component.css',
 })
 export default class LayoutComponent {
-  isLoading: boolean = true;
-  opcionSeleccionadaSidebarEstado = false;
-  opcionSeleccionadaSidebar: string | null = null; 
-  private intervalId: any;
-  fechaVencimientoToken:       string | null = null;
-  horaInicioSesionFormatted:   string | null = null;
-  horaInicioSesion:            number | null = null;
+  isLoading:                       boolean = true;
+  opcionSeleccionadaSidebarEstado: boolean = false;
+  opcionSeleccionadaSidebar:       string | null = null; 
+  fechaVencimientoToken:           string | null = null;
+  horaInicioSesionFormatted:       string | null = null;
+  horaInicioSesion:                number | null = null;
+  private intervalId:              any;
   
   constructor(
     private router: Router,

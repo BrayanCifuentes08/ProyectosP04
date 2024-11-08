@@ -13,14 +13,14 @@ import { SharedService } from '../../services/shared.service';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  dropdownAbierto = false;
-  idiomaDropdownAbierto: boolean = false;
-  idiomaSeleccionado: string = 'es';
-  @Output() opcionSeleccionadaCatalogo  = new EventEmitter<string | null>();
+  dropdownAbierto:            boolean = false;
+  idiomaDropdownAbierto:      boolean = false;
+  isSidebarVisible:           boolean = false;
+  sidebarAbierto:             boolean = false;
+  idiomaSeleccionado:         string = 'es';
   opcionSeleccionadaDropdown: string | null = null;
-  @Output() sidebarToggle = new EventEmitter<boolean>();
-  isSidebarVisible: boolean = false;
-  sidebarAbierto: boolean = false;
+  @Output() opcionSeleccionadaCatalogo  = new EventEmitter<string | null>();
+  @Output() sidebarToggle               = new EventEmitter<boolean>();
 
   constructor(private router: Router, public traduccionService: TraduccionService, private sharedService: SharedService) {
     this.idiomaSeleccionado = this.traduccionService.getIdiomaActual();

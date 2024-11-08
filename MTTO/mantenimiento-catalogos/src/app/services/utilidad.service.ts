@@ -4,17 +4,19 @@ import { ApiService } from './api.service';
 import { TraduccionService } from './traduccion.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UtilidadService {
   private cargaSubject = new BehaviorSubject<boolean>(false);
   public carga$ = this.cargaSubject.asObservable();
-  private darkModeKey = 'darkMode';
   private baseUrl: string = '';
   public colorSeleccionado: string = '';
-  private esModoOscuro: boolean = false;
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private apiService: ApiService,
-  private idiomaService: TraduccionService ) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private apiService: ApiService,
+
+    private idiomaService: TraduccionService
+  ) {
     this.baseUrl = this.apiService.getBaseUrl();
   }
 
@@ -35,19 +37,20 @@ export class UtilidadService {
     const dia = fecha.getDate().toString().padStart(2, '0');
     const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
     const año = fecha.getFullYear();
-    
+
     return `${dia}/${mes}/${año}`;
   }
 
   formatearFechaHora(date: Date): string {
-    return date.toLocaleString('es-ES', { // Cambia 'es-ES' por el locale que desees
+    return date.toLocaleString('es-ES', {
+      // Cambia 'es-ES' por el locale que desees
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      hour12: false // Usa 24 horas
+      hour12: false, // Usa 24 horas
     });
   }
 

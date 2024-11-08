@@ -1,12 +1,12 @@
 export interface PaBscApplication1M{
-    application: number;
+    application:       number;
     applicationFather: number;
-    description: string;
-    observacion1: string;
+    description:       string;
+    observacion1:      string;
 }
 
 export interface ParametrosApplication{
-    TAccion: number;
-    TOpcion: number;
-    pFiltro_1: string;
+    TAccion:    number;
+    TOpcion:    number;
+    pFiltro_1:  string;
 }
