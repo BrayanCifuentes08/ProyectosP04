@@ -262,13 +262,6 @@
           </tr>
         </tbody>
       </table>
-      
-      <p
-        *ngIf="clientes.length < 3 && clientes.length > 0"
-        class="px-4 py-2 text-gray-900 text-2xl dark:text-white text-center"
-      >
-        {{ "messages.noHayMasClientes" | translate }}
-      </p>
     </div>
     <!-- Tarjeta con informacion del cliente -->
     <div *ngIf="mostrarTarjeta" [ngClass]="{'creative-fade-in': mostrarTarjeta}" class="w-1/4 bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg dark:shadow-gray-700">
