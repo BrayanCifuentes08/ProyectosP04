@@ -6,15 +6,15 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class SharedService {
   private esModoOscuro = false;
-  private catalogoSeleccionadoSource = new BehaviorSubject<string | null>(null);
-  catalogoSeleccionado$ = this.catalogoSeleccionadoSource.asObservable();
-  private sidebarOpenSubject = new Subject<boolean>();
-  sidebarOpen$ = this.sidebarOpenSubject.asObservable();
-  private updateListSubject = new Subject<void>();
-  updateList$ = this.updateListSubject.asObservable();
-  private accionSubject = new BehaviorSubject<string>('');
-  accion$ = this.accionSubject.asObservable(); 
   private loading = true;
+  private catalogoSeleccionadoSource = new BehaviorSubject<string | null>(null);
+  catalogoSeleccionado$              = this.catalogoSeleccionadoSource.asObservable();
+  private sidebarOpenSubject         = new Subject<boolean>();
+  sidebarOpen$                       = this.sidebarOpenSubject.asObservable();
+  private updateListSubject          = new Subject<void>();
+  updateList$                        = this.updateListSubject.asObservable();
+  private accionSubject              = new BehaviorSubject<string>('');
+  accion$                            = this.accionSubject.asObservable(); 
   
   constructor() {
     if (typeof window !== 'undefined') {

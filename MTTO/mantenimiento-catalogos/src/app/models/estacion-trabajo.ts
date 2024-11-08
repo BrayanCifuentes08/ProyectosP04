@@ -1,7 +1,7 @@
 export interface PaBscEstacionTrabajo2M{
     estacionTrabajo: number;
-    nombre: string;
-    descripcion: string;
+    nombre:          string;
+    descripcion:     string;
 }
 
 

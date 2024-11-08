@@ -1,5 +1,5 @@
 interface InputConfig {
-    label: string;
+    label:       string;
     placeholder: string;
-    type: string;
+    type:        string;
   }

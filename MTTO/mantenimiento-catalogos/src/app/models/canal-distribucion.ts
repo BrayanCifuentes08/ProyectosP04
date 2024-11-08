@@ -1,22 +1,22 @@
 export interface canalDistribucion{
     tipoCanalDistribucion: number
-    bodega: number,
-    descripcion: string,
-    estado: number,
-    fechaHora: Date,
-    userName: string,
-    mensaje: string,
-    resultado: boolean,
+    bodega:                number,
+    descripcion:           string,
+    estado:                number,
+    fechaHora:             Date,
+    userName:              string,
+    mensaje:               string,
+    resultado:             boolean,
 }
 
 export interface ParamsCanalDistribucion{
-    accion: number
-    pCriterioBusqueda: string,
-    pBodega: number,
+    accion:                 number
+    pCriterioBusqueda:      string,
+    pBodega:                number,
     pTipoCanalDistribucion: number,
-    pDescripcion: string,
-    pEstado: number,
-    pFecha_Hora: Date,
+    pDescripcion:           string,
+    pEstado:                number,
+    pFecha_Hora:            Date,
 }
 
 

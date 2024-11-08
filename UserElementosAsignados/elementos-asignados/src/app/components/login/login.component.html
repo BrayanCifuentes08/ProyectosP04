@@ -1,7 +1,7 @@
 <div
   class="absolute top-0 left-0 bottom-0 leading-5 h-full w-full bg-gray-700 overflow-hidden animate-bg-cascada"
 ></div>
-<!-- [ngStyle]="{ background: colorSeleccionado }" -->
+  <!-- [ngStyle]="{ background: colorSeleccionado }" -->
 
   <ul class="circles">
     <li></li>
@@ -29,10 +29,10 @@
   class="relative min-h-screen flex flex-col items-center justify-center sm:flex-row sm:items-center bg-transparent rounded-3xl shadow-xl p-4 sm:p-0"
 >
 
-<div class="flex items-center space-x-4 rtl:space-x-reverse mb-8 animate-slideIn sm:mb-4 sm:mr-0 sm:ml-8 sm:justify-start">
-  <!-- Logo de la empresa -->
-  <img src="images/logoDmosoftCarga.png" alt="Dmosoft Logo" class="h-20 w-auto sm:h-24 lg:h-28" />
-</div>
+  <div class="flex items-center space-x-4 rtl:space-x-reverse mb-8 animate-slideIn sm:mb-4 sm:mr-0 sm:ml-8 sm:justify-start">
+    <!-- Logo de la empresa -->
+    <img src="images/logoDmosoftCarga.png" alt="Dmosoft Logo" class="h-20 w-auto sm:h-24 lg:h-28" />
+  </div>
 
   <!-- Login Form -->
   <div
@@ -570,7 +570,6 @@
               </div>
             </div>
 
-
             <!-- Acordeon Aplicaciones -->
             <div class="accordion-item border-b border-gray-200 dark:border-gray-600">
               <div
@@ -756,7 +755,6 @@
                   {{ "labelsLogin.guardarCambios" | translate }}
                 </button>
 
-
                 <!-- Checkbox para Guardar Datos de Sesión -->
                 <label class="inline-flex items-center cursor-pointer">
                   <input type="checkbox" 
@@ -775,26 +773,26 @@
                   </div>
                   <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{'labelsLogin.guardarDatosSesion' | translate}}</span>
                 </label>
-
               </div>
             </div>
         </div>  
       </div>
     </div>
-         <!-- Mensaje dinámico -->
-         <div *ngIf="mensajeEstadoDatosSesion" class="fixed inset-0 flex items-center justify-center z-50">
-          <div 
-              [ngClass]="{
-                  'text-green-600 bg-green-100 border-green-300 dark:text-green-400 dark:bg-green-800 dark:border-green-700': mensajeTipo === 'guardado',
-                  'text-gray-800 bg-gray-100 border-gray-300 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600': mensajeTipo === 'noGuardado'
-              }"
-              class="max-w-sm w-full p-4 border rounded-lg shadow-lg transition-transform transform scale-100 animate-slideIn"
-          >
-              <p class="text-center text-sm font-medium">
-                  {{ mensajeEstadoDatosSesion | translate }}
-              </p>
-          </div>
-        </div>
+    
+    <!-- Mensaje dinámico -->
+    <div *ngIf="mensajeEstadoDatosSesion" class="fixed inset-0 flex items-center justify-center z-50">
+      <div 
+        [ngClass]="{
+          'text-green-600 bg-green-100 border-green-300 dark:text-green-400 dark:bg-green-800 dark:border-green-700': mensajeTipo === 'guardado',
+          'text-gray-800 bg-gray-100 border-gray-300 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600': mensajeTipo === 'noGuardado'
+        }"
+        class="max-w-sm w-full p-4 border rounded-lg shadow-lg transition-transform transform scale-100 animate-slideIn"
+        >
+        <p class="text-center text-sm font-medium">
+          {{ mensajeEstadoDatosSesion | translate }}
+          </p>
+      </div>
+    </div>
   </div>
 
   <svg

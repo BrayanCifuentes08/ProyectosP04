@@ -47,10 +47,10 @@ export default class LoginComponent {
   validacionErrores:          { [key: string]: string } = {};
   mensajeTipo:                'guardado' | 'noGuardado' | null = null;
   errores:                    { usuario?: string; pass?: string; general?: string } = {};
-  estacionTrabajo:        PaBscEstacionTrabajo2M[] = [];
-  empresa:                PaBscEmpresa1M[] = [];
-  application1:           PaBscApplication1M[] = [];
-  userDisplay2:           PaBscUserDisplay2M[] = [];
+  estacionTrabajo:            PaBscEstacionTrabajo2M[] = [];
+  empresa:                    PaBscEmpresa1M[] = [];
+  application1:               PaBscApplication1M[] = [];
+  userDisplay2:               PaBscUserDisplay2M[] = [];
   @ViewChild('usuarioInput') usuarioInput!: ElementRef<HTMLInputElement>;
   @ViewChild('passInput')    passInput!:    ElementRef<HTMLInputElement>;
   colorSeleccionado:  string = 'linear-gradient(to bottom, #1e3a8a, #f97316)';
@@ -90,7 +90,6 @@ export default class LoginComponent {
     }
   }
 
-  
   updateColor() {
     //this.colorSeleccionado = this.utilidadService.getColorSeleccionado();
   }

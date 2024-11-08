@@ -12,11 +12,12 @@ import { ApiService } from '../../services/api.service';
 })
 export class FooterComponent {
   catalogoSeleccionado: string | null = null;
-  accionActual: string = '';
-  usuario: string = ''
-  estacionTrabajo: string = ''
+  accionActual:         string = '';
+  usuario:              string = ''
+  estacionTrabajo:      string = ''
 
   constructor(private sharedService: SharedService, private apiService: ApiService) {}
+
   ngOnInit() {
     this.usuario = this.apiService.getUser();
     const estacionTrabajo = this.apiService.getEstacion()
@@ -29,6 +30,7 @@ export class FooterComponent {
     this.sharedService.accion$.subscribe(accion => {
       this.accionActual = accion; 
     });
+    console.log("Usuario cargado en footer al entrar a mantenimiento: ", this.apiService.getUser())
   }
   
 }

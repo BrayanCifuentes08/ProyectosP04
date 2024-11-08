@@ -1,21 +1,21 @@
 export interface tipoCanalDistribucion {
     tipoCanalDistribucion: number,
-    descripcion: string,
-    estado: boolean,
-    fecha_hora: Date,
-    userName: string,
-    mensaje: string,
-    resultado: boolean,
+    descripcion:           string,
+    estado:                boolean,
+    fecha_hora:            Date,
+    userName:              string,
+    mensaje:               string,
+    resultado:             boolean,
 }
 
 export interface ParamsTipoCanalDistribucion {
-    accion: number,
-    pDescripcion: string,
-    pCriterioBusqueda: string
+    accion:                 number,
+    pDescripcion:           string,
+    pCriterioBusqueda:      string
     pTipoCanalDistribucion: number,
-    pEstado: number,
-    pFecha_Hora: Date,
-    pUserName: string
+    pEstado:                number,
+    pFecha_Hora:            Date,
+    pUserName:              string
 }
 
 export interface InputEstadoTipoCanal {
