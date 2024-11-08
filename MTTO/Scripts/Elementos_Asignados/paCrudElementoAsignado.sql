@@ -6,8 +6,7 @@ CREATE OR ALTER PROCEDURE paCrudElementoAsignado(
 	@pUserName              VARCHAR(30)  = NULL,
 	@pEmpresa				TINYINT		 = NULL,
     @pDescripcion           VARCHAR(200) = NULL,
-    @pEstado                TINYINT      = NULL,
-    @pFecha_Hora            DATETIME     = NULL
+    @pEstado                TINYINT      = NULL
 )
 AS
 BEGIN

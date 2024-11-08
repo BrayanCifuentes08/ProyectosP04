@@ -1,6 +1,6 @@
 import 'package:mantenimiento_catalogos/models/ModeloInputs.dart';
 
-class PaBscTipoCanalDistribucionM implements ModelWithFields {
+class PaCrudTipoCanalDistribucionM implements ModelWithFields {
   int? tipoCanalDistribucion;
   String? descripcion;
   int? estado;
@@ -9,7 +9,7 @@ class PaBscTipoCanalDistribucionM implements ModelWithFields {
   String? mensaje;
   bool resultado;
 
-  PaBscTipoCanalDistribucionM({
+  PaCrudTipoCanalDistribucionM({
     required this.tipoCanalDistribucion,
     required this.descripcion,
     required this.estado,
@@ -77,9 +77,9 @@ class PaBscTipoCanalDistribucionM implements ModelWithFields {
   }
 
   // Método para crear una instancia desde JSON
-  factory PaBscTipoCanalDistribucionM.fromJson(Map<String, dynamic> json) {
+  factory PaCrudTipoCanalDistribucionM.fromJson(Map<String, dynamic> json) {
     print("Convirtiendo desde JSON: $json"); // Para depuración
-    return PaBscTipoCanalDistribucionM(
+    return PaCrudTipoCanalDistribucionM(
       tipoCanalDistribucion: json['tipoCanalDistribucion'] as int?,
       descripcion: json['descripcion'] as String? ?? '',
       estado: json['estado'] as int?,
