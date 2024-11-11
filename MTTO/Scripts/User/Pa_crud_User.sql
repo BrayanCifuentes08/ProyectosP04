@@ -4,8 +4,9 @@ CREATE OR ALTER PROCEDURE paCrudUser(
     @pCriterioBusqueda      VARCHAR(100) = NULL,
 	@pUserName              VARCHAR(30)  = NULL,
     @pName					VARCHAR(200) = NULL,
-    @pEstado                TINYINT      = NULL,
-    @pFecha_Hora            DATETIME     = NULL
+    @pFecha_Hora            DATETIME     = NULL,
+	@pCelular				varchar(50)	 = NULL,
+	@pEMail					varchar(100) = NULL
 )
 AS
 BEGIN
@@ -28,8 +29,9 @@ BEGIN
 		BEGIN
             SELECT 
                 UserName,
-                [Name],
-				Estado,
+                [Name],	
+				Celular,
+				EMail,
 				Fecha_Hora,
                 @Mensaje AS Mensaje,
                 1 AS Resultado -- Operación exitosa
@@ -46,7 +48,8 @@ BEGIN
 		 SELECT 
                 UserName,
                 [Name],
-				Estado,
+				Celular,
+				EMail,
 				Fecha_Hora,
                 @Mensaje AS Mensaje,
                 1 AS Resultado -- Operación exitosa
@@ -65,27 +68,22 @@ BEGIN
     END
     ELSE IF @accion = 2
     BEGIN
-
-        -- 2. Generar nuevo valor para @pTipoCanalDistribucion
-        SELECT @NuevoUserName = ISNULL(MAX(TipoCanalDistribucion), 0) + 1 FROM TipoCanalDistribucion;
-
-
         -- INSERT
-        INSERT INTO TipoCanalDistribucion 
+        INSERT INTO tbl_User 
         (
-            [TipoCanalDistribucion],
-            [Descripcion],
-            [Estado],
-            [Fecha_Hora],
-            [UserName]
+            UserName,
+            [Name],
+			Celular,
+			EMail,
+            [Fecha_Hora]
         )
         VALUES 
         (
-            @NuevoTipoCanalDistribucion,
-            @pDescripcion,
-            1,
-            GETDATE(), 
-            @pUserName
+            @pName,
+			@pName,
+			@pCelular,
+			@pEMail,
+            GETDATE()
         );
 
         SET @Mensaje = 'Registro insertado exitosamente.';
@@ -95,23 +93,24 @@ BEGIN
     ELSE IF @accion = 3
     BEGIN
         -- 3. Error al intentar actualizar un registro inexistente
-        IF NOT EXISTS (SELECT 1 FROM TipoCanalDistribucion WHERE TipoCanalDistribucion = @pUserName)
+        IF NOT EXISTS (SELECT 1 FROM tbl_User WHERE UserName = @pUserName)
         BEGIN
-            SET @Mensaje   = 'No se encontró un registro con el TipoCanalDistribucion para actualizar.';
+            SET @Mensaje   = 'No se encontró un registro con el UserName para actualizar.';
             SET @Resultado = 0;
             SELECT @Mensaje AS Mensaje, @Resultado AS Resultado;
             RETURN;
         END
 
         -- UPDATE
-        UPDATE TipoCanalDistribucion
+        UPDATE tbl_User
         SET 
-            Descripcion = @pDescripcion,
-            Estado = @pEstado,
+            [Name]		 = @pName,
+			Celular      = @pCelular,
+			EMail        = @pEMail,
 			M_Fecha_Hora = GETDATE(),
-			M_UserName = @pUserName
+			M_UserName	 = @pUserName
         WHERE 
-            TipoCanalDistribucion = @pUserName;
+            UserName = @pUserName;
 
         SET @Mensaje = 'Registro actualizado exitosamente.';
         SET @Resultado = 1;
@@ -120,7 +119,7 @@ BEGIN
     ELSE IF @accion = 4
     BEGIN
 		-- Verificar si el registro está relacionado con la tabla CanalDistribucion
-		IF EXISTS (SELECT 1 FROM CanalDistribucion WHERE TipoCanalDistribucion = @pUserName)
+		IF EXISTS (SELECT 1 FROM tbl_User_Elemento_Asignado WHERE UserName = @pUserName)
 		BEGIN
 			SET @Mensaje   = 'No se puede eliminar el registro porque tiene asociados otros registros.';
 			SET @Resultado = 0;
@@ -128,17 +127,17 @@ BEGIN
 			RETURN;
 		END
         -- 4. Error al intentar eliminar un registro inexistente
-        IF NOT EXISTS (SELECT 1 FROM TipoCanalDistribucion WHERE TipoCanalDistribucion = @pUserName)
+        IF NOT EXISTS (SELECT 1 FROM tbl_User WHERE UserName = @pUserName)
         BEGIN
-            SET @Mensaje = 'No se encontró un registro con el TipoCanalDistribucion para eliminar.';
+            SET @Mensaje = 'No se encontró un registro con el UserName para eliminar.';
             SET @Resultado = 0;
             SELECT @Mensaje AS Mensaje, @Resultado AS Resultado;
             RETURN;
         END
 
         -- DELETE
-        DELETE FROM TipoCanalDistribucion
-        WHERE TipoCanalDistribucion = @pUserName;
+        DELETE FROM tbl_User
+        WHERE UserName = @pUserName;
 
         SET @Mensaje = 'Registro eliminado exitosamente.';
         SET @Resultado = 1;

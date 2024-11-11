@@ -207,7 +207,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               value: _selectedValue,
                               items: <String>[
                                 'Canal Distribucion',
-                                'Tipo Canal Distribucion'
+                                'Tipo Canal Distribucion',
+                                'Elemento Asignado',
+                                'User'
                               ].map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,

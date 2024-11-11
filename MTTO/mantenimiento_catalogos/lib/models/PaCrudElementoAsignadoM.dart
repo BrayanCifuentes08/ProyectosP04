@@ -3,9 +3,9 @@ import 'package:mantenimiento_catalogos/models/ModeloInputs.dart';
 class PaCrudElementoAsignadoM implements ModelWithFields {
   int? elementoAsignado;
   String? descripcion;
-  int? elementoId;
+  String? elementoId;
   int? empresa;
-  String? elementoAsignadoPadre;
+  int? elementoAsignadoPadre;
   int? estado;
   DateTime? fechaHora;
   String? userName;
@@ -74,7 +74,7 @@ class PaCrudElementoAsignadoM implements ModelWithFields {
       'Descripción': "text", //  Campo de texto
       "Elemento Id": "text", // Campo de texto
       "Empresa": "int", // tipo int
-      "Elemento Asignado Padre": "dropdown", // tipo dropdown
+      "Elemento Asignado Padre": "int", // tipo dropdown
       "Estado": "switch", // tipo switch
       "Fecha y Hora": "date", // Campo de fecha
       "UserName": "text", // Campo de texto
@@ -101,11 +101,11 @@ class PaCrudElementoAsignadoM implements ModelWithFields {
   factory PaCrudElementoAsignadoM.fromJson(Map<String, dynamic> json) {
     print("Convirtiendo desde JSON: $json"); // Para depuración
     return PaCrudElementoAsignadoM(
-      elementoAsignado: json['elementoAsignado'] as int?,
+      elementoAsignado: json['elemento_Asignado'] as int?,
       descripcion: json['descripcion'] as String? ?? '',
-      elementoId: json['elementoId'] as int?,
+      elementoId: json['elemento_Id'] as String? ?? '',
       empresa: json['empresa'] as int?,
-      elementoAsignadoPadre: json['elementoAsignadoPadre'] as String? ?? '',
+      elementoAsignadoPadre: json['elemento_Asignado_Padre'] as int?,
       estado: json['estado'] as int?,
       fechaHora: json['fecha_Hora'] != null
           ? DateTime.tryParse(json['fecha_Hora'])
