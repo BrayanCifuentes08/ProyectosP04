@@ -20,25 +20,25 @@ export interface TiposCampo {
 }
 //Model para bloquear inputs para elementoAsignado
 export const estadoInputsElementoAsignadoInsert: InputEstadoElementoAsignado = {
-  "Elemento Asignado": true, // Bloqueado
-  "Descripción": false, // Editables
-  "Elemento Id": true, // Bloqueado
-  "Empresa": true, // Bloqueado
-  "Elemento Asignado Padre": false, // Editables
-  "Estado": true, // Bloqueado
-  "Fecha y Hora": true, // Bloqueado
-  "UserName": true, // Bloqueado
+  "elemento_Asignado": true, // Bloqueado
+  "descripcion": false, // Editables
+  "elemento_Id": true, // Bloqueado
+  "empresa": true, // Bloqueado
+  "elemento_Asignado_Padre": false, // Editables
+  "estado": true, // Bloqueado
+  "fecha_Hora": true, // Bloqueado
+  "userName": true, // Bloqueado
 };
 
 export const estadoInputsElementoAsignadoUpdate: InputEstadoElementoAsignado = {
-  "Elemento Asignado": true, // Bloqueado
-  "Descripción": false, // Editables
-  "Elemento Id": true, // Bloqueado
-  "Empresa": true, // Bloqueado
-  "Elemento Asignado Padre": true, // Bloqueado
-  "Estado": false, // Editable
-  "Fecha y Hora": true, // Bloqueado
-  "UserName": true, // Bloqueado
+  "elemento_Asignado": true, // Bloqueado
+  "descripcion": false, // Editables
+  "elemento_Id": true, // Bloqueado
+  "empresa": true, // Bloqueado
+  "elemento_Asignado_Padre": true, // Bloqueado
+  "estado": false, // Editable
+  "fecha_Hora": true, // Bloqueado
+  "userName": true, // Bloqueado
 };
 
 // Model para tipos de campo para elementoAsignado

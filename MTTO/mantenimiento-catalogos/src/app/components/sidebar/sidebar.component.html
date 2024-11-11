@@ -72,6 +72,12 @@
               class="text-white py-2 px-3 transition-all duration-300 border-l-4 rounded-md border-transparent hover:border-gray-200 hover:bg-[#c0c0c057]">
               Canal Distribucion
             </li>
+            <li 
+              (click)="seleccionarOpcionCatalogo('Elemento Asignado')" 
+              [ngClass]="{ 'selected-option': opcionSeleccionadaDropdown === 'Elemento Asignado' }" 
+              class="text-white py-2 px-3 transition-all duration-300 border-l-4 rounded-md border-transparent hover:border-gray-200 hover:bg-[#c0c0c057]">
+              Elemento Asignado
+            </li>
           </ul>
         </div>
       </li>

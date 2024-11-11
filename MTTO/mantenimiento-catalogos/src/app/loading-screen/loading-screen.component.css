@@ -9,10 +9,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 1000; 
+  z-index: 1000;
   transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Transición suave para ocultar el componente */
-  opacity: 1; 
-  transform: scale(1); 
+  opacity: 1;
+  transform: scale(1);
 }
 .loading-screen.hidden {
   opacity: 0;
@@ -21,14 +21,14 @@
 }
 
 .spinner {
-  width: 60px; 
-  height: 60px; 
+  width: 60px;
+  height: 60px;
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
 }
 
 .spinner > div {
-  background-color: #fff; 
+  background-color: #fff;
   height: 100%;
   width: 8px;
   display: inline-block;
@@ -42,8 +42,8 @@
 }
 
 .spinner .rect3 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
 }
 
 .spinner .rect4 {
@@ -57,24 +57,33 @@
 }
 
 @-webkit-keyframes sk-stretchdelay {
-  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
-  20% { -webkit-transform: scaleY(1.0) }
+  0%,
+  40%,
+  100% {
+    -webkit-transform: scaleY(0.4);
+  }
+  20% {
+    -webkit-transform: scaleY(1);
+  }
 }
 
 @keyframes sk-stretchdelay {
-  0%, 40%, 100% { 
+  0%,
+  40%,
+  100% {
     transform: scaleY(0.4);
     -webkit-transform: scaleY(0.4);
-  }  20% { 
-    transform: scaleY(1.0);
-    -webkit-transform: scaleY(1.0);
+  }
+  20% {
+    transform: scaleY(1);
+    -webkit-transform: scaleY(1);
   }
 }
 
 .company-logo {
   width: 150px;
-  margin-bottom: 30px; 
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); 
+  margin-bottom: 30px;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
   opacity: 0; /* Inicialmente invisible */
   transform: translateY(-20px); /* Desplazamiento hacia arriba */
   animation: fadeInUp 0.5s forwards; /* Aplicar la animación */
@@ -87,5 +96,3 @@
     transform: translateY(0); /* Restablecer la posición */
   }
 }
-
-
