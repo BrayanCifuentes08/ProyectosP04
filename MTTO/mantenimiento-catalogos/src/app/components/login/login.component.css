@@ -1,13 +1,13 @@
 .fixed {
-    position: fixed;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-  }
-  
-  .transition-transform {
-    transition: transform 0.3s ease;
-  }
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.transition-transform {
+  transition: transform 0.3s ease;
+}
 
 .shine-button {
   position: relative;
@@ -19,13 +19,18 @@
 }
 
 .shine-button.loading::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   animation: shine 1.5s infinite ease-in-out;
   z-index: 0;
 }
@@ -48,7 +53,6 @@
   color: white;
 }
 
-
 .accordion-content {
   max-height: 0;
   opacity: 0;
@@ -60,7 +64,6 @@
   max-height: 500px;
   opacity: 1;
 }
-
 
 .overflow-y-auto::-webkit-scrollbar {
   width: 8px;
@@ -111,8 +114,6 @@
   animation: entrar 0.4s ease-in-out forwards;
 }
 
-
-
 /* Keyframes para la entrada */
 @keyframes entrar {
   0% {
@@ -136,8 +137,6 @@
     transform: translateY(-10%); /* Movimiento más sutil */
   }
 }
-
-
 
 /* Para el overlay */
 .overlay-enter-active {
@@ -195,100 +194,99 @@
   animation: fadeOut 0.5s forwards;
 }
 
-  .circles{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+.circles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
-  .circles li{
-    position: absolute;
-    display: block;
-    list-style: none;
-    width: 20px;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    animation: animate 25s linear infinite;
-    bottom: -150px;  
+.circles li {
+  position: absolute;
+  display: block;
+  list-style: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  animation: animate 25s linear infinite;
+  bottom: -150px;
 }
-.circles li:nth-child(1){
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 0s;
-}
-
-
-.circles li:nth-child(2){
-    left: 10%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 2s;
-    animation-duration: 12s;
+.circles li:nth-child(1) {
+  left: 25%;
+  width: 80px;
+  height: 80px;
+  animation-delay: 0s;
 }
 
-.circles li:nth-child(3){
-    left: 70%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 4s;
+.circles li:nth-child(2) {
+  left: 10%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 2s;
+  animation-duration: 12s;
 }
 
-.circles li:nth-child(4){
-    left: 40%;
-    width: 60px;
-    height: 60px;
-    animation-delay: 0s;
-    animation-duration: 18s;
+.circles li:nth-child(3) {
+  left: 70%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 4s;
 }
 
-.circles li:nth-child(5){
-    left: 65%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 0s;
+.circles li:nth-child(4) {
+  left: 40%;
+  width: 60px;
+  height: 60px;
+  animation-delay: 0s;
+  animation-duration: 18s;
 }
 
-.circles li:nth-child(6){
-    left: 75%;
-    width: 110px;
-    height: 110px;
-    animation-delay: 3s;
+.circles li:nth-child(5) {
+  left: 65%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 0s;
 }
 
-.circles li:nth-child(7){
-    left: 35%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 7s;
+.circles li:nth-child(6) {
+  left: 75%;
+  width: 110px;
+  height: 110px;
+  animation-delay: 3s;
 }
 
-.circles li:nth-child(8){
-    left: 50%;
-    width: 25px;
-    height: 25px;
-    animation-delay: 15s;
-    animation-duration: 30s;
+.circles li:nth-child(7) {
+  left: 35%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 7s;
 }
 
-.circles li:nth-child(9){
-    left: 20%;
-    width: 15px;
-    height: 15px;
-    animation-delay: 2s;
-    animation-duration: 35s;
+.circles li:nth-child(8) {
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  animation-delay: 15s;
+  animation-duration: 30s;
 }
 
-.circles li:nth-child(10){
-    left: 85%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 0s;
-    animation-duration: 11s;
+.circles li:nth-child(9) {
+  left: 20%;
+  width: 15px;
+  height: 15px;
+  animation-delay: 2s;
+  animation-duration: 35s;
 }
-.circles li:nth-child(11){
+
+.circles li:nth-child(10) {
+  left: 85%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 0s;
+  animation-duration: 11s;
+}
+.circles li:nth-child(11) {
   left: 15%;
   width: 110px;
   height: 110px;
@@ -296,21 +294,21 @@
   animation-duration: 15s;
 }
 
-.circles li:nth-child(12){
+.circles li:nth-child(12) {
   left: 25%;
   width: 40px;
   height: 40px;
   animation-delay: 5s;
   animation-duration: 20s;
 }
-.circles li:nth-child(13){
+.circles li:nth-child(13) {
   left: 55%;
   width: 45px;
   height: 45px;
   animation-delay: 8s;
   animation-duration: 20s;
 }
-.circles li:nth-child(14){
+.circles li:nth-child(14) {
   left: 60%;
   width: 25px;
   height: 25px;
@@ -319,19 +317,17 @@
 }
 
 @keyframes animate {
-
-  0%{
-      transform: translateY(0) rotate(0deg);
-      opacity: 1;
-      border-radius: 0;
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+    border-radius: 0;
   }
 
-  100%{
-      transform: translateY(-1000px) rotate(720deg);
-      opacity: 0;
-      border-radius: 50%;
+  100% {
+    transform: translateY(-1000px) rotate(720deg);
+    opacity: 0;
+    border-radius: 50%;
   }
-
 }
 
 @keyframes borderAnimation {
@@ -344,34 +340,37 @@
 }
 
 .animate-border {
-  background: linear-gradient(to right, #4f46e5, rgb(168, 168, 168), #4f46e5); 
+  background: linear-gradient(to right, #4f46e5, rgb(168, 168, 168), #4f46e5);
   background-size: 200% 100%;
-  background-position: 0% 50%; 
-  height: 2px; 
+  background-position: 0% 50%;
+  height: 2px;
   animation: borderAnimation 4s linear infinite;
-  margin: 0 auto; 
-  width: 100%; 
+  margin: 0 auto;
+  width: 100%;
 }
-
 
 @keyframes animateGradient {
   0% {
-    background-position: 200% 50%; 
+    background-position: 200% 50%;
   }
   100% {
-    background-position: 0% 50%; 
+    background-position: 0% 50%;
   }
 }
 
 .animate-gradient-text {
-  background: linear-gradient(to right, #4f46e5, rgb(168, 168, 168), #4f46e5, #4f46e5, rgb(168, 168, 168), #4f46e5);
+  background: linear-gradient(
+    to right,
+    #4f46e5,
+    rgb(168, 168, 168),
+    #4f46e5,
+    #4f46e5,
+    rgb(168, 168, 168),
+    #4f46e5
+  );
   background-size: 200% 100%;
   background-position: 200% 50%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: animateGradient 8s linear infinite; 
+  animation: animateGradient 8s linear infinite;
 }
-
-
-
-

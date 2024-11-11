@@ -7,6 +7,7 @@ import { estadoInputsTipoCanalDistribucionInsert, estadoInputsTipoCanalDistribuc
 import { MessagesComponent } from "../components/messages/messages.component";
 import { FormsModule } from '@angular/forms';
 import { estadoInputsCanalDistribucionInsert, estadoInputsCanalDistribucionUpdate } from '../models/canal-distribucion';
+import { estadoInputsElementoAsignadoInsert, estadoInputsElementoAsignadoUpdate } from '../models/elemento-asignado';
 
 enum Accion {
   Eliminar = 'eliminar',
@@ -504,11 +505,17 @@ export default class DashboardComponent implements OnInit {
   
   getDescripciones(): string[] {
     if (this.catalogoSeleccionado === 'Canal Distribucion') {
-      return this.descripcionesCanalDistribucion
-    } else {
+      return this.descripcionesCanalDistribucion;
+    } else if (this.catalogoSeleccionado === 'Tipo Canal Distribucion') {
       return this.descripcionesTipoCanalDistribucion;
+    } else if (this.catalogoSeleccionado === 'Elemento Asignado') {
+      return this.descripcionesElementoAsignado;
+    } else {
+      return [];
     }
   }
+  
+
   
   //*FUNCIONES PARA MANEJAR LOS INPUT DINAMICOS EN LA INTERFAZ
   mostrarInputs(registro: any = null) {
@@ -591,32 +598,42 @@ export default class DashboardComponent implements OnInit {
           return true;
         };
 
-        //Cambiar logica para bloquear los inputs necesarios para cada catalogo
-        const estadoInputsTipoCanal = allInputsEmpty()
-          ? estadoInputsTipoCanalDistribucionInsert
-          : estadoInputsTipoCanalDistribucionUpdate;
 
-        const estadoInputsCanalDistribucion = allInputsEmpty()
-          ? estadoInputsCanalDistribucionInsert
-          : estadoInputsCanalDistribucionUpdate;
+         // Cambiar lógica para bloquear los inputs necesarios para cada catálogo
+         const allEmpty = allInputsEmpty();
 
-        let estadoInputs = estadoInputsCanalDistribucion;
-
-        if (key in estadoInputsTipoCanal) {
-          estadoInputs = estadoInputsTipoCanal;
-        }
-
-        // Deshabilitar si corresponde
-        if (estadoInputs[key]) {
-          input.disabled = true;
-          input.style.backgroundColor = '#E5E7EB'; 
-          input.style.cursor = 'not-allowed';
-          input.style.color = '#4B5563'; 
-        }
-
-        div.appendChild(input);
-        inputContainer.appendChild(div);
-      }
+         // Aplicar el modelo de estado correspondiente según si el registro está vacío o no
+         const estadoInputsElementoAsignado = allEmpty
+           ? estadoInputsElementoAsignadoInsert
+           : estadoInputsElementoAsignadoUpdate;
+ 
+         const estadoInputsTipoCanal = allEmpty
+           ? estadoInputsTipoCanalDistribucionInsert
+           : estadoInputsTipoCanalDistribucionUpdate;
+ 
+         const estadoInputsCanalDistribucion = allEmpty
+           ? estadoInputsCanalDistribucionInsert
+           : estadoInputsCanalDistribucionUpdate;
+ 
+         // Determinar cuál estado de inputs aplicar
+         let estadoInputs = estadoInputsElementoAsignado; // Predeterminado
+         if (key in estadoInputsTipoCanal) {
+           estadoInputs = estadoInputsTipoCanal;
+         } else if (key in estadoInputsCanalDistribucion) {
+           estadoInputs = estadoInputsCanalDistribucion;
+         }
+ 
+         // Deshabilitar si corresponde
+         if (estadoInputs[key]) {
+           input.disabled = true;
+           input.style.backgroundColor = '#E5E7EB'; 
+           input.style.cursor = 'not-allowed';
+           input.style.color = '#4B5563'; 
+         }
+ 
+         div.appendChild(input);
+         inputContainer.appendChild(div);
+       }
     }
   }
 

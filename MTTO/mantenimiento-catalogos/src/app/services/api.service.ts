@@ -7,7 +7,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 })
 export class ApiService {
   
-  private baseUrl:  string = 'http://192.168.10.41:9098/api/';
+  private baseUrl:  string = 'http://192.168.10.39:9098/api/';
   private usuario:  string = ''
   private estacion: any = null;
   private empresa:  any = null;
@@ -102,7 +102,7 @@ export class ApiService {
   }
 
   buscarUser2(model: any): Observable<any> {
-    const url = `${this.baseUrl}PaCrudUser2Ctrl`;
+    const url = `${this.baseUrl}PaBscUser2Ctrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(url, { params: model, headers })
@@ -112,7 +112,7 @@ export class ApiService {
   }
 
   buscarEstacionTrabajo(model: any): Observable<any> {
-    const url = `${this.baseUrl}PaCrudEstacionTrabajo2Ctrl`;
+    const url = `${this.baseUrl}PaBscEstacionTrabajo2Ctrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(url, {params: model, headers})
@@ -122,7 +122,7 @@ export class ApiService {
   }
 
   buscarEmpresa(model: any): Observable<any> {
-    const url = `${this.baseUrl}PaCrudEmpresa1Ctrl`;
+    const url = `${this.baseUrl}PaBscEmpresa1Ctrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(url, { params: model, headers })
@@ -132,7 +132,7 @@ export class ApiService {
   }
 
   buscarApplication(model: any): Observable<any> {
-    const url = `${this.baseUrl}PaCrudApplication1Ctrl`;
+    const url = `${this.baseUrl}PaBscApplication1Ctrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(url, { params: model, headers })
@@ -142,7 +142,7 @@ export class ApiService {
   }
 
   buscarUserDisplay2(model: any): Observable<any> {
-    const url = `${this.baseUrl}PaCrudUserDisplay2Ctrl`;
+    const url = `${this.baseUrl}PaBscUserDisplay2Ctrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(url, { params: model, headers })
