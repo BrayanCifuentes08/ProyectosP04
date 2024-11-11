@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Practicas\Apis\ApiMantenimientos\ApiMantenimientos\bin\Release\net6.0\publish\</_PublishTargetUrl>
-    <History>True|2024-11-04T22:13:05.8199556Z;</History>
+    <History>True|2024-11-05T21:47:43.1015378Z;True|2024-11-05T15:44:47.3821755-06:00;True|2024-11-05T15:31:11.7988816-06:00;True|2024-11-04T16:13:05.8199556-06:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
