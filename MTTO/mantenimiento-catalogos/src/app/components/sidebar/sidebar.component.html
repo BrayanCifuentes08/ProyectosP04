@@ -78,6 +78,12 @@
               class="text-white py-2 px-3 transition-all duration-300 border-l-4 rounded-md border-transparent hover:border-gray-200 hover:bg-[#c0c0c057]">
               Elemento Asignado
             </li>
+            <li 
+              (click)="seleccionarOpcionCatalogo('User')" 
+              [ngClass]="{ 'selected-option': opcionSeleccionadaDropdown === 'User' }" 
+              class="text-white py-2 px-3 transition-all duration-300 border-l-4 rounded-md border-transparent hover:border-gray-200 hover:bg-[#c0c0c057]">
+              User
+            </li>
           </ul>
         </div>
       </li>

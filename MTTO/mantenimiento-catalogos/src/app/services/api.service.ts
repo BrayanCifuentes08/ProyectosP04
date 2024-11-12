@@ -101,6 +101,16 @@ export class ApiService {
     return this.http.get<any>(url, { params, headers });
   }
 
+  getCatalogoUser(model: any): Observable<any> {
+    const url = `${this.baseUrl}PaCrudUserCtrl`;
+    const params = new HttpParams({ fromObject: model });
+    const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    // Realizar la solicitud GET con los parámetros y encabezados
+    return this.http.get<any>(url, { params, headers });
+  }
+
   buscarUser2(model: any): Observable<any> {
     const url = `${this.baseUrl}PaBscUser2Ctrl`;
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
