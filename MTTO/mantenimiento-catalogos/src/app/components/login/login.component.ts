@@ -489,6 +489,18 @@ export default class LoginComponent {
     this.buscarUserDisplay2(application.application);
   }
 
+  seleccionarItem(section: string, item: any) {
+    this.seleccionados[section] = item;
+    this.sectionOpen = null;
+  
+    if (section === 'estaciones') {
+      this.apiService.setEstacion(item);
+    } else if (section === 'empresas') {
+      this.apiService.setEmpresa(item);
+    }
+  }
+  
+
   validarSeleccion(): boolean {
     this.validacionErrores = {}; //Resetear errores
   
@@ -515,17 +527,7 @@ export default class LoginComponent {
     return validaciones && seleccionDeDisplayValida;
   }
   
-  seleccionarItem(section: string, item: any) {
-    this.seleccionados[section] = item;
-    this.sectionOpen = null;
-  
-    if (section === 'estaciones') {
-      this.apiService.setEstacion(item);
-    } else if (section === 'empresas') {
-      this.apiService.setEmpresa(item);
-    }
-  }
-  
+
   verificarCampos(): void {
     this.errores = {};
   
@@ -554,13 +556,13 @@ export default class LoginComponent {
   }
   
   cerrarModal() {
-    this.isExiting = true; // Activamos la clase de salida
+    this.isExiting = true;
     this.mostrarBotonModal = true;
     
     setTimeout(() => {
-      this.mostrarModal = false;  // Ocultamos el modal después de la animación
-      this.isExiting = false;     // Reseteamos la variable de estado
-    }, 300); // Duración debe coincidir con la animación de salida
+      this.mostrarModal = false;  
+      this.isExiting = false;
+    }, 300);
   }
   
   abrirModal() {
@@ -582,12 +584,11 @@ export default class LoginComponent {
         this.seleccionados['aplicaciones'] = null;
         this.seleccionados['displays'] = null;
         this.userDisplay2 = [];
-        this.sectionOpen = null; // Opcional: Cerrar el acordeón si es necesario
+        this.sectionOpen = null;
         break;
       case 'displays':
         this.seleccionados['displays'] = null;
-        this.userDisplay2 = [];
-        this.sectionOpen = null; // Opcional: Cerrar el acordeón si es necesario
+        this.sectionOpen = null;
         break;
       default:
         console.warn(`Tipo de selección no reconocido: ${tipo}`);
