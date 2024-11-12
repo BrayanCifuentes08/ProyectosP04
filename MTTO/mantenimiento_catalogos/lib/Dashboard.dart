@@ -13,6 +13,7 @@ import 'package:mantenimiento_catalogos/models/ModeloInputs.dart';
 import 'package:mantenimiento_catalogos/models/PaCrudCanalDistribucionM.dart';
 import 'package:mantenimiento_catalogos/models/PaCrudElementoAsignadoM.dart';
 import 'package:mantenimiento_catalogos/models/PaCrudTipoCanalDistribucionM.dart';
+import 'package:mantenimiento_catalogos/models/PaCrudUserM.dart';
 import 'package:mantenimiento_catalogos/services/Shared.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -68,6 +69,7 @@ class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 }
+
 class _DashboardState extends State<Dashboard> {
   List<String> descripciones = [];
   List<Widget> dynamicInputs = [];
@@ -80,6 +82,7 @@ class _DashboardState extends State<Dashboard> {
   List<PaCrudTipoCanalDistribucionM> _tipoCanalDistribucion = [];
   List<PaCrudCanalDistribucionM> _canalDistribucion = [];
   List<PaCrudElementoAsignadoM> _elementoAsignado = [];
+  List<PaCrudUserM> _user = [];
   bool _cargando = false;
   late AccionService accionService;
   List<Map<String, dynamic>> datosDinamicos = [];
@@ -243,6 +246,13 @@ class _DashboardState extends State<Dashboard> {
         if (_elementoAsignado.isNotEmpty) {
           registros.addAll(_elementoAsignado);
         }
+        break;
+      case 'User':
+        await _getUser(1);
+        if (_user.isNotEmpty) {
+          registros.addAll(_user);
+        }
+        break;
       default:
         descripciones.add('Catálogo no definido');
         setState(() {});
@@ -277,6 +287,16 @@ class _DashboardState extends State<Dashboard> {
             break;
           case 'Elemento Asignado':
             descripcion = (modelo as PaCrudElementoAsignadoM).descripcion;
+            if (descripcion != null) {
+              descripciones.add(descripcion);
+              datos['fechaHora'] =
+                  DateFormat('dd/MM/yyyy, HH:mm').format(modelo.fechaHora!);
+              datos['userName'] = modelo.userName ?? '';
+              datosDinamicos.add(datos); // Agregar el nuevo mapa a la lista
+            }
+            break;
+          case 'User':
+            descripcion = (modelo as PaCrudUserM).name;
             if (descripcion != null) {
               descripciones.add(descripcion);
               datos['fechaHora'] =
@@ -947,6 +967,18 @@ class _DashboardState extends State<Dashboard> {
             await _getElementoAsignado(2);
           }, null, null);
           break;
+        case 'User':
+          _mostrarAlerta(
+              context,
+              S.of(context).dashboardConfirmar,
+              S.of(context).dashboardDeseaInsertarEsteRegistro,
+              FontAwesomeIcons.circleExclamation,
+              Color(0xFFFEAB308),
+              1,
+              S.of(context).dashboardInsertar, () async {
+            await _getUser(2);
+          }, null, null);
+          break;
         default:
           setState(() {});
           return;
@@ -993,6 +1025,18 @@ class _DashboardState extends State<Dashboard> {
           await _getElementoAsignado(3);
         }, null, null);
         break;
+      case 'User':
+        _mostrarAlerta(
+            context,
+            S.of(context).dashboardConfirmar,
+            S.of(context).dashboardDeseaActualizarEsteRegistro,
+            FontAwesomeIcons.circleExclamation,
+            Color(0xFFFEAB308),
+            1,
+            S.of(context).dashboardActualizar, () async {
+          await _getUser(3);
+        }, null, null);
+        break;
       default:
         setState(() {});
         return;
@@ -1037,6 +1081,18 @@ class _DashboardState extends State<Dashboard> {
             1,
             S.of(context).dashboardEliminar, () async {
           await _getElementoAsignado(4);
+        }, null, null);
+        break;
+      case 'User':
+        _mostrarAlerta(
+            context,
+            S.of(context).dashboardConfirmar,
+            S.of(context).dashboardDeseaEliminarEsteRegistro,
+            FontAwesomeIcons.circleExclamation,
+            Color(0xFFFEAB308),
+            1,
+            S.of(context).dashboardEliminar, () async {
+          await _getUser(4);
         }, null, null);
         break;
       default:
@@ -1519,6 +1575,154 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  //Función para catálogo User
+  Future<void> _getUser(int accion) async {
+    setState(() {
+      _cargando = true; // Establecer isLoading a true al inicio de la carga
+    });
+
+    String? valorInputpUserName = controllers['UserName']?.text ?? null;
+    String? valorInputName = controllers['Name']?.text ?? null;
+    String? valorInputCelular = controllers['Celular']?.text ?? null;
+    String? valorInputEMail = controllers['EMail']?.text ?? null;
+    String? valorInputFechaHora = controllers['Fecha y Hora']?.text ?? null;
+    DateTime? fechaHora = valorInputFechaHora != null
+        ? DateTime.tryParse(valorInputFechaHora)
+        : null;
+
+    String url = '${widget.baseUrl}PaCrudUserCtrl';
+
+    Map<String, String?> queryParams = {
+      "accion": accion.toString(),
+      "pCriterioBusqueda": widget.searchController.text,
+      if (valorInputpUserName != null) "pUserName": valorInputpUserName,
+      "pName": valorInputName,
+      "pCelular": valorInputCelular,
+      "pEMail": valorInputEMail,
+      if (fechaHora != null) "pFecha_Hora": fechaHora.toIso8601String(),
+    };
+    print(queryParams);
+    Map<String, String> parametrosString = queryParams
+        .map((key, value) => MapEntry(key, value ?? ''))
+      ..removeWhere((key, value) => value.isEmpty);
+
+    Uri uri = Uri.parse(url).replace(queryParameters: parametrosString);
+
+    try {
+      final response = await http.get(uri, headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${widget.token}"
+      });
+
+      if (response.statusCode == 200) {
+        final decodedResponse = json.decode(response.body);
+        // Verifica si la respuesta es un Map
+        if (decodedResponse is Map) {
+          if (decodedResponse['resultado'] == false) {
+            // Muestra el mensaje en un AlertDialog
+            _mostrarAlerta(
+                context,
+                S.of(context).dashboardError,
+                decodedResponse['mensaje'],
+                FontAwesomeIcons.circleExclamation,
+                Colors.red.shade700,
+                0,
+                S.of(context).dashboardAceptar,
+                null,
+                null,
+                null);
+            return; // Salir del método si hay un error
+          }
+          // Ajusta según la estructura de tu respuesta
+          if (decodedResponse['datos'] != null) {
+            List<PaCrudUserM> user = (decodedResponse['datos'] as List)
+                .map((data) => PaCrudUserM.fromJson(data))
+                .toList();
+            setState(() {
+              _user = user;
+            });
+          } else {
+            print('No se encontraron datos en la respuesta.');
+          }
+        } else if (decodedResponse is List) {
+          if (decodedResponse.isNotEmpty && decodedResponse[0] is Map) {
+            var responseMap = decodedResponse[0];
+            if (responseMap['resultado'] == false) {
+              _mostrarAlerta(
+                  context,
+                  S.of(context).dashboardError,
+                  responseMap['mensaje'],
+                  FontAwesomeIcons.circleExclamation,
+                  Colors.red.shade700,
+                  0,
+                  S.of(context).dashboardAceptar,
+                  null,
+                  null,
+                  null);
+              widget.searchController.clear();
+              _getElementoAsignado(1);
+              setState(() {});
+              return; // Salir del método si hay un error
+            }
+          }
+          List<PaCrudUserM> user = decodedResponse
+              .map((data) => PaCrudUserM.fromJson(data))
+              .toList();
+          setState(() {
+            _user = user;
+          });
+        } else {
+          print('Formato de respuesta inesperado.');
+        }
+        if (accion == 2 || accion == 3 || accion == 4) {
+          _opcionSeleccionada = "";
+          controllers.clear();
+          controllers.forEach((key, controller) {
+            controller.clear(); // Esto vacía el texto de cada controlador
+          });
+          generarRegistros(widget.catalogo ?? '');
+          if (accion == 4) {
+            widget.searchController.clear();
+            _mostrarMensajeScaffold(
+                context,
+                "Registro eliminado correctamente",
+                MdiIcons.checkboxMarkedCircle,
+                Color(0xFFF15803D),
+                Duration(seconds: 4));
+          }
+          if (accion == 3) {
+            _mostrarMensajeScaffold(
+                context,
+                "Registro actualizado correctamente",
+                MdiIcons.checkboxMarkedCircle,
+                Color(0xFFF15803D),
+                Duration(seconds: 4));
+          }
+          if (accion == 2) {
+            _mostrarMensajeScaffold(
+                context,
+                "Registro ingresado correctamente",
+                MdiIcons.checkboxMarkedCircle,
+                Color(0xFFF15803D),
+                Duration(seconds: 4));
+          }
+        }
+      } else {
+        print('Error: ${response.body}');
+        print('Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    } finally {
+      setState(() {
+        _cargando = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
+    }
+  }
+
   double _calculateAspectRatio(BuildContext context) {
     // Obtener el ancho de la pantalla
     double screenWidth = MediaQuery.of(context).size.width;
@@ -1596,7 +1800,9 @@ class _DashboardState extends State<Dashboard> {
                               value: opcionNotifier.selectedValue,
                               items: <String>[
                                 'Canal Distribucion',
-                                'Tipo Canal Distribucion'
+                                'Tipo Canal Distribucion',
+                                'Elemento Asignado',
+                                'User'
                               ].map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
@@ -1958,6 +2164,20 @@ class _DashboardState extends State<Dashboard> {
                                                   case 'Canal Distribucion':
                                                     if ((modelo as PaCrudCanalDistribucionM)
                                                             .descripcion ==
+                                                        selectedValue) {
+                                                      registro = modelo;
+                                                    }
+                                                    break;
+                                                  case 'Elemento Asignado':
+                                                    if ((modelo as PaCrudElementoAsignadoM)
+                                                            .descripcion ==
+                                                        selectedValue) {
+                                                      registro = modelo;
+                                                    }
+                                                    break;
+                                                  case 'User':
+                                                    if ((modelo as PaCrudUserM)
+                                                            .name ==
                                                         selectedValue) {
                                                       registro = modelo;
                                                     }

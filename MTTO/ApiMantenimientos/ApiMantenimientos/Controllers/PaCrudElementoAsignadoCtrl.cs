@@ -56,11 +56,11 @@ namespace ApiMantenimientos.Controllers
                         var resultados = db.Query<PaCrudElementoAsignadoM>("paCrudElementoAsignado", parameters, commandType: CommandType.StoredProcedure);
                         var Resultado = resultados.Select(model => new
                         {
-                            model.ElementoAsignado,
+                            model.Elemento_Asignado,
                             model.Descripcion,
-                            model.ElementoId,
+                            model.Elemento_Id,
                             model.Empresa,
-                            model.ElementoAsignadoPadre,
+                            model.Elemento_Asignado_Padre,
                             model.Estado,
                             model.Fecha_Hora,
                             model.UserName,
