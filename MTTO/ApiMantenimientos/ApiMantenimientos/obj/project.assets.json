@@ -2745,23 +2745,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dev003\\.nuget\\packages\\": {},
+    "C:\\Users\\dev005\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Practicas\\Apis\\ApiMantenimientos\\ApiMantenimientos\\ApiMantenimientos.csproj",
+      "projectUniqueName": "C:\\Repositorios Proyectos\\ProyectosP04\\MTTO\\ApiMantenimientos\\ApiMantenimientos\\ApiMantenimientos.csproj",
       "projectName": "ApiMantenimientos",
-      "projectPath": "C:\\Practicas\\Apis\\ApiMantenimientos\\ApiMantenimientos\\ApiMantenimientos.csproj",
-      "packagesPath": "C:\\Users\\dev003\\.nuget\\packages\\",
-      "outputPath": "C:\\Practicas\\Apis\\ApiMantenimientos\\ApiMantenimientos\\obj\\",
+      "projectPath": "C:\\Repositorios Proyectos\\ProyectosP04\\MTTO\\ApiMantenimientos\\ApiMantenimientos\\ApiMantenimientos.csproj",
+      "packagesPath": "C:\\Users\\dev005\\.nuget\\packages\\",
+      "outputPath": "C:\\Repositorios Proyectos\\ProyectosP04\\MTTO\\ApiMantenimientos\\ApiMantenimientos\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\dev003\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dev005\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

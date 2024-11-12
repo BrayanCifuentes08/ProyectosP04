@@ -8,6 +8,7 @@ import { MessagesComponent } from "../components/messages/messages.component";
 import { FormsModule } from '@angular/forms';
 import { estadoInputsCanalDistribucionInsert, estadoInputsCanalDistribucionUpdate } from '../models/canal-distribucion';
 import { estadoInputsElementoAsignadoInsert, estadoInputsElementoAsignadoUpdate } from '../models/elemento-asignado';
+import { estadoInputsUserInsert, estadoInputsUserUpdate } from '../models/user';
 
 enum Accion {
   Eliminar = 'eliminar',
@@ -51,7 +52,7 @@ export default class DashboardComponent implements OnInit {
   tiposCanalDistribucionData:         any[] = [];
   canalDistribucionData:              any[] = [];
   elementoAsignadoData:               any[] = [];
-  userData:               any[] = [];
+  userData:                           any[] = [];
   registros:                          any[] = [];
   accionConfirmar:                    { catalogo: string, accion: Accion } | null = null;
 
@@ -102,7 +103,7 @@ export default class DashboardComponent implements OnInit {
         return;
 
         case 'User':
-          this.obtenerElementoAsignado(1);  
+          this.obtenerUser(1);  
         return;
 
       default:
@@ -583,9 +584,8 @@ export default class DashboardComponent implements OnInit {
                 this.userData = data;
                 this.registros = this.userData; 
                 this.descripcionesUser = this.userData.map(
-                  (registro) => registro.descripcion || ''
+                  (registro) => registro.name || ''
                 );
-                
                 this.mostrarBtnGuardar = false;
             } else {
                 console.warn('No se encontraron registros.');
@@ -607,12 +607,12 @@ export default class DashboardComponent implements OnInit {
       return this.descripcionesTipoCanalDistribucion;
     } else if (this.catalogoSeleccionado === 'Elemento Asignado') {
       return this.descripcionesElementoAsignado;
+    } else if (this.catalogoSeleccionado === 'User') {
+      return this.descripcionesUser;
     } else {
       return [];
     }
   }
-  
-
   
   //*FUNCIONES PARA MANEJAR LOS INPUT DINAMICOS EN LA INTERFAZ
   mostrarInputs(registro: any = null) {
@@ -711,6 +711,8 @@ export default class DashboardComponent implements OnInit {
          const estadoInputsCanalDistribucion = allEmpty
            ? estadoInputsCanalDistribucionInsert
            : estadoInputsCanalDistribucionUpdate;
+
+          const estadoInputsUser = allEmpty ? estadoInputsUserInsert : estadoInputsUserUpdate
  
          // Determinar cuál estado de inputs aplicar
          let estadoInputs = estadoInputsElementoAsignado; // Predeterminado
