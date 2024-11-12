@@ -27,7 +27,8 @@ namespace ApiMantenimientos.Controllers
             [FromQuery] string? pCriterioBusqueda,
             [FromQuery] string? pUserName,
             [FromQuery] string? pName,
-            [FromQuery] int? pEstado,
+            [FromQuery] string? pCelular,
+            [FromQuery] string? pEMail,
             [FromQuery] DateTime? pFecha_Hora
             )
         {
@@ -42,7 +43,8 @@ namespace ApiMantenimientos.Controllers
                     parameters.Add("@pCriterioBusqueda", pCriterioBusqueda);
                     parameters.Add("@pUserName", pUserName);
                     parameters.Add("@pName", pName);
-                    parameters.Add("@pEstado", pEstado);
+                    parameters.Add("@pCelular", pCelular);
+                    parameters.Add("@pEMail", pEMail);
                     parameters.Add("@pFecha_Hora", pFecha_Hora);
 
                     if (accion == 1) // SELECT
@@ -52,7 +54,8 @@ namespace ApiMantenimientos.Controllers
                         {
                             model.UserName,
                             model.Name,
-                            model.Estado,
+                            model.Celular,
+                            model.EMail,
                             model.Fecha_Hora,
                             model.Mensaje,
                             model.Resultado
