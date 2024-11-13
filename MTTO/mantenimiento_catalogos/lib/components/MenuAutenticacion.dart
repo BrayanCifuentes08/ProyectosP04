@@ -332,445 +332,130 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
             : null)
         : null;
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(children: [
-          if (!widget.isBackgroundSet)
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFF004964),
-                    Colors.black,
-                  ],
+    return Stack(children: [
+      if (!widget.isBackgroundSet)
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF004964),
+                Colors.black,
+              ],
+            ),
+          ),
+        ),
+      // if (!widget.isBackgroundSet)
+      //   AnimatedBackground(
+      //     behaviour: RandomParticleBehaviour(
+      //         options: ParticleOptions(
+      //             baseColor: Colors.white,
+      //             spawnMinRadius: 40,
+      //             spawnMaxRadius: 80,
+      //             spawnMinSpeed: 15,
+      //             particleCount: 6,
+      //             spawnMaxSpeed: 80,
+      //             spawnOpacity: 0.2,
+      //             image: Image.asset("assets/image.png"))),
+      //     vsync: this,
+      //     child: Container(),
+      //   ),
+      // Fondo animado con AnimatedBackground
+      if (widget.isBackgroundSet) BackgroundImage(imagePath: widget.imagePath),
+
+      Scaffold(
+          backgroundColor: Colors.transparent,
+          body: CustomScrollView(slivers: [
+            SliverAppBar(
+              expandedHeight: 110.0,
+              pinned: true,
+              floating: true,
+              elevation: 10,
+              shadowColor: Color.fromARGB(255, 0, 73, 100),
+              backgroundColor: Color.fromARGB(0, 0, 73, 100),
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back, color: Colors.white)),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.only(right: 10.0, top: 5.0, bottom: 5.0),
+                  child: Image.asset('assets/logo.png',
+                      height: 50.0, color: Colors.white),
                 ),
-              ),
+              ],
             ),
-          if (!widget.isBackgroundSet)
-            AnimatedBackground(
-              behaviour: RandomParticleBehaviour(
-                  options: ParticleOptions(
-                      baseColor: Colors.white,
-                      spawnMinRadius: 40,
-                      spawnMaxRadius: 80,
-                      spawnMinSpeed: 15,
-                      particleCount: 6,
-                      spawnMaxSpeed: 80,
-                      spawnOpacity: 0.2,
-                      image: Image.asset("assets/image.png"))),
-              vsync: this,
-              child: Container(),
-            ),
-          // Fondo animado con AnimatedBackground
-          if (widget.isBackgroundSet)
-            BackgroundImage(imagePath: widget.imagePath),
-          Container(
-              color: const Color.fromARGB(0, 0, 0, 0),
-              child: Padding(
-                  padding: const EdgeInsets.only(top: 30, left: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back, color: Colors.white)),
-                      SizedBox(width: 5),
-                      Text("Menu Autenticación",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20))
-                    ],
-                  ))),
-          Center(
-              child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: IntrinsicWidth(
-                      child: IntrinsicHeight(
-                          child: Container(
-                              padding: EdgeInsets.all(32.0),
-                              decoration: BoxDecoration(
-                                color: themeNotifier.temaClaro
-                                    ? Color.fromARGB(255, 255, 255, 255)
-                                        .withOpacity(0.97)
-                                    : Color.fromARGB(255, 18, 32, 47)
-                                        .withOpacity(0.9),
-                                borderRadius: BorderRadius.circular(15.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: SingleChildScrollView(
-                                  // Envolver la columna en SingleChildScrollView
-                                  child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  //Switch Guardar sesion
-                                  if (_selectedEstacionTrabajo != null &&
-                                      _selectedEmpresa != null &&
-                                      (_application1.isEmpty ||
-                                          (_application1.isNotEmpty &&
-                                              _selectedApplication != null)) &&
-                                      (_selectedUserDisplay != null ||
-                                          !_userDisplay.any((item) =>
-                                              item.displayURLAlter != null)))
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Flexible(
-                                            child: FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                S
-                                                    .of(context)
-                                                    .loginGuardarSesion,
-                                                style: TextStyle(
-                                                  color: widget.temaClaro
-                                                      ? Color(0xFF5A38FD)
-                                                      : Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Transform.scale(
-                                            scale: MediaQuery.of(context)
-                                                        .size
-                                                        .width <
-                                                    400
-                                                ? 0.7
-                                                : MediaQuery.of(context)
-                                                            .size
-                                                            .width <
-                                                        600
-                                                    ? 0.75
-                                                    : 1.0,
-                                            child: Switch(
-                                              value: _guardarSesion,
-                                              onChanged: (bool value) {
-                                                setState(() {
-                                                  _guardarSesion = value;
-                                                });
-                                                _guardarDatosSesion();
-                                              },
-                                              activeColor: Color(0xFF5A38FD),
-                                              inactiveThumbColor:
-                                                  const Color.fromARGB(
-                                                      255, 155, 86, 86),
-                                              inactiveTrackColor:
-                                                  Colors.grey[300],
-                                            ),
-                                          ),
-                                        ],
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                  child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: IntrinsicWidth(
+                          child: IntrinsicHeight(
+                              child: Container(
+                                  padding: EdgeInsets.all(32.0),
+                                  decoration: BoxDecoration(
+                                    color: themeNotifier.temaClaro
+                                        ? Color.fromARGB(255, 255, 255, 255)
+                                            .withOpacity(0.97)
+                                        : Color.fromARGB(255, 18, 32, 47)
+                                            .withOpacity(0.9),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 10,
+                                        offset: Offset(0, 4),
                                       ),
-                                    ),
-                                  SizedBox(height: 10),
-                                  // COMPONENTE DE CARGA
-                                  if (widget.cargandoUser2 ||
-                                      _cargandoApplication ||
-                                      _cargandoEmpresa ||
-                                      _cargandoEstacionTrabajo)
-                                    LoadingComponent(
-                                      color: Colors.blue[200]!,
-                                      changeLanguage: widget.changeLanguage,
-                                    ),
-                                  //DROPDOWN DE ESTACIONES DE TRABAJO
-                                  if (widget.user2.isNotEmpty &&
-                                      widget.user2[0].continuar == true &&
-                                      _estacionTrabajo.isNotEmpty)
-                                    Column(
-                                      children: [
-                                        if (_isExpandedEstacionTrabajo == true)
-                                          Divider(
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                        ExpansionTile(
-                                          backgroundColor:
-                                              _isExpandedEstacionTrabajo
-                                                  ? const Color.fromARGB(
-                                                      21, 2, 53, 236)
-                                                  : Colors.white,
-                                          title: Text(
-                                            _selectedEstacionTrabajo?.nombre ??
-                                                S
-                                                    .of(context)
-                                                    .loginSeleccionarEstacionTrabajo,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: themeNotifier.temaClaro
-                                                  ? Colors.grey.shade600
-                                                  : Colors.grey.shade100,
-                                            ),
-                                          ),
-                                          trailing: Icon(
-                                            _isExpandedEstacionTrabajo
-                                                ? Icons
-                                                    .keyboard_arrow_up_rounded
-                                                : Icons
-                                                    .keyboard_arrow_down_rounded,
-                                            color: themeNotifier.temaClaro
-                                                ? Colors.black
-                                                : Colors.white,
-                                          ),
-                                          onExpansionChanged: (expanded) {
-                                            setState(() {
-                                              _isExpandedEstacionTrabajo =
-                                                  expanded;
-                                            });
-                                          },
-                                          children: [
-                                            Container(
-                                              height:
-                                                  180, // Ajusta la altura para controlar el espacio de scroll
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  children: _estacionTrabajo
-                                                      .map((item) {
-                                                    return ListTile(
-                                                      title: Text(
-                                                        item.nombre,
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: themeNotifier
-                                                                  .temaClaro
-                                                              ? Colors.black87
-                                                              : Colors
-                                                                  .grey[200],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        setState(() {
-                                                          _selectedEstacionTrabajo =
-                                                              item;
-                                                          despEstacion_Trabajo =
-                                                              item.nombre;
-                                                          _setEstado();
-                                                          _isExpandedEstacionTrabajo =
-                                                              false;
-                                                        });
-                                                      },
-                                                    );
-                                                  }).toList(),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                    ],
+                                  ),
+                                  child: SingleChildScrollView(
+                                      // Envolver la columna en SingleChildScrollView
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text("Menu Autenticación",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)),
+                                      SizedBox(height: 10),
+                                      // COMPONENTE DE CARGA
+                                      if (widget.cargandoUser2 ||
+                                          _cargandoApplication ||
+                                          _cargandoEmpresa ||
+                                          _cargandoEstacionTrabajo)
+                                        LoadingComponent(
+                                          color: Colors.blue[200]!,
+                                          changeLanguage: widget.changeLanguage,
                                         ),
-                                        if (_isExpandedEstacionTrabajo == true)
-                                          Divider(
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                      ],
-                                    ),
-                                  SizedBox(height: 8),
-                                  //DROPDOWN DE EMPRESAS
-                                  if (widget.user2.isNotEmpty &&
-                                      widget.user2[0].continuar == true &&
-                                      _empresa.isNotEmpty)
-                                    Column(
-                                      children: [
-                                        if (_isExpandedEmpresa == true)
-                                          Divider(
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                        ExpansionTile(
-                                          title: Text(
-                                            _selectedEmpresa?.empresaNombre ??
-                                                S
-                                                    .of(context)
-                                                    .loginSeleccionarEmpresa,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: themeNotifier.temaClaro
-                                                  ? Colors.grey.shade600
-                                                  : Colors.grey.shade100,
-                                            ),
-                                          ),
-                                          trailing: Icon(
-                                            _isExpandedEmpresa
-                                                ? Icons
-                                                    .keyboard_arrow_up_rounded
-                                                : Icons
-                                                    .keyboard_arrow_down_rounded,
-                                            color: themeNotifier.temaClaro
-                                                ? Colors.black
-                                                : Colors.white,
-                                          ),
-                                          onExpansionChanged: (expanded) {
-                                            setState(() {
-                                              _isExpandedEmpresa = expanded;
-                                            });
-                                          },
-                                          children: [
-                                            if (_empresa.isNotEmpty)
-                                              Container(
-                                                height:
-                                                    190, // Altura fija para permitir scroll
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    children:
-                                                        _empresa.map((item) {
-                                                      return ListTile(
-                                                        title: Text(
-                                                          item.empresaNombre,
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: themeNotifier
-                                                                    .temaClaro
-                                                                ? Colors.black87
-                                                                : Colors
-                                                                    .grey[200],
-                                                          ),
-                                                        ),
-                                                        onTap: () {
-                                                          setState(() {
-                                                            _selectedEmpresa =
-                                                                item;
-                                                            despEmpresa = item
-                                                                .empresaNombre;
-                                                            _setEstado();
-                                                            _isExpandedEmpresa =
-                                                                false; // Cierra el ExpansionTile después de seleccionar
-                                                          });
-                                                        },
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                        if (_isExpandedEmpresa == true)
-                                          Divider(
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                      ],
-                                    ),
-                                  SizedBox(height: 8),
-                                  //DROPDOWN DE APLICACIONES
-                                  if (widget.user2.isNotEmpty &&
-                                      widget.user2[0].continuar == true &&
-                                      _application1.isNotEmpty)
-                                    Column(
-                                      children: [
-                                        if (_isExpandedApplication == true)
-                                          Divider(
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                        ExpansionTile(
-                                          title: Text(
-                                            _selectedApplication?.description ??
-                                                S
-                                                    .of(context)
-                                                    .loginSeleccionarAplicacion,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: themeNotifier.temaClaro
-                                                  ? Colors.grey.shade600
-                                                  : Colors.grey.shade100,
-                                            ),
-                                          ),
-                                          trailing: Icon(
-                                            _isExpandedApplication
-                                                ? Icons
-                                                    .keyboard_arrow_up_rounded
-                                                : Icons
-                                                    .keyboard_arrow_down_rounded,
-                                            color: themeNotifier.temaClaro
-                                                ? Colors.black
-                                                : Colors.white,
-                                          ),
-                                          onExpansionChanged: (expanded) {
-                                            setState(() {
-                                              _isExpandedApplication = expanded;
-                                            });
-                                          },
-                                          children: [
-                                            if (_application1.isNotEmpty)
-                                              Container(
-                                                height:
-                                                    190, // Altura fija para permitir desplazamiento
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    children: _application1
-                                                        .map((item) {
-                                                      return ListTile(
-                                                        title: Text(
-                                                          item.description,
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: themeNotifier
-                                                                    .temaClaro
-                                                                ? Colors.black87
-                                                                : Colors
-                                                                    .grey[200],
-                                                          ),
-                                                        ),
-                                                        onTap: () {
-                                                          setState(() {
-                                                            _selectedApplication =
-                                                                item;
-                                                            _selectedUserDisplay =
-                                                                null;
-                                                            _buscarUserDisplay2();
-                                                            _isExpandedApplication =
-                                                                false;
-                                                          });
-                                                        },
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                        if (_isExpandedApplication == true)
-                                          Divider(
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                      ],
-                                    ),
-                                  SizedBox(height: 8),
-                                  // COMPONENTE DE CARGA PARA USER DISPLAY
-                                  if (_cargandoUserDisplay)
-                                    LoadingComponent(
-                                      color: Colors.blue[200]!,
-                                      changeLanguage: widget.changeLanguage,
-                                    ),
-                                  //DROPDOWN DE USER DISPLAY
-                                  widget.user2.isNotEmpty &&
+                                      //DROPDOWN DE ESTACIONES DE TRABAJO
+                                      if (widget.user2.isNotEmpty &&
                                           widget.user2[0].continuar == true &&
-                                          _selectedApplication != null &&
-                                          _userDisplay.isNotEmpty
-                                      ? Column(
+                                          _estacionTrabajo.isNotEmpty)
+                                        Column(
                                           children: [
-                                            if (_isExpandedUserDisplay == true)
-                                              Divider(
-                                                thickness: 1,
-                                                color: Colors.grey,
-                                              ),
+                                            Divider(
+                                              height: 4,
+                                              thickness: 0.5,
+                                              color: Colors.grey,
+                                            ),
                                             ExpansionTile(
+                                              backgroundColor:
+                                                  _isExpandedEstacionTrabajo
+                                                      ? const Color.fromARGB(
+                                                          21, 2, 53, 236)
+                                                      : Colors.white,
                                               title: Text(
-                                                _selectedUserDisplay?.name ??
+                                                _selectedEstacionTrabajo
+                                                        ?.nombre ??
                                                     S
                                                         .of(context)
-                                                        .loginSeleccionarDisplay,
+                                                        .loginSeleccionarEstacionTrabajo,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: themeNotifier.temaClaro
@@ -779,7 +464,7 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                 ),
                                               ),
                                               trailing: Icon(
-                                                _isExpandedUserDisplay
+                                                _isExpandedEstacionTrabajo
                                                     ? Icons
                                                         .keyboard_arrow_up_rounded
                                                     : Icons
@@ -790,166 +475,570 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                               ),
                                               onExpansionChanged: (expanded) {
                                                 setState(() {
-                                                  _isExpandedUserDisplay =
+                                                  _isExpandedEstacionTrabajo =
                                                       expanded;
                                                 });
                                               },
                                               children: [
                                                 Container(
-                                                  height: 150,
+                                                  height:
+                                                      150, // Ajusta la altura para controlar el espacio de scroll
                                                   child: SingleChildScrollView(
                                                     child: Column(
-                                                      children:
-                                                          buildUserDisplay(
-                                                              _userDisplay),
+                                                      children: _estacionTrabajo
+                                                          .map((item) {
+                                                        return ListTile(
+                                                          title: Text(
+                                                            item.nombre,
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: themeNotifier
+                                                                      .temaClaro
+                                                                  ? Colors
+                                                                      .black87
+                                                                  : Colors.grey[
+                                                                      200],
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            setState(() {
+                                                              _selectedEstacionTrabajo =
+                                                                  item;
+                                                              despEstacion_Trabajo =
+                                                                  item.nombre;
+                                                              _setEstado();
+                                                              _isExpandedEstacionTrabajo =
+                                                                  false;
+                                                            });
+                                                          },
+                                                        );
+                                                      }).toList(),
                                                     ),
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            if (_isExpandedUserDisplay == true)
+                                            if (_isExpandedEstacionTrabajo ==
+                                                true)
                                               Divider(
-                                                thickness: 1,
+                                                height: 4,
+                                                thickness: 0.5,
                                                 color: Colors.grey,
                                               ),
                                           ],
-                                        )
-                                      : Container(),
-                                  SizedBox(height: 5),
-                                  //Botón Ingresar
-                                  if (_selectedEstacionTrabajo != null &&
-                                          _selectedEmpresa != null ||
-                                      _selectedApplication != null &&
-                                          (_selectedUserDisplay != null ||
-                                              !_userDisplay.any((item) =>
-                                                  item.displayURLAlter !=
-                                                  null)))
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Mantenimiento(
-                                                      imagePath:
-                                                          widget.imagePath,
-                                                      isBackgroundSet: widget
-                                                          .isBackgroundSet,
-                                                      catalogo: null,
-                                                      changeLanguage:
-                                                          widget.changeLanguage,
-                                                      idiomaDropDown:
-                                                          widget.idiomaDropDown,
-                                                      temaClaro: themeNotifier
-                                                          .temaClaro,
-                                                      token: widget.token,
-                                                      pUserName: widget
-                                                          .userController.text,
-                                                      pEmpresa:
-                                                          _selectedEmpresa!
-                                                              .empresa,
-                                                      pEstacion_Trabajo:
-                                                          _selectedEstacionTrabajo!
-                                                              .estacionTrabajo,
-                                                      baseUrl: widget.baseUrl,
-                                                      fechaSesion:
-                                                          DateTime.now(),
-                                                      fechaExpiracion:
-                                                          fechaExpiracion,
-                                                      despEmpresa: despEmpresa,
-                                                      despEstacion_Trabajo:
-                                                          despEstacion_Trabajo,
-                                                    )),
-                                          );
-                                        },
-                                        child: Text(
-                                          S.of(context).loginIngresar,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: themeNotifier.temaClaro
-                                                ? Color(0xFF5A38FD)
-                                                : Colors.white,
-                                          ),
                                         ),
+                                      //DROPDOWN DE EMPRESAS
+                                      if (widget.user2.isNotEmpty &&
+                                          widget.user2[0].continuar == true &&
+                                          _empresa.isNotEmpty)
+                                        Column(
+                                          children: [
+                                            Divider(
+                                              height: 4,
+                                              thickness: 0.5,
+                                              color: Colors.grey,
+                                            ),
+                                            ExpansionTile(
+                                              backgroundColor:
+                                                  _isExpandedEmpresa
+                                                      ? const Color.fromARGB(
+                                                          21, 2, 53, 236)
+                                                      : Colors.white,
+                                              title: Text(
+                                                _selectedEmpresa
+                                                        ?.empresaNombre ??
+                                                    S
+                                                        .of(context)
+                                                        .loginSeleccionarEmpresa,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: themeNotifier.temaClaro
+                                                      ? Colors.grey.shade600
+                                                      : Colors.grey.shade100,
+                                                ),
+                                              ),
+                                              trailing: Icon(
+                                                _isExpandedEmpresa
+                                                    ? Icons
+                                                        .keyboard_arrow_up_rounded
+                                                    : Icons
+                                                        .keyboard_arrow_down_rounded,
+                                                color: themeNotifier.temaClaro
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                              ),
+                                              onExpansionChanged: (expanded) {
+                                                setState(() {
+                                                  _isExpandedEmpresa = expanded;
+                                                });
+                                              },
+                                              children: [
+                                                if (_empresa.isNotEmpty)
+                                                  Container(
+                                                    height:
+                                                        150, // Altura fija para permitir scroll
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      child: Column(
+                                                        children: _empresa
+                                                            .map((item) {
+                                                          return ListTile(
+                                                            title: Text(
+                                                              item.empresaNombre,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: themeNotifier
+                                                                        .temaClaro
+                                                                    ? Colors
+                                                                        .black87
+                                                                    : Colors.grey[
+                                                                        200],
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              setState(() {
+                                                                _selectedEmpresa =
+                                                                    item;
+                                                                despEmpresa = item
+                                                                    .empresaNombre;
+                                                                _setEstado();
+                                                                _isExpandedEmpresa =
+                                                                    false; // Cierra el ExpansionTile después de seleccionar
+                                                              });
+                                                            },
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                            if (_isExpandedEmpresa == true)
+                                              Divider(
+                                                height: 4,
+                                                thickness: 0.5,
+                                                color: Colors.grey,
+                                              ),
+                                          ],
+                                        ),
+                                      //DROPDOWN DE APLICACIONES
+                                      if (widget.user2.isNotEmpty &&
+                                          widget.user2[0].continuar == true &&
+                                          _application1.isNotEmpty)
+                                        Column(
+                                          children: [
+                                            Divider(
+                                              height: 4,
+                                              thickness: 0.5,
+                                              color: Colors.grey,
+                                            ),
+                                            ExpansionTile(
+                                              backgroundColor:
+                                                  _isExpandedApplication
+                                                      ? const Color.fromARGB(
+                                                          21, 2, 53, 236)
+                                                      : Colors.white,
+                                              title: Text(
+                                                _selectedApplication
+                                                        ?.description ??
+                                                    S
+                                                        .of(context)
+                                                        .loginSeleccionarAplicacion,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: themeNotifier.temaClaro
+                                                      ? Colors.grey.shade600
+                                                      : Colors.grey.shade100,
+                                                ),
+                                              ),
+                                              trailing: Icon(
+                                                _isExpandedApplication
+                                                    ? Icons
+                                                        .keyboard_arrow_up_rounded
+                                                    : Icons
+                                                        .keyboard_arrow_down_rounded,
+                                                color: themeNotifier.temaClaro
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                              ),
+                                              onExpansionChanged: (expanded) {
+                                                setState(() {
+                                                  _isExpandedApplication =
+                                                      expanded;
+                                                });
+                                              },
+                                              children: [
+                                                if (_application1.isNotEmpty)
+                                                  Container(
+                                                    height:
+                                                        150, // Altura fija para permitir desplazamiento
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      child: Column(
+                                                        children: _application1
+                                                            .map((item) {
+                                                          return ListTile(
+                                                            title: Text(
+                                                              item.description,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: themeNotifier
+                                                                        .temaClaro
+                                                                    ? Colors
+                                                                        .black87
+                                                                    : Colors.grey[
+                                                                        200],
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              setState(() {
+                                                                _selectedApplication =
+                                                                    item;
+                                                                _selectedUserDisplay =
+                                                                    null;
+                                                                _buscarUserDisplay2();
+                                                                _isExpandedApplication =
+                                                                    false;
+                                                              });
+                                                            },
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                            if (_isExpandedApplication == true)
+                                              Divider(
+                                                height: 4,
+                                                thickness: 0.5,
+                                                color: Colors.grey,
+                                              ),
+                                          ],
+                                        ),
+                                      //DROPDOWN DE USER DISPLAY
+                                      widget.user2.isNotEmpty &&
+                                              widget.user2[0].continuar ==
+                                                  true &&
+                                              _selectedApplication != null &&
+                                              _userDisplay.isNotEmpty
+                                          ? Column(
+                                              children: [
+                                                Divider(
+                                                  height: 4,
+                                                  thickness: 0.5,
+                                                  color: Colors.grey,
+                                                ),
+                                                ExpansionTile(
+                                                  backgroundColor:
+                                                      _isExpandedUserDisplay
+                                                          ? const Color
+                                                              .fromARGB(
+                                                              21, 2, 53, 236)
+                                                          : null,
+                                                  title: Text(
+                                                    _selectedUserDisplay
+                                                            ?.name ??
+                                                        S
+                                                            .of(context)
+                                                            .loginSeleccionarDisplay,
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: themeNotifier
+                                                              .temaClaro
+                                                          ? Colors.grey.shade600
+                                                          : Colors
+                                                              .grey.shade100,
+                                                    ),
+                                                  ),
+                                                  trailing: Icon(
+                                                    _isExpandedUserDisplay
+                                                        ? Icons
+                                                            .keyboard_arrow_up_rounded
+                                                        : Icons
+                                                            .keyboard_arrow_down_rounded,
+                                                    color:
+                                                        themeNotifier.temaClaro
+                                                            ? Colors.black
+                                                            : Colors.white,
+                                                  ),
+                                                  onExpansionChanged:
+                                                      (expanded) {
+                                                    setState(() {
+                                                      _isExpandedUserDisplay =
+                                                          expanded;
+                                                    });
+                                                  },
+                                                  children: [
+                                                    Container(
+                                                      height: 150,
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        child: Column(
+                                                          children:
+                                                              buildUserDisplay(
+                                                                  _userDisplay),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(
+                                                  height: 4,
+                                                  thickness: 0.5,
+                                                  color: Colors.grey,
+                                                ),
+                                              ],
+                                            )
+                                          : Container(),
+                                      // COMPONENTE DE CARGA PARA USER DISPLAY
+                                      if (_cargandoUserDisplay)
+                                        LoadingComponent(
+                                          color: Colors.blue[200]!,
+                                          changeLanguage: widget.changeLanguage,
+                                        ),
+                                      SizedBox(height: 5),
+
+                                      Row(
+                                        children: [
+                                          //Switch Guardar sesion
+                                          if (_selectedEstacionTrabajo !=
+                                                  null &&
+                                              _selectedEmpresa != null &&
+                                              (_application1.isEmpty ||
+                                                  (_application1.isNotEmpty &&
+                                                      _selectedApplication !=
+                                                          null)) &&
+                                              (_selectedUserDisplay != null ||
+                                                  !_userDisplay.any((item) =>
+                                                      item.displayURLAlter !=
+                                                      null)))
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Flexible(
+                                                    child: FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        S
+                                                            .of(context)
+                                                            .loginGuardarSesion,
+                                                        style: TextStyle(
+                                                          color: widget
+                                                                  .temaClaro
+                                                              ? Color(
+                                                                  0xFF5A38FD)
+                                                              : Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Transform.scale(
+                                                    scale: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width <
+                                                            400
+                                                        ? 0.7
+                                                        : MediaQuery.of(context)
+                                                                    .size
+                                                                    .width <
+                                                                600
+                                                            ? 0.75
+                                                            : 1.0,
+                                                    child: Switch(
+                                                      value: _guardarSesion,
+                                                      onChanged: (bool value) {
+                                                        setState(() {
+                                                          _guardarSesion =
+                                                              value;
+                                                        });
+                                                        _guardarDatosSesion();
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFF5A38FD),
+                                                      inactiveThumbColor:
+                                                          const Color.fromARGB(
+                                                              255, 155, 86, 86),
+                                                      inactiveTrackColor:
+                                                          Colors.grey[300],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          //Botón Ingresar
+                                          if (_selectedEstacionTrabajo !=
+                                                  null &&
+                                              _selectedEmpresa != null &&
+                                              (_application1.isEmpty ||
+                                                  (_application1.isNotEmpty &&
+                                                      _selectedApplication !=
+                                                          null)) &&
+                                              (_selectedUserDisplay != null ||
+                                                  !_userDisplay.any((item) =>
+                                                      item.displayURLAlter !=
+                                                      null)))
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: TextButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Mantenimiento(
+                                                              imagePath: widget
+                                                                  .imagePath,
+                                                              isBackgroundSet:
+                                                                  widget
+                                                                      .isBackgroundSet,
+                                                              catalogo: null,
+                                                              changeLanguage: widget
+                                                                  .changeLanguage,
+                                                              idiomaDropDown: widget
+                                                                  .idiomaDropDown,
+                                                              temaClaro:
+                                                                  themeNotifier
+                                                                      .temaClaro,
+                                                              token:
+                                                                  widget.token,
+                                                              pUserName: widget
+                                                                  .userController
+                                                                  .text,
+                                                              pEmpresa:
+                                                                  _selectedEmpresa!
+                                                                      .empresa,
+                                                              pEstacion_Trabajo:
+                                                                  _selectedEstacionTrabajo!
+                                                                      .estacionTrabajo,
+                                                              baseUrl: widget
+                                                                  .baseUrl,
+                                                              fechaSesion:
+                                                                  DateTime
+                                                                      .now(),
+                                                              fechaExpiracion:
+                                                                  fechaExpiracion,
+                                                              despEmpresa:
+                                                                  despEmpresa,
+                                                              despEstacion_Trabajo:
+                                                                  despEstacion_Trabajo,
+                                                            )),
+                                                  );
+                                                },
+                                                child: Text(
+                                                  S.of(context).loginIngresar,
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    color:
+                                                        themeNotifier.temaClaro
+                                                            ? Color(0xFF5A38FD)
+                                                            : Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
                                       ),
-                                    ),
-                                ],
-                              )))))))
-        ]));
+                                    ],
+                                  ))))))),
+            )
+          ]))
+    ]);
   }
 
-  /// Función que maneja la creación de las ramas de ExpansionTile, solo para los items con displayURLAlter != null.
   List<Widget> buildUserDisplay(List<PaBscUserDisplay2M> userDisplayList) {
-    List<PaBscUserDisplay2M> rootDisplays = userDisplayList
-        .where((item) => item.userDisplayFather == null)
-        .toList();
+    // Filtramos solo los elementos raíz
+    List<PaBscUserDisplay2M> rootDisplays =
+        userDisplayList.where((item) => item.userDisplayFather == 0).toList();
 
-    return rootDisplays.map((rootItem) {
+    // Creamos la lista de widgets para los displays
+    List<Widget> displayWidgets = rootDisplays.map((rootItem) {
       return buildExpansionTile(rootItem, userDisplayList);
     }).toList();
+
+    // Filtramos los widgets vacíos (que devuelven Container) y mostramos mensaje si todos están vacíos
+    if (displayWidgets.every((widget) => widget is Container)) {
+      return [
+        ListTile(
+          title: Text(
+            "No hay displays disponibles",
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ];
+    }
+
+    return displayWidgets;
   }
 
   Widget buildExpansionTile(
       PaBscUserDisplay2M parentItem, List<PaBscUserDisplay2M> userDisplayList) {
-    // Obtenemos los hijos con displayURLAlter no nulo.
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
+    // Filtramos los hijos del nodo actual
     List<PaBscUserDisplay2M> children = userDisplayList
         .where((item) =>
             item.userDisplayFather == parentItem.userDisplay &&
-            item.displayURLAlter != null)
+            (item.displayURLAlter !=
+                    null || // Condición para hijos de último nivel
+                userDisplayList.any((subItem) =>
+                    subItem.userDisplayFather == item.userDisplay)))
         .toList();
 
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
-
-    return ExpansionTile(
-      title: Text(
-        parentItem.name,
-        style: TextStyle(
-          fontSize: 14,
-          color: themeNotifier.temaClaro
-              ? Colors.grey.shade600
-              : Colors.grey.shade100,
-        ),
-      ),
-      trailing: Icon(
-        _isExpandedUserDisplay
-            ? Icons.keyboard_arrow_up_rounded
-            : Icons.keyboard_arrow_down_rounded,
-        color: themeNotifier.temaClaro ? Colors.black : Colors.white,
-      ),
-      onExpansionChanged: (expanded) {
-        setState(() {
-          _isExpandedUserDisplay = expanded;
-        });
-      },
-      children: [
-        // Si tiene hijos válidos, los mostramos como ExpansionTiles
-        if (children.isNotEmpty)
-          ...children.map((child) {
-            return buildExpansionTile(child, userDisplayList);
-          }).toList(),
-
-        // Si no tiene hijos, mostramos un ListTile
-        if (children.isEmpty)
-          ListTile(
+    // Si hay hijos válidos, construimos un ExpansionTile para el nodo actual
+    return children.isNotEmpty
+        ? ExpansionTile(
+            backgroundColor: _isExpandedUserDisplay
+                ? const Color.fromARGB(20, 23, 68, 230)
+                : Colors.white,
             title: Text(
               parentItem.name,
               style: TextStyle(
                 fontSize: 14,
-                color:
-                    themeNotifier.temaClaro ? Colors.black87 : Colors.grey[200],
+                color: themeNotifier.temaClaro
+                    ? Colors.grey.shade600
+                    : Colors.grey.shade100,
               ),
             ),
-            onTap: () {
+            trailing: Icon(
+              _isExpandedUserDisplay
+                  ? Icons.keyboard_arrow_up_rounded
+                  : Icons.keyboard_arrow_down_rounded,
+              color: themeNotifier.temaClaro ? Colors.black : Colors.white,
+            ),
+            onExpansionChanged: (expanded) {
               setState(() {
-                _selectedUserDisplay = parentItem;
-                _setEstado();
-                _isExpandedUserDisplay = false;
+                _isExpandedUserDisplay = expanded;
               });
             },
-          ),
-      ],
-    );
+            children: children.map((child) {
+              // Construimos recursivamente cada nodo hijo
+              return buildExpansionTile(child, userDisplayList);
+            }).toList(),
+          )
+        : (parentItem.displayURLAlter != null
+            ? ListTile(
+                title: Text(
+                  parentItem.name,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: themeNotifier.temaClaro
+                        ? Colors.black87
+                        : Colors.grey[200],
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    _selectedUserDisplay = parentItem;
+                    _setEstado();
+                    _isExpandedUserDisplay = false;
+                  });
+                },
+              )
+            : Container()); // Si no tiene displayURLAlter, no muestra el hijo
   }
 }

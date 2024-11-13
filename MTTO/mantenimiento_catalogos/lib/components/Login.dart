@@ -680,6 +680,8 @@ class _LoginScreenState extends State<LoginScreen>
                                     // BOTON INICIAR SESIÓN
                                     ElevatedButton(
                                       onPressed: () {
+                                        _focusPass.unfocus();
+                                        _focusUser.unfocus();
                                         _verificarCampos();
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -698,7 +700,11 @@ class _LoginScreenState extends State<LoginScreen>
                                     ),
                                     SizedBox(height: 20),
                                     // COMPONENTE DE CARGA
-
+                                    if (_cargandoUser2)
+                                      LoadingComponent(
+                                        color: Colors.blue[200]!,
+                                        changeLanguage: widget.changeLanguage,
+                                      ),
                                     SizedBox(
                                       height: 5,
                                     ),
