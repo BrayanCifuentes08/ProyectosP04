@@ -1,6 +1,6 @@
 export interface PaBscUserDisplay2M {
-    userDisplay:       number;
-    userDisplayFather: number;
+    user_Display:       number;
+    user_Display_Father: number;
     userName:          string;
     name:              string;
     active:            boolean;

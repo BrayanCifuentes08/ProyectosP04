@@ -51,6 +51,8 @@ export default class LoginComponent {
   empresa:                PaBscEmpresa1M[] = [];
   application1:           PaBscApplication1M[] = [];
   userDisplay2:           PaBscUserDisplay2M[] = [];
+  userDisplaysPadres: any[] = [];
+  userDisplaysHijos: any[] = [];
   @ViewChild('usuarioInput') usuarioInput!: ElementRef<HTMLInputElement>;
   @ViewChild('passInput')    passInput!:    ElementRef<HTMLInputElement>;
   colorSeleccionado:  string = 'linear-gradient(to bottom, #1e3a8a, #f97316)';
@@ -59,7 +61,8 @@ export default class LoginComponent {
     { name: 'Amarillo a Rojo',    value: 'linear-gradient(to bottom, #eab308, #dc2626)' },
     { name: 'Morado a Turquesa',  value: 'linear-gradient(to bottom, #6a0dad, #0d9488)' },
     { name: 'Azul a Gris',        value: 'linear-gradient(to bottom, #09203f, #537895)' },
-  ];  
+  ];
+  
   
   
   constructor(
@@ -297,6 +300,7 @@ export default class LoginComponent {
       this.router.navigate(['/inicio']);
     }
   }
+  
   // Funcion para mostrar información de la sesion (hora de inicio, fecha de ingreso)
   mostrarInformacionDeSesion(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -458,7 +462,9 @@ export default class LoginComponent {
       console.error('Token no disponible');
       return;
     }
+
     this.cargando = true;
+
     const parametros: ParametrosUserDisplay = {
       UserName: this.usuario,
       Application: aplicacionSeleccionada,
@@ -467,9 +473,77 @@ export default class LoginComponent {
     this.apiService.buscarUserDisplay2(parametros).subscribe(
       (data: PaBscUserDisplay2M[]) => {
         console.log('Datos recibidos:', data);
-        this.userDisplay2 = data.filter(item => item.display_URL_Alter !== null && item.display_URL_Alter !== undefined);
-        console.log('User Display 2 después del filtro:', this.userDisplay2);
-        
+
+        this.userDisplaysPadres = [];
+        this.userDisplaysHijos = [];
+
+        // Separacion de padres e hijos
+        data.forEach(item => {
+          console.log('Procesando item:', item);
+
+          // Es padre si user_Display_Father es null o 0
+          if (item.user_Display_Father === null || item.user_Display_Father === 0) {
+            console.log('Este es un padre:', item);
+            this.userDisplaysPadres.push(item);
+          } else {
+            // Aca es un hijo, solo si tiene display_URL_Alter valido
+            if (item.display_URL_Alter !== null && item.display_URL_Alter !== undefined) {
+              console.log('Este es un hijo válido con display_URL_Alter:', item);
+              this.userDisplaysHijos.push(item);
+            } else {
+              console.log('Este hijo no tiene display_URL_Alter, no se procesará:', item);
+            }
+          }
+        });
+
+        console.log('Padres encontrados:', this.userDisplaysPadres);
+        console.log('Hijos encontrados:', this.userDisplaysHijos);
+
+        // Se relaciona o asocia cada hijo con su padre
+        this.userDisplaysHijos.forEach((hijo: any) => {
+          console.log("Procesando hijo:", hijo);
+
+          // se verifica si el valor de user_Display_Father esta presente y es valido
+          if (hijo.user_Display_Father === undefined || hijo.user_Display_Father === null) {
+            console.log("El hijo no tiene un user_Display_Father válido");
+            return; 
+          }
+
+          const padre = this.userDisplaysPadres.find((p: any) => {
+            const padreDisplay = p.user_Display;
+            const hijoDisplayFather = hijo.user_Display_Father;
+            
+            // Verifica la comparación entre el padre y el hijo
+            return padreDisplay === hijoDisplayFather;
+          });
+
+          if (padre) {
+            console.log('Hijo encontrado con su padre:', padre, hijo);
+            hijo.padre = padre;
+          } else {
+            console.log('No se encontró el padre para el hijo:', hijo);
+          }
+        });
+
+        this.userDisplaysPadres = data
+          .filter(item => item.user_Display_Father === null || item.user_Display_Father === 0) // Solo padres
+          .map(padre => {
+            // Filtra los hijos validos (con el display_URL_Alter no nulo)
+            const hijosValidos = data.filter(hijo =>
+              hijo.user_Display_Father === padre.user_Display && hijo.display_URL_Alter !== null
+            );
+
+            // Solo se agrega los padres con al menos un hijo válido
+            if (hijosValidos.length > 0) {
+              return {
+                ...padre,
+                hijos: hijosValidos
+              };
+            } else {
+              return null;
+            }
+          })
+          .filter(padre => padre !== null)
         this.cargando = false;
       },
       (error) => {
@@ -478,16 +552,31 @@ export default class LoginComponent {
       }
     );
   }
-
+  
+  
   onAplicacionSeleccionada(application: any): void {
     if (this.aplicacionSeleccionada !== application) {
       this.seleccionados['displays'] = null;
     }
+    this.sectionOpen = null;
     this.aplicacionSeleccionada = application;
     this.seleccionados['aplicaciones'] = application;
-    this.sectionOpen = null;
     this.buscarUserDisplay2(application.application);
   }
+
+  seleccionarItem(section: string, item: any) {
+    this.seleccionados[section] = item;
+    this.sectionOpen = null;
+  
+    if (section === 'estaciones') {
+      this.apiService.setEstacion(item);
+    } else if (section === 'empresas') {
+      this.apiService.setEmpresa(item);
+    }
+    console.log("Item seleccionado: ", item)
+  }
+  
+  
 
   validarSeleccion(): boolean {
     this.validacionErrores = {}; //Resetear errores
@@ -515,17 +604,7 @@ export default class LoginComponent {
     return validaciones && seleccionDeDisplayValida;
   }
   
-  seleccionarItem(section: string, item: any) {
-    this.seleccionados[section] = item;
-    this.sectionOpen = null;
-  
-    if (section === 'estaciones') {
-      this.apiService.setEstacion(item);
-    } else if (section === 'empresas') {
-      this.apiService.setEmpresa(item);
-    }
-  }
-  
+
   verificarCampos(): void {
     this.errores = {};
   
@@ -554,13 +633,13 @@ export default class LoginComponent {
   }
   
   cerrarModal() {
-    this.isExiting = true; // Activamos la clase de salida
+    this.isExiting = true;
     this.mostrarBotonModal = true;
     
     setTimeout(() => {
-      this.mostrarModal = false;  // Ocultamos el modal después de la animación
-      this.isExiting = false;     // Reseteamos la variable de estado
-    }, 300); // Duración debe coincidir con la animación de salida
+      this.mostrarModal = false;  
+      this.isExiting = false;
+    }, 300);
   }
   
   abrirModal() {
@@ -582,12 +661,11 @@ export default class LoginComponent {
         this.seleccionados['aplicaciones'] = null;
         this.seleccionados['displays'] = null;
         this.userDisplay2 = [];
-        this.sectionOpen = null; // Opcional: Cerrar el acordeón si es necesario
+        this.sectionOpen = null;
         break;
       case 'displays':
         this.seleccionados['displays'] = null;
-        this.userDisplay2 = [];
-        this.sectionOpen = null; // Opcional: Cerrar el acordeón si es necesario
+        this.sectionOpen = null;
         break;
       default:
         console.warn(`Tipo de selección no reconocido: ${tipo}`);

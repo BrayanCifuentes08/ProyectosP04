@@ -118,7 +118,7 @@ export default class DashboardComponent implements OnInit {
     this.isVisualizandoRegistro = true;
     this.sharedService.setAccion('visualizandoRegistro');
     const registroSeleccionado = this.registros.find(registro => 
-      registro.descripcion === descripcion 
+      registro.descripcion === descripcion || registro.name === descripcion
     );
   
     if (registroSeleccionado) {
@@ -320,23 +320,23 @@ export default class DashboardComponent implements OnInit {
     this.apiService.getCanalDistribucion(model).subscribe({
         next: (data: any) => {
             console.log('Datos recibidos:', data);
-            this.cargando = false;
-
+            
             if (data && data.resultado === false) {
-                // Si hay un error de la base de datos (resultado: false)
-                this.mostrarMensajeAlerta(data.mensaje);
+              // Si hay un error de la base de datos (resultado: false)
+              this.mostrarMensajeAlerta(data.mensaje);
             } else if (data && data.length > 0) {
-                this.canalDistribucionData = data;
-                this.registros = this.canalDistribucionData; 
-                this.descripcionesCanalDistribucion = this.canalDistribucionData.map(
-                  (registro) => registro.descripcion || ''
-                );
+              this.canalDistribucionData = data;
+              this.registros = this.canalDistribucionData; 
+              this.descripcionesCanalDistribucion = this.canalDistribucionData.map(
+                (registro) => registro.descripcion || ''
+              );
                 
-                this.mostrarBtnGuardar = false;
+              this.mostrarBtnGuardar = false;
             } else {
-                console.warn('No se encontraron registros.');
-                this.limpiarInputs();
+              console.warn('No se encontraron registros.');
+              this.limpiarInputs();
             }
+            this.cargando = false;
         },
         error: (error) => {
             this.cargando = false;
@@ -403,10 +403,9 @@ export default class DashboardComponent implements OnInit {
     this.apiService.getTipoCanalDistribucion(model).subscribe({
         next: (data: any) => {
             console.log('Datos recibidos:', data);
-            this.cargando = false;
-
+            
             if (data && data.resultado === false) {
-                this.mostrarMensajeAlerta(data.mensaje);
+              this.mostrarMensajeAlerta(data.mensaje);
             } else if (data && data.length > 0) {
                 this.tiposCanalDistribucionData = data;
                 this.registros = this.tiposCanalDistribucionData; 
@@ -415,10 +414,11 @@ export default class DashboardComponent implements OnInit {
                 );
                 
                 this.mostrarBtnGuardar = false;
-            } else {
+              } else {
                 console.warn('No se encontraron registros.');
                 this.limpiarInputs();
-            }
+              }
+              this.cargando = false;
         },
         error: (error) => {
             this.cargando = false;
@@ -493,24 +493,24 @@ export default class DashboardComponent implements OnInit {
     this.apiService.getElementosAsignados(model).subscribe({
         next: (data: any) => {
             console.log('Datos recibidos:', data);
-            this.cargando = false;
-
+            
             if (data && data.resultado === false) {
-                // Si hay un error de la base de datos (resultado: false)
-                this.mostrarMensajeAlerta(data.mensaje);
+              // Si hay un error de la base de datos (resultado: false)
+              this.mostrarMensajeAlerta(data.mensaje);
             } else if (data && data.length > 0) {
-                this.elementoAsignadoData = data;
-                this.registros = this.elementoAsignadoData; 
-                this.descripcionesElementoAsignado = this.elementoAsignadoData.map(
+              this.elementoAsignadoData = data;
+              this.registros = this.elementoAsignadoData; 
+              this.descripcionesElementoAsignado = this.elementoAsignadoData.map(
                   (registro) => registro.descripcion || ''
                 );
                 
                 this.mostrarBtnGuardar = false;
             } else {
-                console.warn('No se encontraron registros.');
-                this.limpiarInputs();
+              console.warn('No se encontraron registros.');
+              this.limpiarInputs();
             }
-        },
+            this.cargando = false;
+          },
         error: (error) => {
             this.cargando = false;
             console.error('Error al obtener el elemento asignado:', error);
@@ -575,22 +575,22 @@ export default class DashboardComponent implements OnInit {
     this.apiService.getCatalogoUser(model).subscribe({
         next: (data: any) => {
             console.log('Datos recibidos:', data);
-            this.cargando = false;
-
+            
             if (data && data.resultado === false) {
-                // Si hay un error de la base de datos (resultado: false)
-                this.mostrarMensajeAlerta(data.mensaje);
+              // Si hay un error de la base de datos (resultado: false)
+              this.mostrarMensajeAlerta(data.mensaje);
             } else if (data && data.length > 0) {
-                this.userData = data;
-                this.registros = this.userData; 
-                this.descripcionesUser = this.userData.map(
-                  (registro) => registro.name || ''
-                );
-                this.mostrarBtnGuardar = false;
+              this.userData = data;
+              this.registros = this.userData; 
+              this.descripcionesUser = this.userData.map(
+                (registro) => registro.name || ''
+              );
+              this.mostrarBtnGuardar = false;
             } else {
-                console.warn('No se encontraron registros.');
-                this.limpiarInputs();
+              console.warn('No se encontraron registros.');
+              this.limpiarInputs();
             }
+            this.cargando = false;
         },
         error: (error) => {
             this.cargando = false;
@@ -627,9 +627,9 @@ export default class DashboardComponent implements OnInit {
       return; // Si ya hay inputs, no limpiarlos
     }
 
-    const camposExcluidos = ['mensaje', 'resultado'];
     inputContainer.innerHTML = '';
-
+    
+    const camposExcluidos = ['mensaje', 'resultado'];
     const plantillaRegistro = this.registros[0] || {};
 
     for (const key in plantillaRegistro) {
@@ -712,7 +712,9 @@ export default class DashboardComponent implements OnInit {
            ? estadoInputsCanalDistribucionInsert
            : estadoInputsCanalDistribucionUpdate;
 
-          const estadoInputsUser = allEmpty ? estadoInputsUserInsert : estadoInputsUserUpdate
+          const estadoInputsUser = allEmpty 
+          ? estadoInputsUserInsert 
+          : estadoInputsUserUpdate
  
          // Determinar cuál estado de inputs aplicar
          let estadoInputs = estadoInputsElementoAsignado; // Predeterminado
@@ -720,7 +722,9 @@ export default class DashboardComponent implements OnInit {
            estadoInputs = estadoInputsTipoCanal;
          } else if (key in estadoInputsCanalDistribucion) {
            estadoInputs = estadoInputsCanalDistribucion;
-         }
+         }  else if (key in estadoInputsUser) {
+          estadoInputs = estadoInputsUser;
+        }
  
          // Deshabilitar si corresponde
          if (estadoInputs[key]) {
@@ -776,9 +780,11 @@ export default class DashboardComponent implements OnInit {
   private limpiarInputs() {
     const inputContainer = document.getElementById('inputContainer');
     if (inputContainer) {
-      inputContainer.innerHTML = ''; // Limpiar inputs
+      while (inputContainer.firstChild) {
+          inputContainer.removeChild(inputContainer.firstChild); // Eliminar cada input de forma individual
+      }
       console.log('Inputs limpiados');
-    }
+  }
   }
 
   //*FUNCIONES PARA MANEJAR MENSAJES Y COMPONENTES DE MENSAJES
