@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mantenimiento_catalogos/common/ThemeNotifier.dart';
 import 'package:mantenimiento_catalogos/components/Mantenimiento.dart';
+import 'package:mantenimiento_catalogos/components/MenuAutenticacion.dart';
 import 'package:mantenimiento_catalogos/components/Plantillas/PlantillaImagen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -67,20 +68,10 @@ class _LoginScreenState extends State<LoginScreen>
 
   //models
   List<PaBscUser2M> _user2 = [];
-  List<PaBscApplication1M> _application1 = [];
-  List<PaBscEmpresa1M> _empresa = [];
-  List<PaBscEstacionTrabajo2M> _estacionTrabajo = [];
-  List<PaBscUserDisplay2M> _userDisplay = [];
 
-  PaBscEstacionTrabajo2M? _selectedEstacionTrabajo;
-  PaBscEmpresa1M? _selectedEmpresa;
-  PaBscApplication1M? _selectedApplication;
-  PaBscUserDisplay2M? _selectedUserDisplay;
   final LoginService _loginService = LoginService();
   DateTime? fechaExpiracion = null;
   late AnimationController _controllerAnimated;
-  String? despEmpresa;
-  String? despEstacion_Trabajo;
 
   @override
   void initState() {
@@ -116,34 +107,6 @@ class _LoginScreenState extends State<LoginScreen>
     } catch (e) {
       print('Error: $e'); // Error al intentar hacer la solicitud
       return false; // Error al intentar hacer la solicitud
-    }
-  }
-
-  void _guardarDatosSesion() async {
-    if (_guardarSesion) {
-      final tokenExpiration = DateTime.now().add(Duration(days: 1));
-      fechaExpiracion = tokenExpiration;
-      await _loginService.saveUserSession(
-        username: _userController.text,
-        password: _passwordController.text,
-        empresa: _selectedEmpresa!.empresa,
-        estacionTrabajo: _selectedEstacionTrabajo!.estacionTrabajo,
-        aplicacion: _selectedApplication!.application,
-        display: _selectedUserDisplay?.userDisplay != null
-            ? _selectedUserDisplay!.userDisplay
-            : 0,
-        token: token,
-        fecha: DateTime.now(),
-        tokenExpiration: tokenExpiration,
-        urlBase: baseUrl,
-        desEmpresa: despEmpresa,
-        desEstacionTrabajo: despEstacion_Trabajo,
-      );
-      final sessionData = await _loginService.getUserSession();
-      print('Datos de sesión guardados: $sessionData');
-    } else {
-      await _loginService.clearUserSession();
-      print('Datos de sesión eliminados');
     }
   }
 
@@ -192,19 +155,27 @@ class _LoginScreenState extends State<LoginScreen>
             // Utilizar los datos convertidos
             print("Bienvenido, $userName");
 
-            _application1.clear();
-            _empresa.clear();
-            _estacionTrabajo.clear();
-            _userDisplay.clear();
-            _selectedApplication = null;
-            _selectedEmpresa = null;
-            _selectedEstacionTrabajo = null;
-            _selectedUserDisplay = null;
-            _buscarEstacionTrabajo();
-            _buscarEmpresa();
-            _buscarApplication();
             _focusUser.unfocus();
             _focusPass.unfocus();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MenuAutenticacion(
+                  changeLanguage: widget.changeLanguage,
+                  imagePath: widget.imagePath,
+                  isBackgroundSet: widget.isBackgroundSet,
+                  idiomaDropDown: widget.idiomaDropDown,
+                  temaClaro: temaClaro,
+                  token: token,
+                  baseUrl: baseUrl,
+                  user2: _user2,
+                  urlController: _urlController,
+                  userController: _userController,
+                  cargandoUser2: _cargandoUser2,
+                  passwordController: _passwordController,
+                ),
+              ),
+            );
           } else {
             // Mostrar el mensaje de advertencia si no hay token
             Mensajes.mensajeAdvertencia(
@@ -236,10 +207,6 @@ class _LoginScreenState extends State<LoginScreen>
             temaClaro ? Colors.white : Color.fromARGB(255, 73, 73, 73),
             temaClaro ? Color.fromARGB(255, 83, 83, 83) : Colors.white,
             temaClaro ? Color.fromARGB(255, 0, 0, 0) : Colors.white);
-        _application1.clear();
-        _empresa.clear();
-        _estacionTrabajo.clear();
-        _userDisplay.clear();
       }
     } catch (error) {
       print('Error: $error');
@@ -254,188 +221,6 @@ class _LoginScreenState extends State<LoginScreen>
     } finally {
       setState(() {
         _cargandoUser2 = false;
-      });
-    }
-  }
-
-  Future<void> _buscarEstacionTrabajo() async {
-    setState(() {
-      _cargandoEstacionTrabajo =
-          true; // Establecer isLoading a true al inicio de la carga
-    });
-    String url = '${baseUrl}PaBscEstacionTrabajo2Ctrl';
-    Map<String, dynamic> queryParams = {"pUserName": _userController.text};
-
-    Uri uri = Uri.parse(url).replace(queryParameters: queryParams);
-
-    try {
-      final response = await http.get(uri, headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      });
-
-      if (response.statusCode == 200) {
-        // respuesta JSON a lista
-        List<dynamic> jsonResponse = json.decode(response.body);
-        List<PaBscEstacionTrabajo2M> estacionTrabajo = jsonResponse
-            .map((data) => PaBscEstacionTrabajo2M.fromJson(data))
-            .toList();
-
-        // Convertir la respuesta en objetos de modelo si es una lista
-        _estacionTrabajo = estacionTrabajo;
-        // Actualizar el estado con los datos obtenidos
-        print('Estaciones de Trabajo: ${response.body}');
-        setState(() {});
-      } else {
-        print('Error: ${response.statusCode}');
-        print('${response.body}');
-      }
-    } catch (error) {
-      print('Error: $error');
-    } finally {
-      setState(() {
-        _cargandoEstacionTrabajo = false;
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
-      });
-    }
-  }
-
-  Future<void> _buscarEmpresa() async {
-    setState(() {
-      _cargandoEmpresa =
-          true; // Establecer isLoading a true al inicio de la carga
-    });
-    String url = '${baseUrl}PaBscEmpresa1Ctrl';
-    Map<String, dynamic> queryParams = {"pUserName": _userController.text};
-
-    Uri uri = Uri.parse(url).replace(queryParameters: queryParams);
-
-    try {
-      final response = await http.get(uri, headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      });
-
-      if (response.statusCode == 200) {
-        // respuesta JSON a lista
-        List<dynamic> jsonResponse = json.decode(response.body);
-        List<PaBscEmpresa1M> empresa =
-            jsonResponse.map((data) => PaBscEmpresa1M.fromJson(data)).toList();
-
-        // Convertir la respuesta en objetos de modelo si es una lista
-        _empresa = empresa;
-        // Actualizar el estado con los datos obtenidos
-        print('Empresas: ${response.body}');
-        setState(() {});
-      } else {
-        print('Error: ${response.statusCode}');
-        print('${response.body}');
-      }
-    } catch (error) {
-      print('Error: $error');
-    } finally {
-      setState(() {
-        _cargandoEmpresa = false;
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
-      });
-    }
-  }
-
-  Future<void> _buscarApplication() async {
-    setState(() {
-      _cargandoApplication =
-          true; // Establecer isLoading a true al inicio de la carga
-    });
-    String url = '${baseUrl}PaBscApplication1Ctrl';
-    Map<String, dynamic> queryParams = {
-      "TAccion": "1",
-      "TOpcion": "1",
-      "pFiltro_1": _userController.text,
-    };
-
-    Uri uri = Uri.parse(url).replace(queryParameters: queryParams);
-
-    try {
-      final response = await http.get(uri, headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      });
-
-      if (response.statusCode == 200) {
-        // respuesta JSON a lista
-        List<dynamic> jsonResponse = json.decode(response.body);
-        List<PaBscApplication1M> application = jsonResponse
-            .map((data) => PaBscApplication1M.fromJson(data))
-            .toList();
-
-        // Convertir la respuesta en objetos de modelo si es una lista
-        _application1 = application;
-        // Actualizar el estado con los datos obtenidos
-        print('Aplicaciones: ${response.body}');
-        setState(() {});
-      } else {
-        print('Error: ${response.statusCode}');
-        print('${response.body}');
-      }
-    } catch (error) {
-      print('Error: $error');
-    } finally {
-      setState(() {
-        _cargandoApplication = false;
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
-      });
-    }
-  }
-
-  Future<void> _buscarUserDisplay2() async {
-    setState(() {
-      _cargandoUserDisplay =
-          true; // Establecer isLoading a true al inicio de la carga
-    });
-    String url = '${baseUrl}PaBscUserDisplay2Ctrl';
-    Map<String, dynamic> queryParams = {
-      "UserName": _userController.text,
-      "Application": _selectedApplication!.application.toString(),
-    };
-
-    Uri uri = Uri.parse(url).replace(queryParameters: queryParams);
-
-    try {
-      final response = await http.get(uri, headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      });
-
-      if (response.statusCode == 200) {
-        // respuesta JSON a lista
-        List<dynamic> jsonResponse = json.decode(response.body);
-        List<PaBscUserDisplay2M> userDisplay = jsonResponse
-            .map((data) => PaBscUserDisplay2M.fromJson(data))
-            .toList();
-
-        // Convertir la respuesta en objetos de modelo si es una lista
-        _userDisplay = userDisplay;
-        // Actualizar el estado con los datos obtenidos
-        print('userDisplay: ${response.body}');
-        setState(() {});
-      } else {
-        print('Error: ${response.statusCode}');
-        print('${response.body}');
-      }
-    } catch (error) {
-      print('Error: $error');
-    } finally {
-      setState(() {
-        _cargandoUserDisplay = false;
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
       });
     }
   }
@@ -606,24 +391,6 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     // Verifica si el valor seleccionado está en la lista
-    _selectedEstacionTrabajo = _estacionTrabajo.isNotEmpty
-        ? (_estacionTrabajo.contains(_selectedEstacionTrabajo)
-            ? _selectedEstacionTrabajo
-            : null)
-        : null;
-    _selectedEmpresa = _empresa.isNotEmpty
-        ? (_empresa.contains(_selectedEmpresa) ? _selectedEmpresa : null)
-        : null;
-    _selectedApplication = _application1.isNotEmpty
-        ? (_application1.contains(_selectedApplication)
-            ? _selectedApplication
-            : null)
-        : null;
-    _selectedUserDisplay = _userDisplay.isNotEmpty
-        ? (_userDisplay.contains(_selectedUserDisplay)
-            ? _selectedUserDisplay
-            : null)
-        : null;
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
       body: Stack(
@@ -909,71 +676,12 @@ class _LoginScreenState extends State<LoginScreen>
                                       textInputAction: TextInputAction.done,
                                     ),
                                     SizedBox(height: 5),
-                                    //Switch Guardar sesion
-                                    if (_selectedEstacionTrabajo != null &&
-                                        _selectedEmpresa != null &&
-                                        (_application1.isEmpty ||
-                                            (_application1.isNotEmpty &&
-                                                _selectedApplication !=
-                                                    null)) &&
-                                        (_selectedUserDisplay != null ||
-                                            !_userDisplay.any((item) =>
-                                                item.displayURLAlter != null)))
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Flexible(
-                                              child: FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  S
-                                                      .of(context)
-                                                      .loginGuardarSesion,
-                                                  style: TextStyle(
-                                                    color: temaClaro
-                                                        ? Color(0xFF5A38FD)
-                                                        : Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Transform.scale(
-                                              scale: MediaQuery.of(context)
-                                                          .size
-                                                          .width <
-                                                      400
-                                                  ? 0.7
-                                                  : MediaQuery.of(context)
-                                                              .size
-                                                              .width <
-                                                          600
-                                                      ? 0.75
-                                                      : 1.0,
-                                              child: Switch(
-                                                value: _guardarSesion,
-                                                onChanged: (bool value) {
-                                                  setState(() {
-                                                    _guardarSesion = value;
-                                                  });
-                                                  _guardarDatosSesion();
-                                                },
-                                                activeColor: Color(0xFF5A38FD),
-                                                inactiveThumbColor:
-                                                    const Color.fromARGB(
-                                                        255, 155, 86, 86),
-                                                inactiveTrackColor:
-                                                    Colors.grey[300],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                     SizedBox(height: 10),
-                                    //BOTON INICIAR SESIÓN
+                                    // BOTON INICIAR SESIÓN
                                     ElevatedButton(
                                       onPressed: () {
+                                        _focusPass.unfocus();
+                                        _focusUser.unfocus();
                                         _verificarCampos();
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -991,405 +699,11 @@ class _LoginScreenState extends State<LoginScreen>
                                       ),
                                     ),
                                     SizedBox(height: 20),
-                                    //COMPONENTE DE CARGA
-                                    if (_cargandoUser2 ||
-                                        _cargandoApplication ||
-                                        _cargandoEmpresa ||
-                                        _cargandoEstacionTrabajo)
+                                    // COMPONENTE DE CARGA
+                                    if (_cargandoUser2)
                                       LoadingComponent(
                                         color: Colors.blue[200]!,
                                         changeLanguage: widget.changeLanguage,
-                                      ),
-                                    //DROPDOWN DE ESTACIONES DE TRABAJO
-                                    if (_user2.isNotEmpty &&
-                                        _user2[0].continuar == true &&
-                                        _estacionTrabajo.isNotEmpty)
-                                      DropdownButtonFormField<
-                                          PaBscEstacionTrabajo2M>(
-                                        dropdownColor: temaClaro
-                                            ? Color.fromARGB(255, 221, 231, 250)
-                                            : Color.fromARGB(255, 12, 46, 109),
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 16),
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                12), // Bordes redondeados más suaves
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide(
-                                              color: Color(0xFF5A38FD),
-                                              width:
-                                                  1.5, // Aumenta el grosor del borde al enfocarse
-                                            ),
-                                          ),
-                                          filled: true,
-                                          fillColor: temaClaro
-                                              ? Colors.grey.shade100
-                                              : Color.fromARGB(255, 59, 59, 59),
-                                          // Sombra para dar un efecto de profundidad
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                        ),
-                                        isExpanded: true,
-                                        value: _selectedEstacionTrabajo,
-                                        hint: Text(
-                                          S
-                                              .of(context)
-                                              .loginSeleccionarEstacionTrabajo,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: temaClaro
-                                                ? Colors.grey.shade600
-                                                : Colors.grey.shade100,
-                                          ),
-                                        ),
-                                        icon: Icon(
-                                          Icons.keyboard_arrow_down_rounded,
-                                          color: temaClaro
-                                              ? Colors.black
-                                              : Colors.white,
-                                        ),
-                                        iconSize: 24,
-                                        items: _estacionTrabajo.map((item) {
-                                          return DropdownMenuItem(
-                                            value: item,
-                                            child: Text(
-                                              item.nombre,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: temaClaro
-                                                    ? Colors.black87
-                                                    : Colors.grey[200],
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            _selectedEstacionTrabajo = newValue;
-                                            despEstacion_Trabajo =
-                                                _selectedEstacionTrabajo!
-                                                    .nombre;
-                                          });
-                                        },
-                                      ),
-                                    SizedBox(height: 8),
-                                    //DROPDOWN DE EMPRESAS
-                                    if (_user2.isNotEmpty &&
-                                        _user2[0].continuar == true &&
-                                        _empresa.isNotEmpty)
-                                      DropdownButtonFormField<PaBscEmpresa1M>(
-                                        dropdownColor: temaClaro
-                                            ? Color.fromARGB(255, 221, 231, 250)
-                                            : Color.fromARGB(255, 12, 46, 109),
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 16),
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                12), // Bordes redondeados más suaves
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            borderSide: BorderSide(
-                                              color: Color(0xFF5A38FD),
-                                              width: 1.5,
-                                            ),
-                                          ),
-                                          filled: true,
-                                          fillColor: temaClaro
-                                              ? Colors.grey.shade100
-                                              : Color.fromARGB(255, 59, 59, 59),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                        ),
-                                        isExpanded: true,
-                                        value: _selectedEmpresa,
-                                        hint: Text(
-                                          "${S.of(context).loginSeleccionarEmpresa}",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: temaClaro
-                                                ? Colors.grey.shade600
-                                                : Colors.grey.shade100,
-                                          ),
-                                        ),
-                                        icon: Icon(
-                                          Icons
-                                              .keyboard_arrow_down_rounded, // Ícono moderno
-                                          color: temaClaro
-                                              ? Colors.black
-                                              : Colors.white,
-                                        ),
-                                        iconSize: 24,
-                                        items: _empresa.map((item) {
-                                          return DropdownMenuItem(
-                                            value: item,
-                                            child: Text(
-                                              item.empresaNombre,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: temaClaro
-                                                    ? Colors.black87
-                                                    : Colors.grey[200],
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            _selectedEmpresa = newValue;
-                                            despEmpresa =
-                                                _selectedEmpresa!.empresaNombre;
-                                          });
-                                        },
-                                      ),
-                                    SizedBox(height: 8),
-                                    //DROPDOWN DE APLICACIONES
-                                    if (_user2.isNotEmpty &&
-                                        _user2[0].continuar == true &&
-                                        _application1.isNotEmpty)
-                                      DropdownButtonFormField<
-                                          PaBscApplication1M>(
-                                        dropdownColor: temaClaro
-                                            ? Color.fromARGB(255, 221, 231, 250)
-                                            : Color.fromARGB(255, 12, 46, 109),
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 16),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide(
-                                              color: Color(0xFF5A38FD),
-                                              width: 1.5,
-                                            ),
-                                          ),
-                                          filled: true,
-                                          fillColor: temaClaro
-                                              ? Colors.grey.shade100
-                                              : Color.fromARGB(255, 59, 59, 59),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                        ),
-                                        isExpanded: true,
-                                        value: _selectedApplication,
-                                        hint: Text(
-                                          "${S.of(context).loginSeleccionarAplicacion}",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: temaClaro
-                                                ? Colors.grey.shade600
-                                                : Colors.grey.shade100,
-                                          ),
-                                        ),
-                                        icon: Icon(
-                                          Icons
-                                              .keyboard_arrow_down_rounded, // Ícono moderno
-                                          color: temaClaro
-                                              ? Colors.black
-                                              : Colors.white,
-                                        ),
-                                        iconSize: 24,
-                                        items: _application1.map((item) {
-                                          return DropdownMenuItem(
-                                            value: item,
-                                            child: Text(
-                                              item.description,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: temaClaro
-                                                    ? Colors.black87
-                                                    : Colors.grey[200],
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            _selectedApplication = newValue;
-                                            _selectedUserDisplay = null;
-                                            _buscarUserDisplay2();
-                                          });
-                                        },
-                                      ),
-                                    SizedBox(height: 8),
-                                    //COMPONENTE DE CARGA PARA USER DISPLAY
-                                    if (_cargandoUserDisplay)
-                                      LoadingComponent(
-                                        color: Colors.blue[200]!,
-                                        changeLanguage: widget.changeLanguage,
-                                      ),
-                                    //DROPDOWN DE USER DISPLAY
-                                    _user2.isNotEmpty &&
-                                            _user2[0].continuar == true &&
-                                            _selectedApplication != null &&
-                                            _userDisplay.isNotEmpty &&
-                                            _userDisplay.any((item) =>
-                                                item.displayURLAlter != null)
-                                        ? DropdownButtonFormField<
-                                            PaBscUserDisplay2M>(
-                                            dropdownColor: temaClaro
-                                                ? Color.fromARGB(
-                                                    255, 221, 231, 250)
-                                                : Color.fromARGB(
-                                                    255, 12, 46, 109),
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 16),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                borderSide: BorderSide(
-                                                  color: Color(0xFF5A38FD),
-                                                  width: 1.5,
-                                                ),
-                                              ),
-                                              filled: true,
-                                              fillColor: temaClaro
-                                                  ? Colors.grey.shade100
-                                                  : Color.fromARGB(
-                                                      255, 59, 59, 59),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                            ),
-                                            isExpanded: true,
-                                            value: _selectedUserDisplay,
-                                            hint: Text(
-                                              "${S.of(context).loginSeleccionarDisplay}",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: temaClaro
-                                                    ? Colors.grey.shade600
-                                                    : Colors.grey.shade100,
-                                              ),
-                                            ),
-                                            icon: Icon(
-                                              Icons
-                                                  .keyboard_arrow_down_rounded, // Ícono moderno
-                                              color: temaClaro
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                            ),
-                                            iconSize: 24,
-                                            items: _userDisplay
-                                                .where((item) =>
-                                                    item.displayURLAlter !=
-                                                    null)
-                                                .map((item) {
-                                              return DropdownMenuItem(
-                                                value: item,
-                                                child: Text(
-                                                  item.name,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: temaClaro
-                                                        ? Colors.black87
-                                                        : Colors.grey[200],
-                                                  ),
-                                                ),
-                                              );
-                                            }).toList(),
-                                            onChanged: (newValue) {
-                                              setState(() {
-                                                _selectedUserDisplay =
-                                                    newValue!;
-                                              });
-                                            },
-                                          )
-                                        : Container(), // Si no hay items, no se muestra el Dropdown
-
-                                    SizedBox(height: 5),
-                                    //Botón Ingresar
-                                    if (_selectedEstacionTrabajo != null &&
-                                            _selectedEmpresa != null ||
-                                        _selectedApplication != null &&
-                                            (_selectedUserDisplay != null ||
-                                                !_userDisplay.any((item) =>
-                                                    item.displayURLAlter !=
-                                                    null)))
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Mantenimiento(
-                                                        imagePath:
-                                                            widget.imagePath,
-                                                        isBackgroundSet: widget
-                                                            .isBackgroundSet,
-                                                        catalogo: null,
-                                                        changeLanguage: widget
-                                                            .changeLanguage,
-                                                        idiomaDropDown: widget
-                                                            .idiomaDropDown,
-                                                        temaClaro: themeNotifier
-                                                            .temaClaro,
-                                                        token: token,
-                                                        pUserName:
-                                                            _userController
-                                                                .text,
-                                                        pEmpresa:
-                                                            _selectedEmpresa!
-                                                                .empresa,
-                                                        pEstacion_Trabajo:
-                                                            _selectedEstacionTrabajo!
-                                                                .estacionTrabajo,
-                                                        baseUrl: baseUrl,
-                                                        fechaSesion:
-                                                            DateTime.now(),
-                                                        fechaExpiracion:
-                                                            fechaExpiracion,
-                                                        despEmpresa:
-                                                            despEmpresa,
-                                                        despEstacion_Trabajo:
-                                                            despEstacion_Trabajo,
-                                                      )),
-                                            );
-                                          },
-                                          child: Text(
-                                            S.of(context).loginIngresar,
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: temaClaro
-                                                  ? Color(0xFF5A38FD)
-                                                  : Colors.white,
-                                            ),
-                                          ),
-                                        ),
                                       ),
                                     SizedBox(
                                       height: 5,
