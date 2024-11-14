@@ -1,21 +1,22 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:animated_background/animated_background.dart';
+import 'package:elementos_asignados/components/Layout.dart';
+import 'package:elementos_asignados/models/PaBscUser2M.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mantenimiento_catalogos/common/Loading.dart';
-import 'package:mantenimiento_catalogos/common/ThemeNotifier.dart';
-import 'package:mantenimiento_catalogos/components/Login.dart';
-import 'package:mantenimiento_catalogos/components/Mantenimiento.dart';
-import 'package:mantenimiento_catalogos/components/Plantillas/PlantillaImagen.dart';
-import 'package:mantenimiento_catalogos/generated/l10n.dart';
-import 'package:mantenimiento_catalogos/models/PaBscApplication1M.dart';
-import 'package:mantenimiento_catalogos/models/PaBscEmpresa1M.dart';
-import 'package:mantenimiento_catalogos/models/PaBscEstacionTrabajo2M.dart';
-import 'package:mantenimiento_catalogos/models/PaBscUser2M.dart';
-import 'package:mantenimiento_catalogos/models/PaBscUserDisplay2M.dart';
+import 'package:elementos_asignados/common/Loading.dart';
+import 'package:elementos_asignados/common/ThemeNotifier.dart';
+import 'package:elementos_asignados/components/Login.dart';
+import 'package:elementos_asignados/components/Plantillas/PlantillaImagen.dart';
+import 'package:elementos_asignados/generated/l10n.dart';
+import 'package:elementos_asignados/models/PaBscApplication1M.dart';
+import 'package:elementos_asignados/models/PaBscEmpresa1M.dart';
+import 'package:elementos_asignados/models/PaBscEstacionTrabajo2M.dart';
+import 'package:elementos_asignados/models/PaBscUser2M.dart';
+import 'package:elementos_asignados/models/PaBscUserDisplay2M.dart';
 import 'package:http/http.dart' as http;
-import 'package:mantenimiento_catalogos/services/LoginService.dart';
+import 'package:elementos_asignados/services/LoginService.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -923,48 +924,39 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  Mantenimiento(
-                                                                    imagePath:
-                                                                        widget
-                                                                            .imagePath,
-                                                                    isBackgroundSet:
-                                                                        widget
-                                                                            .isBackgroundSet,
-                                                                    catalogo:
-                                                                        null,
-                                                                    changeLanguage:
-                                                                        widget
-                                                                            .changeLanguage,
-                                                                    idiomaDropDown:
-                                                                        widget
-                                                                            .idiomaDropDown,
-                                                                    temaClaro:
-                                                                        themeNotifier
-                                                                            .temaClaro,
-                                                                    token: widget
-                                                                        .token,
-                                                                    pUserName: widget
-                                                                        .userController
-                                                                        .text,
-                                                                    pEmpresa:
-                                                                        _selectedEmpresa!
-                                                                            .empresa,
-                                                                    pEstacion_Trabajo:
-                                                                        _selectedEstacionTrabajo!
-                                                                            .estacionTrabajo,
-                                                                    baseUrl: widget
-                                                                        .baseUrl,
-                                                                    fechaSesion:
-                                                                        DateTime
-                                                                            .now(),
-                                                                    fechaExpiracion:
-                                                                        fechaExpiracion,
-                                                                    despEmpresa:
-                                                                        despEmpresa,
-                                                                    despEstacion_Trabajo:
-                                                                        despEstacion_Trabajo,
-                                                                  )),
+                                                              builder:
+                                                                  (context) =>
+                                                                      Layout(
+                                                                        imagePath:
+                                                                            widget.imagePath,
+                                                                        isBackgroundSet:
+                                                                            widget.isBackgroundSet,
+                                                                        changeLanguage:
+                                                                            widget.changeLanguage,
+                                                                        idiomaDropDown:
+                                                                            widget.idiomaDropDown,
+                                                                        temaClaro:
+                                                                            themeNotifier.temaClaro,
+                                                                        token: widget
+                                                                            .token,
+                                                                        pUserName: widget
+                                                                            .userController
+                                                                            .text,
+                                                                        pEmpresa:
+                                                                            _selectedEmpresa!.empresa,
+                                                                        pEstacion_Trabajo:
+                                                                            _selectedEstacionTrabajo!.estacionTrabajo,
+                                                                        baseUrl:
+                                                                            widget.baseUrl,
+                                                                        fechaSesion:
+                                                                            DateTime.now(),
+                                                                        fechaExpiracion:
+                                                                            fechaExpiracion,
+                                                                        despEmpresa:
+                                                                            despEmpresa,
+                                                                        despEstacion_Trabajo:
+                                                                            despEstacion_Trabajo,
+                                                                      )),
                                                         );
                                                       },
                                                       child: Text(
