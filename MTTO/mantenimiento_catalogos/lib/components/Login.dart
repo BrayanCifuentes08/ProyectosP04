@@ -4,7 +4,6 @@ import 'package:animated_background/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mantenimiento_catalogos/common/ThemeNotifier.dart';
-import 'package:mantenimiento_catalogos/components/Mantenimiento.dart';
 import 'package:mantenimiento_catalogos/components/MenuAutenticacion.dart';
 import 'package:mantenimiento_catalogos/components/Plantillas/PlantillaImagen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -13,11 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mantenimiento_catalogos/common/Animaciones.dart';
 import 'package:mantenimiento_catalogos/common/Loading.dart';
 import 'package:mantenimiento_catalogos/common/Mensajes.dart';
-import 'package:mantenimiento_catalogos/models/PaBscApplication1M.dart';
-import 'package:mantenimiento_catalogos/models/PaBscEmpresa1M.dart';
-import 'package:mantenimiento_catalogos/models/PaBscEstacionTrabajo2M.dart';
 import 'package:mantenimiento_catalogos/models/PaBscUser2M.dart';
-import 'package:mantenimiento_catalogos/models/PaBscUserDisplay2M.dart';
 import 'package:http/http.dart' as http;
 import 'package:mantenimiento_catalogos/generated/l10n.dart';
 import 'package:mantenimiento_catalogos/services/LoginService.dart';
@@ -57,14 +52,9 @@ class _LoginScreenState extends State<LoginScreen>
   String? _checkResult;
 
   bool temaClaro = true;
-  bool _guardarSesion = false;
 
   //variables de carga:
   bool _cargandoUser2 = false;
-  bool _cargandoApplication = false;
-  bool _cargandoEmpresa = false;
-  bool _cargandoEstacionTrabajo = false;
-  bool _cargandoUserDisplay = false;
 
   //models
   List<PaBscUser2M> _user2 = [];
@@ -73,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen>
   DateTime? fechaExpiracion = null;
   late AnimationController _controllerAnimated;
   int _backGestureCount = 0;
+
   @override
   void initState() {
     super.initState();
