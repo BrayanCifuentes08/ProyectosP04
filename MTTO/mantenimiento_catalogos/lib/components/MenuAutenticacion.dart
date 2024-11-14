@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:animated_background/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:mantenimiento_catalogos/common/Loading.dart';
@@ -76,6 +77,11 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
   bool _isExpandedUserDisplay = false;
   DateTime? fechaExpiracion = null;
   final LoginService _loginService = LoginService();
+
+  Key _expansionTileKeyEstacionTrabajo = ValueKey(Random().nextInt(10000));
+  Key _expansionTileKeyEmpresa = ValueKey(Random().nextInt(10000));
+  Key _expansionTileKeyApplication = ValueKey(Random().nextInt(10000));
+  Key _expansionTileKeyUserDisplay = ValueKey(Random().nextInt(10000));
 
   @override
   void initState() {
@@ -307,10 +313,6 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
     }
   }
 
-  Future<void> _setEstado() async {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     _selectedEstacionTrabajo = _estacionTrabajo.isNotEmpty
@@ -346,24 +348,23 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
             ),
           ),
         ),
-      // if (!widget.isBackgroundSet)
-      //   AnimatedBackground(
-      //     behaviour: RandomParticleBehaviour(
-      //         options: ParticleOptions(
-      //             baseColor: Colors.white,
-      //             spawnMinRadius: 40,
-      //             spawnMaxRadius: 80,
-      //             spawnMinSpeed: 15,
-      //             particleCount: 6,
-      //             spawnMaxSpeed: 80,
-      //             spawnOpacity: 0.2,
-      //             image: Image.asset("assets/image.png"))),
-      //     vsync: this,
-      //     child: Container(),
-      //   ),
       // Fondo animado con AnimatedBackground
+      if (!widget.isBackgroundSet)
+        AnimatedBackground(
+          behaviour: RandomParticleBehaviour(
+              options: ParticleOptions(
+                  baseColor: Colors.white,
+                  spawnMinRadius: 40,
+                  spawnMaxRadius: 80,
+                  spawnMinSpeed: 15,
+                  particleCount: 6,
+                  spawnMaxSpeed: 80,
+                  spawnOpacity: 0.2,
+                  image: Image.asset("assets/image.png"))),
+          vsync: this,
+          child: Container(),
+        ),
       if (widget.isBackgroundSet) BackgroundImage(imagePath: widget.imagePath),
-
       Scaffold(
           backgroundColor: Colors.transparent,
           body: CustomScrollView(slivers: [
@@ -433,7 +434,7 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                           color: Colors.blue[200]!,
                                           changeLanguage: widget.changeLanguage,
                                         ),
-                                      //DROPDOWN DE ESTACIONES DE TRABAJO
+                                      //EXPANSION TILE DE ESTACIONES DE TRABAJO
                                       if (widget.user2.isNotEmpty &&
                                           widget.user2[0].continuar == true &&
                                           _estacionTrabajo.isNotEmpty)
@@ -445,6 +446,10 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                               color: Colors.grey,
                                             ),
                                             ExpansionTile(
+                                              key:
+                                                  _expansionTileKeyEstacionTrabajo,
+                                              initiallyExpanded:
+                                                  _isExpandedEstacionTrabajo,
                                               backgroundColor:
                                                   _isExpandedEstacionTrabajo
                                                       ? const Color.fromARGB(
@@ -506,9 +511,12 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                                   item;
                                                               despEstacion_Trabajo =
                                                                   item.nombre;
-                                                              _setEstado();
                                                               _isExpandedEstacionTrabajo =
                                                                   false;
+                                                              _expansionTileKeyEstacionTrabajo =
+                                                                  ValueKey(Random()
+                                                                      .nextInt(
+                                                                          10000));
                                                             });
                                                           },
                                                         );
@@ -527,7 +535,7 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                               ),
                                           ],
                                         ),
-                                      //DROPDOWN DE EMPRESAS
+                                      //EXPANSION TILE  DE EMPRESAS
                                       if (widget.user2.isNotEmpty &&
                                           widget.user2[0].continuar == true &&
                                           _empresa.isNotEmpty)
@@ -539,6 +547,9 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                               color: Colors.grey,
                                             ),
                                             ExpansionTile(
+                                              key: _expansionTileKeyEmpresa,
+                                              initiallyExpanded:
+                                                  _isExpandedEmpresa,
                                               backgroundColor:
                                                   _isExpandedEmpresa
                                                       ? const Color.fromARGB(
@@ -601,7 +612,10 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                                     item;
                                                                 despEmpresa = item
                                                                     .empresaNombre;
-                                                                _setEstado();
+                                                                _expansionTileKeyEmpresa =
+                                                                    ValueKey(Random()
+                                                                        .nextInt(
+                                                                            10000));
                                                                 _isExpandedEmpresa =
                                                                     false; // Cierra el ExpansionTile después de seleccionar
                                                               });
@@ -621,7 +635,7 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                               ),
                                           ],
                                         ),
-                                      //DROPDOWN DE APLICACIONES
+                                      //EXPANSION TILE  DE APLICACIONES
                                       if (widget.user2.isNotEmpty &&
                                           widget.user2[0].continuar == true &&
                                           _application1.isNotEmpty)
@@ -633,6 +647,9 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                               color: Colors.grey,
                                             ),
                                             ExpansionTile(
+                                              key: _expansionTileKeyApplication,
+                                              initiallyExpanded:
+                                                  _isExpandedApplication,
                                               backgroundColor:
                                                   _isExpandedApplication
                                                       ? const Color.fromARGB(
@@ -699,6 +716,10 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                                 _buscarUserDisplay2();
                                                                 _isExpandedApplication =
                                                                     false;
+                                                                _expansionTileKeyApplication =
+                                                                    ValueKey(Random()
+                                                                        .nextInt(
+                                                                            10000));
                                                               });
                                                             },
                                                           );
@@ -716,7 +737,7 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                               ),
                                           ],
                                         ),
-                                      //DROPDOWN DE USER DISPLAY
+                                      //EXPANSION TILE  DE USER DISPLAY
                                       widget.user2.isNotEmpty &&
                                               widget.user2[0].continuar ==
                                                   true &&
@@ -730,6 +751,10 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                   color: Colors.grey,
                                                 ),
                                                 ExpansionTile(
+                                                  key:
+                                                      _expansionTileKeyUserDisplay,
+                                                  initiallyExpanded:
+                                                      _isExpandedUserDisplay,
                                                   backgroundColor:
                                                       _isExpandedUserDisplay
                                                           ? const Color
@@ -798,77 +823,11 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                           changeLanguage: widget.changeLanguage,
                                         ),
                                       SizedBox(height: 5),
-
+                                      //BOTON DE INGRESAR Y SWITCH PARA GUARDAR SESION
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          //Switch Guardar sesion
-                                          if (_selectedEstacionTrabajo !=
-                                                  null &&
-                                              _selectedEmpresa != null &&
-                                              (_application1.isEmpty ||
-                                                  (_application1.isNotEmpty &&
-                                                      _selectedApplication !=
-                                                          null)) &&
-                                              (_selectedUserDisplay != null ||
-                                                  !_userDisplay.any((item) =>
-                                                      item.displayURLAlter !=
-                                                      null)))
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Flexible(
-                                                    child: FittedBox(
-                                                      fit: BoxFit.scaleDown,
-                                                      child: Text(
-                                                        S
-                                                            .of(context)
-                                                            .loginGuardarSesion,
-                                                        style: TextStyle(
-                                                          color: widget
-                                                                  .temaClaro
-                                                              ? Color(
-                                                                  0xFF5A38FD)
-                                                              : Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Transform.scale(
-                                                    scale: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width <
-                                                            400
-                                                        ? 0.7
-                                                        : MediaQuery.of(context)
-                                                                    .size
-                                                                    .width <
-                                                                600
-                                                            ? 0.75
-                                                            : 1.0,
-                                                    child: Switch(
-                                                      value: _guardarSesion,
-                                                      onChanged: (bool value) {
-                                                        setState(() {
-                                                          _guardarSesion =
-                                                              value;
-                                                        });
-                                                        _guardarDatosSesion();
-                                                      },
-                                                      activeColor:
-                                                          Color(0xFF5A38FD),
-                                                      inactiveThumbColor:
-                                                          const Color.fromARGB(
-                                                              255, 155, 86, 86),
-                                                      inactiveTrackColor:
-                                                          Colors.grey[300],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
                                           //Botón Ingresar
                                           if (_selectedEstacionTrabajo !=
                                                   null &&
@@ -881,62 +840,140 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                   !_userDisplay.any((item) =>
                                                       item.displayURLAlter !=
                                                       null)))
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: TextButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Mantenimiento(
-                                                              imagePath: widget
-                                                                  .imagePath,
-                                                              isBackgroundSet:
-                                                                  widget
-                                                                      .isBackgroundSet,
-                                                              catalogo: null,
-                                                              changeLanguage: widget
-                                                                  .changeLanguage,
-                                                              idiomaDropDown: widget
-                                                                  .idiomaDropDown,
-                                                              temaClaro:
-                                                                  themeNotifier
-                                                                      .temaClaro,
-                                                              token:
-                                                                  widget.token,
-                                                              pUserName: widget
-                                                                  .userController
-                                                                  .text,
-                                                              pEmpresa:
-                                                                  _selectedEmpresa!
-                                                                      .empresa,
-                                                              pEstacion_Trabajo:
-                                                                  _selectedEstacionTrabajo!
-                                                                      .estacionTrabajo,
-                                                              baseUrl: widget
-                                                                  .baseUrl,
-                                                              fechaSesion:
-                                                                  DateTime
-                                                                      .now(),
-                                                              fechaExpiracion:
-                                                                  fechaExpiracion,
-                                                              despEmpresa:
-                                                                  despEmpresa,
-                                                              despEstacion_Trabajo:
-                                                                  despEstacion_Trabajo,
-                                                            )),
-                                                  );
-                                                },
-                                                child: Text(
-                                                  S.of(context).loginIngresar,
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    color:
-                                                        themeNotifier.temaClaro
-                                                            ? Color(0xFF5A38FD)
-                                                            : Colors.white,
+                                            Flexible(
+                                              child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Mantenimiento(
+                                                                imagePath: widget
+                                                                    .imagePath,
+                                                                isBackgroundSet:
+                                                                    widget
+                                                                        .isBackgroundSet,
+                                                                catalogo: null,
+                                                                changeLanguage:
+                                                                    widget
+                                                                        .changeLanguage,
+                                                                idiomaDropDown:
+                                                                    widget
+                                                                        .idiomaDropDown,
+                                                                temaClaro:
+                                                                    themeNotifier
+                                                                        .temaClaro,
+                                                                token: widget
+                                                                    .token,
+                                                                pUserName: widget
+                                                                    .userController
+                                                                    .text,
+                                                                pEmpresa:
+                                                                    _selectedEmpresa!
+                                                                        .empresa,
+                                                                pEstacion_Trabajo:
+                                                                    _selectedEstacionTrabajo!
+                                                                        .estacionTrabajo,
+                                                                baseUrl: widget
+                                                                    .baseUrl,
+                                                                fechaSesion:
+                                                                    DateTime
+                                                                        .now(),
+                                                                fechaExpiracion:
+                                                                    fechaExpiracion,
+                                                                despEmpresa:
+                                                                    despEmpresa,
+                                                                despEstacion_Trabajo:
+                                                                    despEstacion_Trabajo,
+                                                              )),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    S.of(context).loginIngresar,
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: themeNotifier
+                                                              .temaClaro
+                                                          ? Color(0xFF5A38FD)
+                                                          : Colors.white,
+                                                    ),
                                                   ),
+                                                ),
+                                              ),
+                                            ),
+                                          //Switch Guardar sesion
+                                          if (_selectedEstacionTrabajo !=
+                                                  null &&
+                                              _selectedEmpresa != null &&
+                                              (_application1.isEmpty ||
+                                                  (_application1.isNotEmpty &&
+                                                      _selectedApplication !=
+                                                          null)) &&
+                                              (_selectedUserDisplay != null ||
+                                                  !_userDisplay.any((item) =>
+                                                      item.displayURLAlter !=
+                                                      null)))
+                                            Flexible(
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Flexible(
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                          S
+                                                              .of(context)
+                                                              .loginGuardarSesion,
+                                                          style: TextStyle(
+                                                            color: widget
+                                                                    .temaClaro
+                                                                ? Color(
+                                                                    0xFF5A38FD)
+                                                                : Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Transform.scale(
+                                                      scale: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width <
+                                                              400
+                                                          ? 0.7
+                                                          : MediaQuery.of(context)
+                                                                      .size
+                                                                      .width <
+                                                                  600
+                                                              ? 0.75
+                                                              : 1.0,
+                                                      child: Switch(
+                                                        value: _guardarSesion,
+                                                        onChanged:
+                                                            (bool value) {
+                                                          setState(() {
+                                                            _guardarSesion =
+                                                                value;
+                                                          });
+                                                          _guardarDatosSesion();
+                                                        },
+                                                        activeColor:
+                                                            Color(0xFF5A38FD),
+                                                        inactiveThumbColor:
+                                                            const Color
+                                                                .fromARGB(255,
+                                                                155, 86, 86),
+                                                        inactiveTrackColor:
+                                                            Colors.grey[300],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -986,59 +1023,88 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
             (item.displayURLAlter !=
                     null || // Condición para hijos de último nivel
                 userDisplayList.any((subItem) =>
-                    subItem.userDisplayFather == item.userDisplay)))
+                    subItem.userDisplayFather ==
+                    item.userDisplay))) // Si tiene más hijos
         .toList();
 
-    // Si hay hijos válidos, construimos un ExpansionTile para el nodo actual
-    return children.isNotEmpty
-        ? ExpansionTile(
-            backgroundColor: _isExpandedUserDisplay
-                ? const Color.fromARGB(20, 23, 68, 230)
-                : Colors.white,
-            title: Text(
-              parentItem.name,
-              style: TextStyle(
-                fontSize: 14,
-                color: themeNotifier.temaClaro
-                    ? Colors.grey.shade600
-                    : Colors.grey.shade100,
-              ),
-            ),
-            trailing: Icon(
-              _isExpandedUserDisplay
-                  ? Icons.keyboard_arrow_up_rounded
-                  : Icons.keyboard_arrow_down_rounded,
-              color: themeNotifier.temaClaro ? Colors.black : Colors.white,
-            ),
-            onExpansionChanged: (expanded) {
-              setState(() {
-                _isExpandedUserDisplay = expanded;
-              });
-            },
-            children: children.map((child) {
-              // Construimos recursivamente cada nodo hijo
-              return buildExpansionTile(child, userDisplayList);
-            }).toList(),
-          )
-        : (parentItem.displayURLAlter != null
-            ? ListTile(
-                title: Text(
-                  parentItem.name,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: themeNotifier.temaClaro
-                        ? Colors.black87
-                        : Colors.grey[200],
-                  ),
-                ),
-                onTap: () {
-                  setState(() {
-                    _selectedUserDisplay = parentItem;
-                    _setEstado();
-                    _isExpandedUserDisplay = false;
-                  });
-                },
-              )
-            : Container()); // Si no tiene displayURLAlter, no muestra el hijo
+    // Si el nodo no tiene hijos válidos (ni tiene displayURLAlter ni tiene hijos válidos)
+    if (children.isEmpty && parentItem.displayURLAlter == null) {
+      return Container();
+    }
+
+    // Si el nodo raíz no tiene hijos válidos, no lo mostramos
+    if (parentItem.userDisplayFather == 0 && children.isEmpty) {
+      return Container();
+    }
+
+    // Función para filtrar los hijos de último nivel
+    List<PaBscUserDisplay2M> getHijosUltimoNivel(
+        List<PaBscUserDisplay2M> children) {
+      return children.where((child) {
+        // Un hijo es de último nivel si no tiene más hijos
+        bool hasNoSubChildren = !userDisplayList
+            .any((subItem) => subItem.userDisplayFather == child.userDisplay);
+        return hasNoSubChildren &&
+            child.displayURLAlter !=
+                null; // Solo mostrar si tiene displayURLAlter
+      }).toList();
+    }
+
+    // Filtrar los hijos de último nivel válidos
+    List<PaBscUserDisplay2M> validChildren = getHijosUltimoNivel(children);
+
+    // Si hay hijos de último nivel válidos, construimos el ExpansionTile
+    if (validChildren.isNotEmpty) {
+      return ExpansionTile(
+        backgroundColor: _isExpandedUserDisplay
+            ? const Color.fromARGB(20, 23, 68, 230)
+            : Colors.white,
+        title: Text(
+          parentItem.name,
+          style: TextStyle(
+            fontSize: 14,
+            color: themeNotifier.temaClaro
+                ? Colors.grey.shade600
+                : Colors.grey.shade100,
+          ),
+        ),
+        trailing: Icon(
+          _isExpandedUserDisplay
+              ? Icons.keyboard_arrow_up_rounded
+              : Icons.keyboard_arrow_down_rounded,
+          color: themeNotifier.temaClaro ? Colors.black : Colors.white,
+        ),
+        onExpansionChanged: (expanded) {
+          setState(() {
+            _isExpandedUserDisplay = expanded;
+          });
+        },
+        children: validChildren.map((child) {
+          // Construimos recursivamente cada nodo hijo
+          return buildExpansionTile(child, userDisplayList);
+        }).toList(),
+      );
+    } else if (parentItem.displayURLAlter != null) {
+      // Si no tiene hijos pero tiene displayURLAlter, mostramos ListTile
+      return ListTile(
+        title: Text(
+          parentItem.name,
+          style: TextStyle(
+            fontSize: 14,
+            color: themeNotifier.temaClaro ? Colors.black87 : Colors.grey[200],
+          ),
+        ),
+        onTap: () {
+          setState(() {
+            _selectedUserDisplay = parentItem;
+            _expansionTileKeyUserDisplay = ValueKey(Random().nextInt(10000));
+            _isExpandedUserDisplay = false;
+          });
+        },
+      );
+    }
+
+    // En caso de que no se cumpla ninguna condición, devolvemos un Container vacío
+    return Container();
   }
 }
