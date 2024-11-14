@@ -402,42 +402,44 @@
     border border-white dark:border-gray-800 m-4 sm:m-8 md:m-12" 
     [ngClass]="{'modal-enter': mostrarModal && !isExiting, 'modal-exit': isExiting}" (click)="$event.stopPropagation()">
     
-    <div class="relative">
-      <!-- Botón Cerrar Modal -->
-      <button
-        (click)="cerrarModal()"
-        class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
+      <div class="relative">
+        <!-- Botón Cerrar Modal -->
+        <button
+          (click)="cerrarModal()"
+          class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          ></path>
-        </svg>
-      </button>
-    
-      <!-- Título del Modal -->
-      <div class="text-center py-4 px-6 bg-gray-100 dark:bg-gray-700 rounded-t-2xl text-gray-900 dark:text-white shadow-lg">
-        <h2
-          class="text-3xl font-extrabold tracking-wide text-gray-900 dark:text-transparent bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-blue-500 transition-all duration-500 ease-in-out"
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+
+        <!-- Título del Modal -->
+        <div
+          class="text-center py-4 px-6 bg-gray-100 dark:bg-gray-700 rounded-t-2xl text-gray-900 dark:text-white shadow-lg"
         >
-          {{ 'labelsLogin.menuAutenticacion' | translate }}
-        </h2>
+          <h2
+            class="text-3xl font-extrabold tracking-wide text-gray-900 dark:text-transparent bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-blue-500 transition-all duration-500 ease-in-out"
+          >
+            {{ 'labelsLogin.menuAutenticacion' | translate }}
+          </h2>
+        </div>
+
+        <!-- Subtítulo opcional -->
+        <p class="text-sm text-gray-600 dark:text-gray-300 text-center mt-2">
+          {{ 'labelsLogin.seleccionarInformacionAdicional' | translate }}
+        </p>
       </div>
-    
-      <!-- Subtítulo opcional -->
-      <p class="text-sm text-gray-600 dark:text-gray-300 text-center mt-2">
-        {{ 'labelsLogin.seleccionarInformacionAdicional' | translate }}
-      </p>
-    </div>
     
       
       <div class="mt-6 h-[calc(100%-120px)] overflow-y-auto p-2 dark:text-gray-200">
@@ -637,33 +639,40 @@
                         class="flex items-center cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300 dark:hover:text-gray-700 text-sm rounded-md transition-colors duration-200"
                         [ngClass]="{ 'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': padre.abierto }"
                       >
-                        <!-- Flecha con rotación -->
                         <div
-                          class=" mr-2 transition-transform duration-300"
+                          class="mr-2 transition-transform duration-300"
                           [ngClass]="{ 'rotate-90': padre.abierto, 'rotate-0': !padre.abierto }"
                         >
-                        <i class="fa-solid fa-angle-down items-center"></i>
+                          <i class="fa-solid fa-angle-down items-center"></i>
                         </div>
                         {{ padre.name }}
                       </div>
                   
-                      <!-- Lista de Hijos con efecto de continuidad en rama -->
-                      <ul *ngIf="padre.abierto" class="list-none pl-6 ml-4 border-l-2 border-gray-300 dark:border-gray-600">
+                      <!-- Lista de Hijos -->
+                      <ul
+                        *ngIf="padre.abierto"
+                        class="list-none pl-6 ml-4 border-l-2 border-gray-300 dark:border-gray-600"
+                      >
                         <li
                           *ngFor="let hijo of padre.hijos"
                           (click)="seleccionarItem('displays', hijo)"
                           [ngClass]="{
-                            'text-blue-600 dark:text-indigo-400': seleccionados['displays'] === hijo
+                            'text-blue-700 dark:text-indigo-400': seleccionados['displays'] === hijo,
+                            'text-gray-600 dark:text-gray-400': seleccionados['displays'] !== hijo
                           }"
-                          class="relative cursor-pointer py-2 pl-4 text-gray-700 dark:text-gray-400 text-sm transition-all duration-200 
-                                hover:text-blue-500 hover:dark:text-indigo-300"
+                          class="relative cursor-pointer py-1.5 pl-2 text-sm transition-all duration-200
+                                hover:text-blue-500 hover:dark:text-indigo-300 rounded-md"
                         >
-                          <span class="before:content-[''] before:absolute before:left-[-1.25rem] before:top-1/2 before:h-0.5 before:w-4 before:bg-gray-300 dark:before:bg-gray-600"></span>
+                          <!-- Ramificación -->
+                          <span
+                            class="before:content-[''] before:absolute before:left-[-1.5rem] before:top-1/2 before:h-0.5 before:w-5 before:bg-gray-300 dark:before:bg-gray-600"
+                          ></span>
+
                           {{ hijo.name }}
                         </li>
                       </ul>
                     </li>
-                  </ul>    
+                  </ul>
                 </div>
               </div>
             </div>
@@ -771,21 +780,24 @@
         </div>  
       </div>
     </div>
-         <!-- Mensaje dinámico -->
-         <div *ngIf="mensajeEstadoDatosSesion" class="fixed inset-0 flex items-center justify-center z-50">
-          <div 
-              [ngClass]="{
+   <!-- Mensaje dinámico -->
+  <div
+    *ngIf="mensajeEstadoDatosSesion"
+    class="fixed inset-0 flex items-center justify-center z-50"
+    >
+    <div
+      [ngClass]="{
                   'text-green-600 bg-green-100 border-green-300 dark:text-green-400 dark:bg-green-800 dark:border-green-700': mensajeTipo === 'guardado',
                   'text-gray-800 bg-gray-100 border-gray-300 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600': mensajeTipo === 'noGuardado'
               }"
-              class="max-w-sm w-full p-4 border rounded-lg shadow-lg transition-transform transform scale-100 animate-slideIn"
-          >
-              <p class="text-center text-sm font-medium">
-                  {{ mensajeEstadoDatosSesion | translate }}
-              </p>
-          </div>
-        </div>
+      class="max-w-sm w-full p-4 border rounded-lg shadow-lg transition-transform transform scale-100 animate-slideIn"
+    >
+     <p class="text-center text-sm font-medium">
+       {{ mensajeEstadoDatosSesion | translate }}
+     </p>
+    </div>
   </div>
+</div>
 
   <svg
     class="absolute bottom-0 left-0 w-full"

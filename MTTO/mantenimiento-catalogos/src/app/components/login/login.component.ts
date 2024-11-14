@@ -64,7 +64,6 @@ export default class LoginComponent {
   ];
   
   
-  
   constructor(
     private router: Router,
     public traduccionService: TraduccionService,
@@ -388,6 +387,7 @@ export default class LoginComponent {
           this.buscarApplication();
           this.abrirModal();
           this.seleccionados = {};
+          this.aplicacionSeleccionada = null;
           this.mostrarBotonModal = false;
         } else {
           this.errores.general = data.mensaje || 'Error de autenticación';
@@ -477,16 +477,14 @@ export default class LoginComponent {
         this.userDisplaysPadres = [];
         this.userDisplaysHijos = [];
 
-        // Separacion de padres e hijos
+        //Separacion de padres e hijos
         data.forEach(item => {
-          console.log('Procesando item:', item);
-
-          // Es padre si user_Display_Father es null o 0
+          //Es padre si user_Display_Father es null o 0
           if (item.user_Display_Father === null || item.user_Display_Father === 0) {
             console.log('Este es un padre:', item);
             this.userDisplaysPadres.push(item);
           } else {
-            // Aca es un hijo, solo si tiene display_URL_Alter valido
+            //Aca es un hijo, solo si tiene display_URL_Alter valido
             if (item.display_URL_Alter !== null && item.display_URL_Alter !== undefined) {
               console.log('Este es un hijo válido con display_URL_Alter:', item);
               this.userDisplaysHijos.push(item);
@@ -499,11 +497,11 @@ export default class LoginComponent {
         console.log('Padres encontrados:', this.userDisplaysPadres);
         console.log('Hijos encontrados:', this.userDisplaysHijos);
 
-        // Se relaciona o asocia cada hijo con su padre
+        //Se relaciona o asocia cada hijo con su padre
         this.userDisplaysHijos.forEach((hijo: any) => {
           console.log("Procesando hijo:", hijo);
 
-          // se verifica si el valor de user_Display_Father esta presente y es valido
+          //se verifica si el valor de user_Display_Father esta presente y es valido
           if (hijo.user_Display_Father === undefined || hijo.user_Display_Father === null) {
             console.log("El hijo no tiene un user_Display_Father válido");
             return; 
@@ -513,7 +511,7 @@ export default class LoginComponent {
             const padreDisplay = p.user_Display;
             const hijoDisplayFather = hijo.user_Display_Father;
             
-            // Verifica la comparación entre el padre y el hijo
+            //Verifica la comparación entre el padre y el hijo
             return padreDisplay === hijoDisplayFather;
           });
 
@@ -526,14 +524,14 @@ export default class LoginComponent {
         });
 
         this.userDisplaysPadres = data
-          .filter(item => item.user_Display_Father === null || item.user_Display_Father === 0) // Solo padres
+          .filter(item => item.user_Display_Father === null || item.user_Display_Father === 0) //Solo dislplays padres
           .map(padre => {
-            // Filtra los hijos validos (con el display_URL_Alter no nulo)
+            //Filtra los hijos validos (con el display_URL_Alter no nulo)
             const hijosValidos = data.filter(hijo =>
               hijo.user_Display_Father === padre.user_Display && hijo.display_URL_Alter !== null
             );
 
-            // Solo se agrega los padres con al menos un hijo válido
+            //Solo se agrega los padres con al menos un hijo válido
             if (hijosValidos.length > 0) {
               return {
                 ...padre,
