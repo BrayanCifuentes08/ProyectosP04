@@ -326,7 +326,7 @@ export class InicioComponent {
     sessionStorage.setItem('horaCierreSesion', currentTime);
 
     // Limpiar datos de localStorage y sessionStorage
-    this.eliminarDatos(['usuario', 'user', 'pass', 'estacion', 'estacionTrabajo', 'empresa', 'aplicacion', 'display', 'jwtToken', 'horaInicioSesion', 'horaInicioSesionTemp', '_grecaptcha']);
+    this.eliminarDatos(['usuario', 'user', 'pass', 'estacion', 'estacionTrabajo', 'empresa', 'aplicacion', 'display', 'jwtToken', 'horaInicioSesion', 'horaInicioSesionTemp', '_grecaptcha', 'urlApi']);
 
     // Actualizar el estado del logo en el servicio
     this.utilidadService.setLogo(null);
@@ -351,7 +351,6 @@ export class InicioComponent {
     this.mostrarMensaje = false;
     this.mostrarMensajeUrlConfirmacion = false;
   }
-
 
   verificarUrl(urlApi: string) {
     this.mostrarMensajeUrlConfirmacion = false;

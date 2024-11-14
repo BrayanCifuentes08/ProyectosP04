@@ -10,7 +10,7 @@ import { PaBscUser2M, ParametrosLogin } from '../models/login';
 })
 export class ApiService {
 
-  private baseUrl: string = 'http://192.168.1.25/ApiCuentaCorriente/api/';
+  private baseUrl: string = 'http://192.168.10.39/ApiCuentaCorriente/api/';
   private clienteSeleccionadoSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public clienteSeleccionado$: Observable<any> = this.clienteSeleccionadoSubject.asObservable();
   private datosReciboSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);

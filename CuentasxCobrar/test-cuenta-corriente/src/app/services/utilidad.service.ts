@@ -15,6 +15,13 @@ export class UtilidadService {
   public colorSeleccionado: string = '';
   private esModoOscuro: boolean = false;
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private apiService: ApiService,
+  private idiomaService: TraduccionService ) {
+    const storedMode = localStorage.getItem('darkMode');
+    this.esModoOscuro = storedMode ? JSON.parse(storedMode) : false;
+    this.updateTheme();
+    this.baseUrl = this.apiService.getBaseUrl();
+  }
 
   private unidades = {
     'es': ["", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"],
@@ -153,24 +160,27 @@ export class UtilidadService {
     'fr': { 'y': ' ET ', 'con': ' AVEC ' }
   };
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private apiService: ApiService,
-  private idiomaService: TraduccionService ) {
-    const storedMode = localStorage.getItem('darkMode');
-    this.esModoOscuro = storedMode ? JSON.parse(storedMode) : false;
-    this.updateTheme();
-    this.baseUrl = this.apiService.getBaseUrl();
-  }
-
-  getUrlService(): string {
-    return this.baseUrl;
-  }
-
+  // UtilidadService
   setUrlService(newUrl: string): void {
     this.baseUrl = newUrl;
+
+    // Guardar la URL en localStorage y sessionStorage
+    localStorage.setItem('urlApi', newUrl); // Guardar en localStorage
+    sessionStorage.setItem('urlApi', newUrl); // Guardar en sessionStorage
+
+    // Actualizar la URL en el API
     this.apiService.setBaseUrl(this.baseUrl);
     console.log(`URL API actualizada a: ${this.baseUrl}`);
   }
 
+  getUrlService(): string {
+    // Verificar si existe una URL en localStorage o sessionStorage
+    const urlFromLocal = localStorage.getItem('urlApi');
+    const urlFromSession = sessionStorage.getItem('urlApi');
+    
+    // Preferir la URL almacenada en localStorage, luego en sessionStorage
+    return urlFromLocal ?? urlFromSession ?? this.baseUrl; // Retornar la URL, o la base por defecto si no existe ninguna
+  }
   toggleModoOscuro() {
     this.esModoOscuro = !this.esModoOscuro;
     localStorage.setItem('darkMode', JSON.stringify(this.esModoOscuro));

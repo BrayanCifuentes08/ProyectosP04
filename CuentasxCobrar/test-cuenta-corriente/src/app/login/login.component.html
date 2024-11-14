@@ -635,9 +635,9 @@
                 hover:bg-gradient-to-r from-blue-200 to-indigo-300 
                 dark:text-gray-400 dark:hover:bg-gradient-to-r dark:hover:text-gray-200 dark:from-indigo-500 dark:to-blue-600 
                 rounded-md transition-all duration-300 ease-in-out"
-         [ngClass]="{
-           'bg-blue-100 text-gray-400 dark:bg-indigo-400 dark:text-white': sectionOpen === 'displays'
-         }"
+                [ngClass]="{
+                  'bg-blue-100 text-gray-400 dark:bg-indigo-400 dark:text-white': sectionOpen === 'displays'
+                }"
               >
                 <div
                   class="w-8 border-r px-2 transform transition-transform duration-300 ease-in-out"
@@ -664,31 +664,65 @@
                 <div class="flex-1 px-2 py-2">
                   <span class="text-base font-medium">{{ "labels.displaysLogin" | translate }}</span>
                 </div>
+                <div 
+                *ngIf="userDisplaysPadres && userDisplaysPadres.length > 0" 
+                class="text-sm mt-3 mr-2 pb-3"
+                >
+                  Hay displays disponibles
+                </div>
               </div>
 
               <div class="accordion-content" [ngClass]="{ open: sectionOpen === 'displays' }">
                 <div class="max-h-56 overflow-y-auto">
                   <!-- Mostrar mensaje si no hay displays -->
-                  <div *ngIf="userDisplay2.length === 0" class="text-center text-gray-500 py-4">
+                  <div *ngIf="userDisplaysPadres.length === 0" class="text-center text-gray-500 py-4">
                     <span>{{ "labels.noDisplaysDisponibles" | translate }}</span>
                   </div>
-                  <!-- Mostrar lista de displays si hay disponibles -->
-                  <ul *ngIf="userDisplay2.length > 0" class="list-none p-0">
-                    <li
-                      *ngFor="let display of userDisplay2"
-                      (click)="seleccionarItem('displays', display)"
-                      [ngClass]="{
-                        'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': seleccionados['displays'] === display
-                      }"
-                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300 text-sm rounded-md transition-colors duration-200"
-                    >
-                      {{ display.name }}
+                  <ul *ngIf="userDisplaysPadres.length > 0" class="list-none p-0">
+                    <li *ngFor="let padre of userDisplaysPadres">
+                      <!-- Elemento Padre -->
+                      <div
+                        (click)="padre.abierto = !padre.abierto"
+                        class="flex items-center cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300 dark:hover:text-gray-700 text-sm rounded-md transition-colors duration-200"
+                        [ngClass]="{ 'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': padre.abierto }"
+                      >
+                        <div
+                          class="mr-2 transition-transform duration-300"
+                          [ngClass]="{ 'rotate-90': padre.abierto, 'rotate-0': !padre.abierto }"
+                        >
+                          <i class="fa-solid fa-angle-down items-center"></i>
+                        </div>
+                        {{ padre.name }}
+                      </div>
+                  
+                      <!-- Lista de Hijos -->
+                      <ul
+                        *ngIf="padre.abierto"
+                        class="list-none pl-6 ml-4 border-l-2 border-gray-300 dark:border-gray-600"
+                      >
+                        <li
+                          *ngFor="let hijo of padre.hijos"
+                          (click)="seleccionarItem('displays', hijo)"
+                          [ngClass]="{
+                            'text-blue-700 dark:text-indigo-400': seleccionados['displays'] === hijo,
+                            'text-gray-600 dark:text-gray-400': seleccionados['displays'] !== hijo
+                          }"
+                          class="relative cursor-pointer py-1.5 pl-2 text-sm transition-all duration-200
+                                hover:text-blue-500 hover:dark:text-indigo-300 rounded-md"
+                        >
+                          <!-- Ramificación -->
+                          <span
+                            class="before:content-[''] before:absolute before:left-[-1.5rem] before:top-1/2 before:h-0.5 before:w-5 before:bg-gray-300 dark:before:bg-gray-600"
+                          ></span>
+
+                          {{ hijo.name }}
+                        </li>
+                      </ul>
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
-
             <!-- Opciones seleccionadas -->
             <div class="mt-4">
               <h3 class="text-lg font-semibold mb-2 text-center">
