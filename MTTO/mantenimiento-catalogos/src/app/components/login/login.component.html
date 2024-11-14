@@ -623,6 +623,12 @@
                 <div class="flex-1 px-2 py-2">
                   <span class="text-base font-medium">{{ "labelsLogin.displaysLogin" | translate }}</span>
                 </div>
+                <div 
+                *ngIf="userDisplaysPadres && userDisplaysPadres.length > 0" 
+                class="text-sm mt-3 mr-2 pb-3"
+                >
+                  Hay displays disponibles
+                </div>
               </div>
 
               <div class="accordion-content" [ngClass]="{ open: sectionOpen === 'displays' }">
@@ -676,7 +682,6 @@
                 </div>
               </div>
             </div>
-
 
             <!-- Opciones seleccionadas -->
             <div class="mt-4">

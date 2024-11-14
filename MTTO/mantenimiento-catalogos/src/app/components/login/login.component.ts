@@ -28,7 +28,6 @@ export default class LoginComponent {
   cargando:                   boolean = false;
   mostrarModal:               boolean = false;
   mostrarBotonModal:          boolean = false;  
-  isColorSeleccinadoAbierto:  boolean = false;
   isExiting:                  boolean = false;
   guardarDatosSesion:         boolean = false;  
   isVerificando:              boolean = false; 
@@ -55,14 +54,6 @@ export default class LoginComponent {
   userDisplaysHijos: any[] = [];
   @ViewChild('usuarioInput') usuarioInput!: ElementRef<HTMLInputElement>;
   @ViewChild('passInput')    passInput!:    ElementRef<HTMLInputElement>;
-  colorSeleccionado:  string = 'linear-gradient(to bottom, #1e3a8a, #f97316)';
-  coloresDisponibles = [
-    { name: 'Azul a Naranja',     value: 'linear-gradient(to bottom, #1e3a8a, #f97316)' },
-    { name: 'Amarillo a Rojo',    value: 'linear-gradient(to bottom, #eab308, #dc2626)' },
-    { name: 'Morado a Turquesa',  value: 'linear-gradient(to bottom, #6a0dad, #0d9488)' },
-    { name: 'Azul a Gris',        value: 'linear-gradient(to bottom, #09203f, #537895)' },
-  ];
-  
   
   constructor(
     private router: Router,
@@ -103,15 +94,6 @@ export default class LoginComponent {
 
   get esModoOscuro(): boolean {
     return this.sharedService.esModoOscuroHabilitado();
-  }
-
-  onCambioColor(colorValue: string): void {
-    this.colorSeleccionado = colorValue;
-    this.isColorSeleccinadoAbierto = false;
-  }
-
-  toggleColorSelector(): void {
-    this.isColorSeleccinadoAbierto = !this.isColorSeleccinadoAbierto;
   }
 
   alternarMensaje() {
@@ -551,7 +533,6 @@ export default class LoginComponent {
     );
   }
   
-  
   onAplicacionSeleccionada(application: any): void {
     if (this.aplicacionSeleccionada !== application) {
       this.seleccionados['displays'] = null;
@@ -574,33 +555,32 @@ export default class LoginComponent {
     console.log("Item seleccionado: ", item)
   }
   
-  
-
   validarSeleccion(): boolean {
     this.validacionErrores = {}; //Resetear errores
   
-    //Verificar si todas las selecciones están completas
+    // Verificar si todas las selecciones están completas
     const estacionesSeleccionadas = this.seleccionados['estaciones'];
     const empresasSeleccionadas = this.seleccionados['empresas'];
     const aplicacionesSeleccionadas = this.seleccionados['aplicaciones'];
     const displaysSeleccionados = this.seleccionados['displays'];
   
-    //Verificar si todos los campos requeridos están seleccionados
+    // Verificar si todos los campos requeridos están seleccionados
     const validaciones = [
       estacionesSeleccionadas,
       empresasSeleccionadas,
       aplicacionesSeleccionadas
     ].every(valor => valor !== null && valor !== undefined);
   
-    //Verificar si hay al menos un display valido
-    const hayDisplayValido = this.userDisplay2.some(item => item.display_URL_Alter !== null);
+    // Verificar si hay al menos un display válido
+    const hayDisplayValido = this.userDisplaysPadres.some(item => item.hijos && item.hijos.some((hijo: any) => hijo.display_URL_Alter !== null));
   
-    //Si hay displays validos, el usuario debe seleccionar al menos uno, pero si no hay displays, la selección no es obligatoria
-    const seleccionDeDisplayValida = hayDisplayValido ? (displaysSeleccionados !== null) : true;
+    // Validar si el padre tiene al menos un hijo seleccionado
+    const seleccionDeDisplayValida = hayDisplayValido ? (displaysSeleccionados !== null && this.userDisplaysPadres.some(padre => padre.hijos.some((hijo: any) => hijo === displaysSeleccionados))) : true;
   
-    //Validar si todos los campos requeridos están completos y la selección de display es válida
+    // Validar si todos los campos requeridos están completos y la selección de display es válida
     return validaciones && seleccionDeDisplayValida;
   }
+  
   
 
   verificarCampos(): void {
@@ -658,7 +638,8 @@ export default class LoginComponent {
         this.aplicacionSeleccionada = null;
         this.seleccionados['aplicaciones'] = null;
         this.seleccionados['displays'] = null;
-        this.userDisplay2 = [];
+        this.userDisplaysHijos = []
+        this.userDisplaysPadres = []
         this.sectionOpen = null;
         break;
       case 'displays':
