@@ -214,6 +214,39 @@ class MessageLookup extends MessageLookupByLibrary {
         "localizacion": MessageLookupByLibrary.simpleMessage("Localización"),
         "localizacionPadre":
             MessageLookupByLibrary.simpleMessage("Localización_Padre"),
+        "loginConfirmar": MessageLookupByLibrary.simpleMessage("Confirmar"),
+        "loginContrasena": MessageLookupByLibrary.simpleMessage("Contraseña"),
+        "loginDebeIngresarElUsuario":
+            MessageLookupByLibrary.simpleMessage("Debe ingresar el usuario"),
+        "loginDebeIngresarLaContrasena":
+            MessageLookupByLibrary.simpleMessage("Debe ingresar la contraseña"),
+        "loginGuardarSesion":
+            MessageLookupByLibrary.simpleMessage("Guardar Sesión"),
+        "loginIngresaContrasena":
+            MessageLookupByLibrary.simpleMessage("Ingresa tu contraseña"),
+        "loginIngresaUsuario":
+            MessageLookupByLibrary.simpleMessage("Ingresa tu usuario"),
+        "loginIngresar": MessageLookupByLibrary.simpleMessage("Ingresar"),
+        "loginIngresarURL":
+            MessageLookupByLibrary.simpleMessage("Ingrese aquí su URL"),
+        "loginIniciarSesion":
+            MessageLookupByLibrary.simpleMessage("Iniciar Sesión"),
+        "loginSeleccionarAplicacion":
+            MessageLookupByLibrary.simpleMessage("Seleccione una aplicación"),
+        "loginSeleccionarDisplay":
+            MessageLookupByLibrary.simpleMessage("Seleccione Displays"),
+        "loginSeleccionarEmpresa":
+            MessageLookupByLibrary.simpleMessage("Seleccione una empresa"),
+        "loginSeleccionarEstacionTrabajo": MessageLookupByLibrary.simpleMessage(
+            "Seleccione una estación de trabajo"),
+        "loginTextoCopiado": MessageLookupByLibrary.simpleMessage(
+            "Texto copiado al portapapeles"),
+        "loginURLNoValida": MessageLookupByLibrary.simpleMessage(
+            "La URL no responde o no es válida."),
+        "loginURLvalida": MessageLookupByLibrary.simpleMessage(
+            "La URL es válida y responde."),
+        "loginUsuario": MessageLookupByLibrary.simpleMessage("Usuario"),
+        "loginVerificar": MessageLookupByLibrary.simpleMessage("Verificar"),
         "logoAqui": MessageLookupByLibrary.simpleMessage("TU LOGO\nAQUI"),
         "mFechaHora": MessageLookupByLibrary.simpleMessage("M_Fecha_Hora"),
         "mUsername": MessageLookupByLibrary.simpleMessage("M_UserName"),

@@ -488,11 +488,13 @@ class _TablaDocsPendientesState extends State<TablaDocsPendientes> {
   }
 
   void _DesplazarScroll() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 100),
-      curve: Curves.easeInOut,
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   void _OrdenarDocumentos() {

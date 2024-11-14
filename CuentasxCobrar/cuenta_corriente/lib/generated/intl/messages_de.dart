@@ -216,6 +216,39 @@ class MessageLookup extends MessageLookupByLibrary {
         "localizacion": MessageLookupByLibrary.simpleMessage("Standort"),
         "localizacionPadre":
             MessageLookupByLibrary.simpleMessage("Übergeordneter Standort"),
+        "loginConfirmar":
+            MessageLookupByLibrary.simpleMessage("Bestätigen Sie"),
+        "loginContrasena": MessageLookupByLibrary.simpleMessage("Passwort"),
+        "loginDebeIngresarElUsuario": MessageLookupByLibrary.simpleMessage(
+            "Sie müssen den Benutzer eingeben"),
+        "loginDebeIngresarLaContrasena": MessageLookupByLibrary.simpleMessage(
+            "Sie müssen das Passwort eingeben"),
+        "loginGuardarSesion":
+            MessageLookupByLibrary.simpleMessage("Sitzung speichern"),
+        "loginIngresaContrasena":
+            MessageLookupByLibrary.simpleMessage("Geben Sie Ihr Passwort ein"),
+        "loginIngresaUsuario": MessageLookupByLibrary.simpleMessage(
+            "Geben Sie Ihren Benutzernamen ein"),
+        "loginIngresar": MessageLookupByLibrary.simpleMessage("Beitreten"),
+        "loginIngresarURL":
+            MessageLookupByLibrary.simpleMessage("Geben Sie hier Ihre URL ein"),
+        "loginIniciarSesion": MessageLookupByLibrary.simpleMessage("Anmelden"),
+        "loginSeleccionarAplicacion":
+            MessageLookupByLibrary.simpleMessage("Wählen Sie eine Anwendung"),
+        "loginSeleccionarDisplay":
+            MessageLookupByLibrary.simpleMessage("Wählen Sie Displays"),
+        "loginSeleccionarEmpresa":
+            MessageLookupByLibrary.simpleMessage("Wählen Sie ein Unternehmen"),
+        "loginSeleccionarEstacionTrabajo": MessageLookupByLibrary.simpleMessage(
+            "Wählen Sie eine Arbeitsstation"),
+        "loginTextoCopiado": MessageLookupByLibrary.simpleMessage(
+            "Text in die Zwischenablage kopiert"),
+        "loginURLNoValida": MessageLookupByLibrary.simpleMessage(
+            "Die URL antwortet nicht oder ist ungültig."),
+        "loginURLvalida": MessageLookupByLibrary.simpleMessage(
+            "Die URL ist gültig und antwortet."),
+        "loginUsuario": MessageLookupByLibrary.simpleMessage("Benutzername"),
+        "loginVerificar": MessageLookupByLibrary.simpleMessage("Überprüfen"),
         "logoAqui": MessageLookupByLibrary.simpleMessage("IHR LOGO\nHIER"),
         "mFechaHora": MessageLookupByLibrary.simpleMessage("M_Datum_Uhrzeit"),
         "mUsername": MessageLookupByLibrary.simpleMessage("M_Benutzername"),
