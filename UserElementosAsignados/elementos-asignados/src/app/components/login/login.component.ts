@@ -51,6 +51,8 @@ export default class LoginComponent {
   empresa:                    PaBscEmpresa1M[] = [];
   application1:               PaBscApplication1M[] = [];
   userDisplay2:               PaBscUserDisplay2M[] = [];
+  userDisplaysPadres: any[] = [];
+  userDisplaysHijos: any[] = [];
   @ViewChild('usuarioInput') usuarioInput!: ElementRef<HTMLInputElement>;
   @ViewChild('passInput')    passInput!:    ElementRef<HTMLInputElement>;
   colorSeleccionado:  string = 'linear-gradient(to bottom, #1e3a8a, #f97316)';
@@ -457,7 +459,9 @@ export default class LoginComponent {
       console.error('Token no disponible');
       return;
     }
+
     this.cargando = true;
+
     const parametros: ParametrosUserDisplay = {
       UserName: this.usuario,
       Application: aplicacionSeleccionada,
@@ -466,9 +470,75 @@ export default class LoginComponent {
     this.apiService.buscarUserDisplay2(parametros).subscribe(
       (data: PaBscUserDisplay2M[]) => {
         console.log('Datos recibidos:', data);
-        this.userDisplay2 = data.filter(item => item.display_URL_Alter !== null && item.display_URL_Alter !== undefined);
-        console.log('User Display 2 después del filtro:', this.userDisplay2);
-        
+
+        this.userDisplaysPadres = [];
+        this.userDisplaysHijos = [];
+
+        //Separacion de padres e hijos
+        data.forEach(item => {
+          //Es padre si user_Display_Father es null o 0
+          if (item.user_Display_Father === null || item.user_Display_Father === 0) {
+            console.log('Este es un padre:', item);
+            this.userDisplaysPadres.push(item);
+          } else {
+            //Aca es un hijo, solo si tiene display_URL_Alter valido
+            if (item.display_URL_Alter !== null && item.display_URL_Alter !== undefined) {
+              console.log('Este es un hijo válido con display_URL_Alter:', item);
+              this.userDisplaysHijos.push(item);
+            } else {
+              console.log('Este hijo no tiene display_URL_Alter, no se procesará:', item);
+            }
+          }
+        });
+
+        console.log('Padres encontrados:', this.userDisplaysPadres);
+        console.log('Hijos encontrados:', this.userDisplaysHijos);
+
+        //Se relaciona o asocia cada hijo con su padre
+        this.userDisplaysHijos.forEach((hijo: any) => {
+          console.log("Procesando hijo:", hijo);
+
+          //se verifica si el valor de user_Display_Father esta presente y es valido
+          if (hijo.user_Display_Father === undefined || hijo.user_Display_Father === null) {
+            console.log("El hijo no tiene un user_Display_Father válido");
+            return; 
+          }
+
+          const padre = this.userDisplaysPadres.find((p: any) => {
+            const padreDisplay = p.user_Display;
+            const hijoDisplayFather = hijo.user_Display_Father;
+            
+            //Verifica la comparación entre el padre y el hijo
+            return padreDisplay === hijoDisplayFather;
+          });
+
+          if (padre) {
+            console.log('Hijo encontrado con su padre:', padre, hijo);
+            hijo.padre = padre;
+          } else {
+            console.log('No se encontró el padre para el hijo:', hijo);
+          }
+        });
+
+        this.userDisplaysPadres = data
+          .filter(item => item.user_Display_Father === null || item.user_Display_Father === 0) //Solo dislplays padres
+          .map(padre => {
+            //Filtra los hijos validos (con el display_URL_Alter no nulo)
+            const hijosValidos = data.filter(hijo =>
+              hijo.user_Display_Father === padre.user_Display && hijo.display_URL_Alter !== null
+            );
+
+            //Solo se agrega los padres con al menos un hijo válido
+            if (hijosValidos.length > 0) {
+              return {
+                ...padre,
+                hijos: hijosValidos
+              };
+            } else {
+              return null;
+            }
+          })
+          .filter(padre => padre !== null)
         this.cargando = false;
       },
       (error) => {
@@ -505,10 +575,10 @@ export default class LoginComponent {
     ].every(valor => valor !== null && valor !== undefined);
   
     //Verificar si hay al menos un display valido
-    const hayDisplayValido = this.userDisplay2.some(item => item.display_URL_Alter !== null);
+    const hayDisplayValido = this.userDisplaysPadres.some(item => item.hijos && item.hijos.some((hijo: any) => hijo.display_URL_Alter !== null));
   
-    //Si hay displays validos, el usuario debe seleccionar al menos uno, pero si no hay displays, la selección no es obligatoria
-    const seleccionDeDisplayValida = hayDisplayValido ? (displaysSeleccionados !== null) : true;
+    //Validar si el padre tiene al menos un hijo seleccionado
+    const seleccionDeDisplayValida = hayDisplayValido ? (displaysSeleccionados !== null && this.userDisplaysPadres.some(padre => padre.hijos.some((hijo: any) => hijo === displaysSeleccionados))) : true;
   
     //Validar si todos los campos requeridos están completos y la selección de display es válida
     return validaciones && seleccionDeDisplayValida;
@@ -580,13 +650,13 @@ export default class LoginComponent {
         this.aplicacionSeleccionada = null;
         this.seleccionados['aplicaciones'] = null;
         this.seleccionados['displays'] = null;
-        this.userDisplay2 = [];
-        this.sectionOpen = null; // Opcional: Cerrar el acordeón si es necesario
+        this.userDisplaysHijos = [];
+        this.userDisplaysPadres = [];
+        this.sectionOpen = null;
         break;
       case 'displays':
         this.seleccionados['displays'] = null;
-        this.userDisplay2 = [];
-        this.sectionOpen = null; // Opcional: Cerrar el acordeón si es necesario
+        this.sectionOpen = null;
         break;
       default:
         console.warn(`Tipo de selección no reconocido: ${tipo}`);
