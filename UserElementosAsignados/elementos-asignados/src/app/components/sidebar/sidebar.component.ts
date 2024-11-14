@@ -107,7 +107,6 @@ export class SidebarComponent {
 
   seleccionarIdioma(language: string) {
     this.traduccionService.cambiarIdioma(language); // Cambia el idioma
-    console.log('Idioma seleccionado:', language);
     this.idiomaSeleccionado = language;
     this.idiomaDropdownAbierto = false; 
   }

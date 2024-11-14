@@ -15,9 +15,4 @@ export class AppComponent {
   loading: boolean = true;
   constructor(public sharedService: SharedService, private router: Router,     @Inject(PLATFORM_ID) private platformId: Object){}
 
-  ngOnInit(): void {
-    // this.mostrarLoadingScreen();
-  }
-
-  
 }

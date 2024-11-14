@@ -44,7 +44,6 @@ export class AsignadorComponent {
     const model = {}; 
     this.apiService.getElementosNoAsigandos(model).subscribe({
       next: (data: ElementosNoAsignadosM[]) => {
-        console.log(data)
         this.elementosNoAsignados = data;
         this.elementosNoAsignadosOriginal = [...data];
         this.isLoadingDatos = false;

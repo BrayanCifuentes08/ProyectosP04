@@ -34,7 +34,6 @@ export class HeaderComponent {
     });
     //Inicializar tema oscuro
     this.sharedService.inicializacionTema();
-    console.log("texto header: ", this.headerText)
   }
 
   //*Seccion de funciones para el modo de la interfaz
