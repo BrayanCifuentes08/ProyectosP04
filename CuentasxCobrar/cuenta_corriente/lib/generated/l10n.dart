@@ -60,6 +60,196 @@ class S {
     );
   }
 
+  /// `You must enter the user`
+  String get loginDebeIngresarElUsuario {
+    return Intl.message(
+      'You must enter the user',
+      name: 'loginDebeIngresarElUsuario',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must enter the password`
+  String get loginDebeIngresarLaContrasena {
+    return Intl.message(
+      'You must enter the password',
+      name: 'loginDebeIngresarLaContrasena',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your URL here`
+  String get loginIngresarURL {
+    return Intl.message(
+      'Enter your URL here',
+      name: 'loginIngresarURL',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Text copied to clipboard`
+  String get loginTextoCopiado {
+    return Intl.message(
+      'Text copied to clipboard',
+      name: 'loginTextoCopiado',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The URL is valid and responding.`
+  String get loginURLvalida {
+    return Intl.message(
+      'The URL is valid and responding.',
+      name: 'loginURLvalida',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The URL is not responding or invalid.`
+  String get loginURLNoValida {
+    return Intl.message(
+      'The URL is not responding or invalid.',
+      name: 'loginURLNoValida',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify`
+  String get loginVerificar {
+    return Intl.message(
+      'Verify',
+      name: 'loginVerificar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get loginConfirmar {
+    return Intl.message(
+      'Confirm',
+      name: 'loginConfirmar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login`
+  String get loginIniciarSesion {
+    return Intl.message(
+      'Login',
+      name: 'loginIniciarSesion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User`
+  String get loginUsuario {
+    return Intl.message(
+      'User',
+      name: 'loginUsuario',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your user`
+  String get loginIngresaUsuario {
+    return Intl.message(
+      'Enter your user',
+      name: 'loginIngresaUsuario',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get loginContrasena {
+    return Intl.message(
+      'Password',
+      name: 'loginContrasena',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your password`
+  String get loginIngresaContrasena {
+    return Intl.message(
+      'Enter your password',
+      name: 'loginIngresaContrasena',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Session`
+  String get loginGuardarSesion {
+    return Intl.message(
+      'Save Session',
+      name: 'loginGuardarSesion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a workstation`
+  String get loginSeleccionarEstacionTrabajo {
+    return Intl.message(
+      'Select a workstation',
+      name: 'loginSeleccionarEstacionTrabajo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a company`
+  String get loginSeleccionarEmpresa {
+    return Intl.message(
+      'Select a company',
+      name: 'loginSeleccionarEmpresa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select an application`
+  String get loginSeleccionarAplicacion {
+    return Intl.message(
+      'Select an application',
+      name: 'loginSeleccionarAplicacion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Displays`
+  String get loginSeleccionarDisplay {
+    return Intl.message(
+      'Select Displays',
+      name: 'loginSeleccionarDisplay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join`
+  String get loginIngresar {
+    return Intl.message(
+      'Join',
+      name: 'loginIngresar',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `If you swipe again, you will exit the application.`
   String get siVuelvesADeslizar {
     return Intl.message(

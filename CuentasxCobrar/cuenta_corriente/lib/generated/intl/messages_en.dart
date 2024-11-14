@@ -210,6 +210,38 @@ class MessageLookup extends MessageLookupByLibrary {
         "localizacion": MessageLookupByLibrary.simpleMessage("Location"),
         "localizacionPadre":
             MessageLookupByLibrary.simpleMessage("Parent_Location"),
+        "loginConfirmar": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "loginContrasena": MessageLookupByLibrary.simpleMessage("Password"),
+        "loginDebeIngresarElUsuario":
+            MessageLookupByLibrary.simpleMessage("You must enter the user"),
+        "loginDebeIngresarLaContrasena":
+            MessageLookupByLibrary.simpleMessage("You must enter the password"),
+        "loginGuardarSesion":
+            MessageLookupByLibrary.simpleMessage("Save Session"),
+        "loginIngresaContrasena":
+            MessageLookupByLibrary.simpleMessage("Enter your password"),
+        "loginIngresaUsuario":
+            MessageLookupByLibrary.simpleMessage("Enter your user"),
+        "loginIngresar": MessageLookupByLibrary.simpleMessage("Join"),
+        "loginIngresarURL":
+            MessageLookupByLibrary.simpleMessage("Enter your URL here"),
+        "loginIniciarSesion": MessageLookupByLibrary.simpleMessage("Login"),
+        "loginSeleccionarAplicacion":
+            MessageLookupByLibrary.simpleMessage("Select an application"),
+        "loginSeleccionarDisplay":
+            MessageLookupByLibrary.simpleMessage("Select Displays"),
+        "loginSeleccionarEmpresa":
+            MessageLookupByLibrary.simpleMessage("Select a company"),
+        "loginSeleccionarEstacionTrabajo":
+            MessageLookupByLibrary.simpleMessage("Select a workstation"),
+        "loginTextoCopiado":
+            MessageLookupByLibrary.simpleMessage("Text copied to clipboard"),
+        "loginURLNoValida": MessageLookupByLibrary.simpleMessage(
+            "The URL is not responding or invalid."),
+        "loginURLvalida": MessageLookupByLibrary.simpleMessage(
+            "The URL is valid and responding."),
+        "loginUsuario": MessageLookupByLibrary.simpleMessage("User"),
+        "loginVerificar": MessageLookupByLibrary.simpleMessage("Verify"),
         "logoAqui": MessageLookupByLibrary.simpleMessage("YOUR LOGO\nHERE"),
         "mFechaHora": MessageLookupByLibrary.simpleMessage("M_Date_Time"),
         "mUsername": MessageLookupByLibrary.simpleMessage("M_UserName"),
