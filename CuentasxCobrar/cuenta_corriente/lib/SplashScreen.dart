@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:test_cuenta_corriente/Login.dart';
 import 'package:test_cuenta_corriente/TablaCliente.dart';
@@ -31,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animacionController;
   late Animation<double> _animacion;
   late LoginService _loginService;
+  int _backGestureCount = 0;
 
   @override
   void initState() {
@@ -117,6 +119,27 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
+  Future<bool> _onWillPop() async {
+    if (_backGestureCount == 0) {
+      _backGestureCount++;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Si vuelves a deslizar, saldrás de la aplicación."),
+          backgroundColor: Colors.grey,
+        ),
+      );
+      // Resetea el contador después de unos segundos
+      Future.delayed(Duration(seconds: 2), () {
+        _backGestureCount = 0;
+      });
+      return false;
+    } else {
+      // Cierra la aplicación
+      SystemNavigator.pop();
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -124,63 +147,69 @@ class _SplashScreenState extends State<SplashScreen>
     final textSize = screenSize.width * 0.08;
     final spinnerSize = screenSize.width * 0.15;
 
-    return Scaffold(
-      backgroundColor: widget.isBackgroundSet
-          ? Color.fromARGB(0, 21, 70, 144)
-          : Color(0xFF154790),
-      body: LayoutBuilder(
-        // Utilizamos LayoutBuilder para obtener el tamaño disponible
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: FadeTransition(
-                opacity: _animacion,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                        height: screenSize.height *
-                            0.05), // Separación inicial ajustada
+    return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          backgroundColor: widget.isBackgroundSet
+              ? Color.fromARGB(0, 21, 70, 144)
+              : Color(0xFF154790),
+          body: LayoutBuilder(
+            // Utilizamos LayoutBuilder para obtener el tamaño disponible
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: FadeTransition(
+                    opacity: _animacion,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            height: screenSize.height *
+                                0.05), // Separación inicial ajustada
 
-                    // Logo responsive
-                    Image.asset(
-                      'assets/logo.png',
-                      height: logoSize,
-                      width: logoSize,
-                      color: Colors.white, // Cambiar el color del logo a blanco
+                        // Logo responsive
+                        Image.asset(
+                          'assets/logo.png',
+                          height: logoSize,
+                          width: logoSize,
+                          color: Colors
+                              .white, // Cambiar el color del logo a blanco
+                        ),
+
+                        SizedBox(
+                            height: screenSize.height *
+                                0.05), // Ajustar el espaciado
+
+                        // Título responsive
+                        Text(
+                          S.of(context).tituloMenu,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize:
+                                textSize.clamp(18.0, 36.0), // Limitar tamaño
+                          ),
+                        ),
+
+                        SizedBox(
+                            height:
+                                screenSize.height * 0.1), // Ajustar espaciado
+
+                        // Spinner responsive
+                        SpinKitFadingCube(
+                          color: Colors.white,
+                          size: spinnerSize.clamp(
+                              40.0, 80.0), // Tamaño con límites
+                        ),
+                      ],
                     ),
-
-                    SizedBox(
-                        height:
-                            screenSize.height * 0.05), // Ajustar el espaciado
-
-                    // Título responsive
-                    Text(
-                      S.of(context).tituloMenu,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: textSize.clamp(18.0, 36.0), // Limitar tamaño
-                      ),
-                    ),
-
-                    SizedBox(
-                        height: screenSize.height * 0.1), // Ajustar espaciado
-
-                    // Spinner responsive
-                    SpinKitFadingCube(
-                      color: Colors.white,
-                      size: spinnerSize.clamp(40.0, 80.0), // Tamaño con límites
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+              );
+            },
+          ),
+        ));
   }
 }
