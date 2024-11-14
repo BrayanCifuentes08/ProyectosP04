@@ -48,7 +48,6 @@ export default class InicioComponent {
         // Establecer la bandera
         this.hayElementosCargados = this.userElementosAsignados.length > 0;
         this.isLoading = false;
-        console.log('Elementos asignados', this.userElementosAsignados);
         this.sharedService.setUserElementosAsignados(this.userElementosAsignados);
       },
       error: (error) => {
