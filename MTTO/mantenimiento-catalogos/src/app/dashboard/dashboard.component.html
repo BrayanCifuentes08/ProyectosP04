@@ -18,16 +18,23 @@
       <!-- Input de búsqueda -->
       <div class="relative group w-auto">
         <input
+          #criterioBusquedaInput
           (input)="generarRegistros(this.catalogoSeleccionado ?? '')" 
           name="criterioBusqueda"
           type="text"
           placeholder="{{'buttonsLabels.btnBuscar' | translate}}"
           class="bg-transparent border-0 border-b-2 border-transparent rounded-md py-1 pl-8 pr-2 text-xs md:text-sm lg:text-base focus:outline-none focus:border-blue-500 focus:bg-transparent transition duration-200 w-36 sm:w-28 md:w-28"
         />
-        <span class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600 transition-colors duration-200 group-focus-within:text-blue-500">
-          <i class="fa-solid fa-magnifying-glass"></i>
+        <span 
+          class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600 transition-colors duration-200 group-focus-within:text-blue-500 cursor-pointer"
+          (click)="criterioBusquedaInput.value ? limpiarBusqueda(criterioBusquedaInput) : null"
+        >
+          <i 
+            [ngClass]="criterioBusquedaInput.value ? 'fa-solid fa-xmark hover:text-red-500' : 'fa-solid fa-magnifying-glass'"
+          ></i>
         </span>
       </div>
+      
 
       <div *ngIf="mostrarBtnAgregar" class="relative group">
         <button (click)="habilitarInputsVacios()" class="flex items-center text-green-600 hover:text-green-800">

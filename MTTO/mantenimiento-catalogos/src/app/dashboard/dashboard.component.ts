@@ -88,7 +88,7 @@ export default class DashboardComponent implements OnInit {
     this.limpiarInputs();
 
     console.log(`Catálogo seleccionado: ${catalogo}`);
-
+  
     switch (catalogo) {
         case 'Tipo Canal Distribucion':
         this.obtenerTipoCanalDistribucion(1);
@@ -109,6 +109,7 @@ export default class DashboardComponent implements OnInit {
       default:
         this.descripciones.push('Catálogo no definido');
         break;
+        
     }
 
   }
@@ -758,6 +759,7 @@ export default class DashboardComponent implements OnInit {
   }
 
   habilitarInputsVacios() {
+    //this.mostrarBtnAgregar = false;
     this.isAgregandoRegistro = true;
     this.sharedService.setAccion('agregandoRegistro');
     this.mostrarInputs(); // Llamar a mostrarInputs sin pasar un registro (para mostrar inputs vacíos)
@@ -829,4 +831,12 @@ export default class DashboardComponent implements OnInit {
     this.isVisibleAlerta = false;
     this.isVisibleExito = false;
   }
+
+  limpiarBusqueda(inputElement: HTMLInputElement): void {
+    inputElement.value = ''; // Limpiar el valor del input
+    this.mostrarBtnAgregar = true;
+    this.generarRegistros(this.catalogoSeleccionado ?? '')
+    
+  }
+  
 }
