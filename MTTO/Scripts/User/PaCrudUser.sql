@@ -3,16 +3,22 @@ CREATE OR ALTER PROCEDURE paCrudUser(
     @accion                 INT,
     @pCriterioBusqueda      VARCHAR(100) = NULL,
 	@pUserName              VARCHAR(30)  = NULL,
+	@pEmpresa               INT		     = NULL,	
+	@pEstacion_Trabajo		INT			 = NULL,
+	@pApplication			INT			 = NULL,
     @pName					VARCHAR(200) = NULL,
     @pFecha_Hora            DATETIME     = NULL,
 	@pCelular				varchar(50)	 = NULL,
-	@pEMail					varchar(100) = NULL
+	@pEMail					varchar(100) = NULL,
+	@pPass					varchar(256) = NULL,
+	@pDisable				bit			 = NULL
 )
 AS
 BEGIN
     DECLARE @Mensaje VARCHAR(255);
     DECLARE @Resultado BIT;
 	DECLARE @NuevoUserName SMALLINT;
+	DECLARE  @Pass_Key VARBINARY(64);
 
     -- 1. Verificación de parámetros obligatorios
     IF @pUserName IS NULL AND @accion IN (3, 4)
@@ -32,7 +38,17 @@ BEGIN
                 [Name],	
 				Celular,
 				EMail,
+				Pass_Key,
+				[Disable],
+				Empresa,
+				[Estacion_Trabajo],
+				[Application],
+				Language_ID,
 				Fecha_Hora,
+				M_Fecha_Hora,
+				M_UserName,
+				Fecha_Ini,
+				Fecha_Fin,
                 @Mensaje AS Mensaje,
                 1 AS Resultado -- Operación exitosa
             FROM tbl_User;
@@ -47,10 +63,20 @@ BEGIN
 		 BEGIN
 		 SELECT 
                 UserName,
-                [Name],
+                [Name],	
 				Celular,
 				EMail,
+				Pass_Key,
+				[Disable],
+				Empresa,
+				[Estacion_Trabajo],
+				[Application],
+				Language_ID,
 				Fecha_Hora,
+				M_Fecha_Hora,
+				M_UserName,
+				Fecha_Ini,
+				Fecha_Fin,
                 @Mensaje AS Mensaje,
                 1 AS Resultado -- Operación exitosa
             FROM tbl_User
@@ -69,13 +95,30 @@ BEGIN
     ELSE IF @accion = 2
     BEGIN
         -- INSERT
+		SET @Pass_Key = HASHBYTES('SHA2_512', @pPass);
         INSERT INTO tbl_User 
         (
             UserName,
             [Name],
 			Celular,
 			EMail,
-            [Fecha_Hora]
+			[Fecha_Usuario],
+            [Fecha_Hora],
+			Pass_Key,
+			[Disable],
+			Empresa,
+			[Estacion_Trabajo],
+			[Application],
+			Language_ID,
+			Fecha_Ini,
+			Val_Nomenclatura_Contable,
+			Pass_Key_Dias,
+			Val_Serie_Documento,
+			Ocultar_SAE,
+			Val_Rol_Poliza,
+			Permitir_CxC,
+			Asignar_Rango_Fecha,
+			Pass_Key_Len
         )
         VALUES 
         (
@@ -83,7 +126,23 @@ BEGIN
 			@pName,
 			@pCelular,
 			@pEMail,
-            GETDATE()
+			GETDATE(),
+            GETDATE(),
+			@Pass_Key,
+			0,
+			@pEmpresa,
+			@pEstacion_Trabajo,
+			@pApplication,
+			1,
+			GETDATE(),
+			0,
+			0,
+			0,
+			0,
+			0,
+			1,
+			1,
+			0
         );
 
         SET @Mensaje = 'Registro insertado exitosamente.';
@@ -101,6 +160,9 @@ BEGIN
             RETURN;
         END
 
+		
+		SET @Pass_Key = HASHBYTES('SHA2_512', @pPass);
+
         -- UPDATE
         UPDATE tbl_User
         SET 
@@ -108,7 +170,11 @@ BEGIN
 			Celular      = @pCelular,
 			EMail        = @pEMail,
 			M_Fecha_Hora = GETDATE(),
-			M_UserName	 = @pUserName
+			M_UserName	 = @pUserName,
+			[Disable]	 = @pDisable,
+			Fecha_Fin    = CASE WHEN @pDisable = 1 THEN GETDATE() ELSE Fecha_Fin END,
+			Pass_Key	 = @Pass_Key
+		
         WHERE 
             UserName = @pUserName;
 
