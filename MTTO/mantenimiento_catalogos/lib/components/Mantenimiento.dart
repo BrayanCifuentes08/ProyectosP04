@@ -158,8 +158,8 @@ class _MantenimientoState extends State<Mantenimiento> {
                       )
                     : LinearGradient(
                         colors: [
-                          Color(0xFFDD952A),
-                          Color(0xFFDD952A),
+                          Color.fromARGB(255, 124, 124, 124),
+                          Color.fromARGB(255, 124, 124, 124),
                           Color(0xFF004964),
                           Color(0xFF004964),
                           Color(0xFF004964),
@@ -209,7 +209,7 @@ class _MantenimientoState extends State<Mantenimiento> {
                               Color(0xFF004964),
                             ])
                           : LinearGradient(colors: [
-                              Color(0xFFDD952A),
+                              Color.fromARGB(255, 124, 124, 124),
                               Color(0xFF004964),
                             ]),
                     ),
