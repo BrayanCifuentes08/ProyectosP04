@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:mantenimiento_catalogos/models/ModeloInputs.dart';
 
 class PaCrudUserM implements ModelWithFields {
@@ -38,6 +38,11 @@ class PaCrudUserM implements ModelWithFields {
       'Name': name,
       "Celular": celular,
       "EMail": eMail,
+      "Pass": passKey,
+      "Disable": disable,
+      "Empresa": empresa,
+      "Estacion Trabajo": estacionTrabajo,
+      "Application": application,
       "Fecha y Hora": fechaHora,
     };
   }
@@ -49,6 +54,11 @@ class PaCrudUserM implements ModelWithFields {
       'Name': false, // Editables
       "Celular": false, // Editables
       "EMail": false, // Editables
+      "Pass": true, // Bloqueado
+      "Disable": false, // Bloqueado
+      "Empresa": true, // Bloqueado
+      "Estacion Trabajo": true, // Bloqueado
+      "Application": true, // Bloqueado
       "Fecha y Hora": true, // Bloqueado
     };
   }
@@ -60,6 +70,11 @@ class PaCrudUserM implements ModelWithFields {
       'Name': false, // Editables
       "Celular": false, // Editables
       "EMail": false, // Editables
+      "Pass": false, // Editables
+      "Disable": true, // Bloqueado
+      "Empresa": false, // Bloqueado
+      "Estacion Trabajo": false, // Bloqueado
+      "Application": false, // Bloqueado
       "Fecha y Hora": true, // Bloqueado
     };
   }
@@ -67,11 +82,16 @@ class PaCrudUserM implements ModelWithFields {
   @override
   Map<String, String> getTiposDeCampo() {
     return {
-      "UserName": "text", // Bloqueado
-      'Name': "text", // Editables
-      "Celular": "text", // Editables
-      "EMail": "text", // Editables
-      "Fecha y Hora": "date", // Bloqueado
+      "UserName": "text",
+      'Name': "text",
+      "Celular": "text",
+      "EMail": "email",
+      "Pass": "text",
+      "Disable": "bool",
+      "Empresa": "int",
+      "Estacion Trabajo": "int",
+      "Application": "int",
+      "Fecha y Hora": "date",
     };
   }
 
@@ -101,10 +121,10 @@ class PaCrudUserM implements ModelWithFields {
       name: json['name'] as String? ?? '',
       celular: json['celular'] as String? ?? '',
       eMail: json['eMail'] as String? ?? '',
-      passKey: json['pass_Key'] as Uint8List,
+      passKey: json['pass_Key'] != null ? base64Decode(json['pass_Key']) : null,
       disable: json['disable'] as bool,
       empresa: json['empresa'] as int?,
-      estacionTrabajo: json['estacionTrabajo'] as int?,
+      estacionTrabajo: json['estacion_Trabajo'] as int?,
       application: json['application'] as int?,
       fechaHora: json['fecha_Hora'] != null
           ? DateTime.tryParse(json['fecha_Hora'])

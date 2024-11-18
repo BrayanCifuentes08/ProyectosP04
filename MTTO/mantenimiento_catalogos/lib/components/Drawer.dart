@@ -26,6 +26,7 @@ class CustomDrawer extends StatefulWidget {
   final DateTime fechaSesion;
   final DateTime? fechaExpiracion;
   final String? despEmpresa;
+  final int pApplication;
   final String? despEstacion_Trabajo;
 
   CustomDrawer({
@@ -44,6 +45,7 @@ class CustomDrawer extends StatefulWidget {
     required this.baseUrl,
     required this.despEmpresa,
     required this.despEstacion_Trabajo,
+    required this.pApplication,
   });
 
   @override
@@ -248,6 +250,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                       despEmpresa: widget.despEmpresa,
                                       despEstacion_Trabajo:
                                           widget.despEstacion_Trabajo,
+                                      pApplication: widget.pApplication,
                                     ),
                                   ),
                                 );

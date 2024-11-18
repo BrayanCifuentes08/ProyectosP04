@@ -37,6 +37,7 @@ class Dashboard extends StatefulWidget {
   final String pUserName;
   final int pEmpresa;
   final int pEstacion_Trabajo;
+  final int pApplication;
   String baseUrl;
   final DateTime fechaSesion;
   final DateTime? fechaExpiracion;
@@ -65,6 +66,7 @@ class Dashboard extends StatefulWidget {
     required this.despEmpresa,
     required this.despEstacion_Trabajo,
     this.fechaExpiracion,
+    required this.pApplication,
   }) : _opcionSeleccionada = opcionSeleccionado;
   @override
   _DashboardState createState() => _DashboardState();
@@ -91,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
   int? valorSeleccionadoDropdown;
   int? _indiceSeleccionado;
   ValueNotifier<bool> valorSwitchNotifier = ValueNotifier<bool>(false);
-
+  ValueNotifier<bool> valorCheckboxNotifier = ValueNotifier<bool>(false);
   @override
   void initState() {
     super.initState();
@@ -321,7 +323,6 @@ class _DashboardState extends State<Dashboard> {
     bool esCampoBloqueado = modelo.getCamposBloqueadosInsert()[label] ?? false;
     String tipoCampo = modelo.getTiposDeCampo()[label] ?? 'text';
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
-
     final textStyle = TextStyle(
       color: !themeNotifier.temaClaro ? Colors.white70 : Colors.grey[800],
       fontWeight: FontWeight.w500,
@@ -357,19 +358,46 @@ class _DashboardState extends State<Dashboard> {
     );
 
     if (tipoCampo == "bool") {
+      if (!controllers.containsKey(label)) {
+        controllers[label] = TextEditingController(
+            text: '0'); // Inicializa el controlador en '0'
+      }
+
+      // Determina el valor inicial basándote en si el campo está bloqueado
+      valorCheckboxNotifier.value =
+          esCampoBloqueado ? true : (controllers[label]?.text == '1');
+
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label, style: textStyle),
-            Checkbox(
-              value: false, // Valor vacío inicialmente
-              onChanged: esCampoBloqueado
-                  ? null // Bloqueado si es true
-                  : (bool? nuevoValor) {
-                      setState(() {});
-                    },
+            ValueListenableBuilder<bool>(
+              valueListenable:
+                  valorCheckboxNotifier, // Escucha los cambios en el ValueNotifier
+              builder: (context, valorSwitch, child) {
+                return Switch(
+                  value: valorSwitch, // Estado visual del Switch
+                  onChanged: esCampoBloqueado
+                      ? null // No se puede cambiar si está bloqueado
+                      : (bool nuevoValor) {
+                          setState(() {
+                            // Actualizar el valor con 1 si es activo, 0 si no
+                            controllers[label]?.text = nuevoValor
+                                ? '1'
+                                : '0'; // Refleja en el controlador
+                            valorCheckboxNotifier.value =
+                                nuevoValor; // Actualiza el ValueNotifier
+                            valor = nuevoValor
+                                ? 1
+                                : 0; // Actualiza la variable valor
+                          });
+                        },
+                  activeColor:
+                      Colors.blueAccent, // Color del switch cuando está activo
+                );
+              },
             ),
           ],
         ),
@@ -644,25 +672,52 @@ class _DashboardState extends State<Dashboard> {
           : null, // No mostrar nada si el campo no está bloqueado
     );
     setState(() {});
+
+    if (tipoCampo == "bool") {
+      // Inicializa el ValueNotifier basado en valorInicial
+      valorSwitchNotifier.value = valorInicial == true;
+      if (!controllers.containsKey(label)) {
+        controllers[label] = TextEditingController(
+          text: valorCheckboxNotifier.value ? 'true' : 'false',
+        );
+      } else {
+        // Si el controlador ya existe, actualiza su valor inicial si es necesario
+        controllers[label]!.text =
+            valorCheckboxNotifier.value ? 'true' : 'false';
+      }
+    }
+
     if (tipoCampo == "bool") {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: textStyle,
-            ),
-            Checkbox(
-              value: valorInicial, // Valor booleano inicial
-              onChanged: esCampoBloqueado
-                  ? null // Bloqueado si es true
-                  : (bool? nuevoValor) {
-                      setState(() {
-                        valorInicial = nuevoValor!; // Actualiza el estado
-                      });
-                    },
+            Text(label,
+                style: TextStyle(
+                    color: !themeNotifier.temaClaro
+                        ? Colors.white
+                        : Colors.black)),
+            ValueListenableBuilder<bool>(
+              valueListenable: valorCheckboxNotifier,
+              builder: (context, valorSwitch, child) {
+                return Switch(
+                  value: valorSwitch, // Estado visual del Switch
+                  onChanged: esCampoBloqueado
+                      ? null // Bloqueado si es true
+                      : (bool nuevoValor) {
+                          setState(() {
+                            valorCheckboxNotifier.value = nuevoValor;
+                            bool nuevoValorBool = nuevoValor ? true : false;
+                            controllers[label]?.text =
+                                nuevoValorBool.toString();
+                            print(
+                                "Nuevo valor de Estado bool: $nuevoValorBool");
+                          });
+                        },
+                  activeColor: Colors.blueAccent, // Color cuando está activo
+                );
+              },
             ),
           ],
         ),
@@ -1582,9 +1637,16 @@ class _DashboardState extends State<Dashboard> {
     });
 
     String? valorInputpUserName = controllers['UserName']?.text ?? null;
+    String? valorInputpEmpresa = controllers['Empresa']?.text ?? null;
+    String? valorInputpEstacionTrabajo =
+        controllers['Estacion Trabajo']?.text ?? null;
+    String? valorInputpApplication = controllers['Application']?.text ?? null;
     String? valorInputName = controllers['Name']?.text ?? null;
     String? valorInputCelular = controllers['Celular']?.text ?? null;
     String? valorInputEMail = controllers['EMail']?.text ?? null;
+    String? valorInputDisable = controllers['Disable']?.text ?? null;
+
+    String? valorInputPass = controllers['Pass']?.text ?? null;
     String? valorInputFechaHora = controllers['Fecha y Hora']?.text ?? null;
     DateTime? fechaHora = valorInputFechaHora != null
         ? DateTime.tryParse(valorInputFechaHora)
@@ -1596,9 +1658,14 @@ class _DashboardState extends State<Dashboard> {
       "accion": accion.toString(),
       "pCriterioBusqueda": widget.searchController.text,
       if (valorInputpUserName != null) "pUserName": valorInputpUserName,
+      "pEmpresa": valorInputpEmpresa,
+      "pEstacion_Trabajo": valorInputpEstacionTrabajo,
+      "pApplication": valorInputpApplication,
       "pName": valorInputName,
       "pCelular": valorInputCelular,
       "pEMail": valorInputEMail,
+      "pPass": valorInputPass,
+      if (valorInputDisable != null) "pDisable": valorInputDisable.toString(),
       if (fechaHora != null) "pFecha_Hora": fechaHora.toIso8601String(),
     };
     print(queryParams);
@@ -1612,7 +1679,8 @@ class _DashboardState extends State<Dashboard> {
       final response = await http.get(uri, headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer ${widget.token}"
-      });
+      }).timeout(Duration(seconds: 130));
+      ;
 
       if (response.statusCode == 200) {
         final decodedResponse = json.decode(response.body);
@@ -1847,6 +1915,7 @@ class _DashboardState extends State<Dashboard> {
                                       despEmpresa: widget.despEmpresa,
                                       despEstacion_Trabajo:
                                           widget.despEstacion_Trabajo,
+                                      pApplication: widget.pApplication,
                                     ),
                                   ),
                                 );
@@ -2469,6 +2538,10 @@ class _DashboardState extends State<Dashboard> {
                       // Espacio flexible para empujar los botones hacia abajo
                       SizedBox(height: 20),
                       // Iconos alineados a la derecha en la parte inferior
+                      if (_cargando)
+                        LoadingComponent(
+                            color: Colors.lightBlue,
+                            changeLanguage: widget.changeLanguage),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: LayoutBuilder(

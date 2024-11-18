@@ -89,6 +89,7 @@ class _SplashScreenState extends State<SplashScreen>
               fechaExpiracion: sessionData['fechaExpiracion'],
               despEmpresa: sessionData['desEmpresa'],
               despEstacion_Trabajo: sessionData['desEstacionTrabajo'],
+              pApplication: sessionData['aplicacion'],
             );
           },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

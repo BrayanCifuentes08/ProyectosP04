@@ -964,6 +964,9 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                                         despEmpresa,
                                                                     despEstacion_Trabajo:
                                                                         despEstacion_Trabajo,
+                                                                    pApplication:
+                                                                        _selectedApplication!
+                                                                            .application,
                                                                   )),
                                                         );
                                                       },

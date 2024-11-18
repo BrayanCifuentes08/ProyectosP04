@@ -21,6 +21,7 @@ class Mantenimiento extends StatefulWidget {
   final String pUserName;
   final int pEmpresa;
   final int pEstacion_Trabajo;
+  final int pApplication;
   String baseUrl;
   final DateTime fechaSesion;
   final DateTime? fechaExpiracion;
@@ -45,6 +46,7 @@ class Mantenimiento extends StatefulWidget {
     this.imageLogo,
     required this.despEmpresa,
     required this.despEstacion_Trabajo,
+    required this.pApplication,
   });
 
   @override
@@ -190,6 +192,7 @@ class _MantenimientoState extends State<Mantenimiento> {
               fechaExpiracion: widget.fechaExpiracion,
               despEmpresa: widget.despEmpresa,
               despEstacion_Trabajo: widget.despEstacion_Trabajo,
+              pApplication: widget.pApplication,
             ),
             body: CustomScrollView(controller: _scrollController, slivers: [
               SliverAppBar(
@@ -279,6 +282,7 @@ class _MantenimientoState extends State<Mantenimiento> {
                   despEmpresa: widget.despEmpresa,
                   despEstacion_Trabajo: widget.despEstacion_Trabajo,
                   focusSearch: _focusSearch,
+                  pApplication: widget.pApplication,
                 ),
               if (widget.catalogo == null)
                 PantallaInicio(
@@ -296,6 +300,7 @@ class _MantenimientoState extends State<Mantenimiento> {
                   fechaExpiracion: widget.fechaExpiracion,
                   despEmpresa: widget.despEmpresa,
                   despEstacion_Trabajo: widget.despEstacion_Trabajo,
+                  pApplication: widget.pApplication,
                 ),
             ]),
             bottomNavigationBar: widget.catalogo != null
@@ -346,6 +351,7 @@ class _MantenimientoState extends State<Mantenimiento> {
                                       despEstacion_Trabajo:
                                           widget.despEstacion_Trabajo,
                                       catalogo: null,
+                                      pApplication: widget.pApplication,
                                     ))); // Acción del botón
                       },
                       backgroundColor: Color(0xFF004964),
