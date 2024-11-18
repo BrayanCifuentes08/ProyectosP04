@@ -27,6 +27,7 @@ class PantallaInicio extends StatefulWidget {
   final DateTime fechaSesion;
   final DateTime? fechaExpiracion;
   final String? despEmpresa;
+  final int pApplication;
   final String? despEstacion_Trabajo;
 
   PantallaInicio({
@@ -44,6 +45,7 @@ class PantallaInicio extends StatefulWidget {
     required this.baseUrl,
     required this.despEmpresa,
     required this.despEstacion_Trabajo,
+    required this.pApplication,
   });
   _PantallaInicioState createState() => _PantallaInicioState();
 }
@@ -232,6 +234,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                                           despEmpresa: widget.despEmpresa,
                                           despEstacion_Trabajo:
                                               widget.despEstacion_Trabajo,
+                                          pApplication: widget.pApplication,
                                         ),
                                       ),
                                     );

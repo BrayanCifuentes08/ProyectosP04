@@ -155,6 +155,7 @@ class _MyAppState extends State<MyApp> {
                     fechaExpiracion: null,
                     despEmpresa: '',
                     despEstacion_Trabajo: '',
+                    pApplication: 1,
                   ),
                 ],
               ),

@@ -172,8 +172,7 @@ BEGIN
 			M_Fecha_Hora = GETDATE(),
 			M_UserName	 = @pUserName,
 			[Disable]	 = @pDisable,
-			Fecha_Fin    = CASE WHEN @pDisable = 1 THEN GETDATE() ELSE Fecha_Fin END,
-			Pass_Key	 = @Pass_Key
+			Fecha_Fin    = CASE WHEN @pDisable = 1 THEN GETDATE() ELSE Fecha_Fin END
 		
         WHERE 
             UserName = @pUserName;
