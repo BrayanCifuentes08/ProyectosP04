@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:mantenimiento_catalogos/models/ModeloInputs.dart';
 
 class PaCrudUserM implements ModelWithFields {
@@ -5,6 +7,11 @@ class PaCrudUserM implements ModelWithFields {
   String? name;
   String? celular;
   String? eMail;
+  Uint8List? passKey;
+  bool disable;
+  int? empresa;
+  int? estacionTrabajo;
+  int? application;
   DateTime? fechaHora;
   String? mensaje;
   bool resultado;
@@ -14,6 +21,11 @@ class PaCrudUserM implements ModelWithFields {
     required this.name,
     required this.celular,
     required this.eMail,
+    required this.passKey,
+    required this.disable,
+    required this.empresa,
+    required this.estacionTrabajo,
+    required this.application,
     required this.fechaHora,
     required this.mensaje,
     required this.resultado,
@@ -70,6 +82,11 @@ class PaCrudUserM implements ModelWithFields {
       'name': name,
       'celular': celular,
       'eMail': eMail,
+      'passKey': passKey,
+      'disable': disable,
+      'empresa': empresa,
+      'estacionTrabajo': estacionTrabajo,
+      'application': application,
       'fechaHora': fechaHora,
       'mensaje': mensaje,
       'resultado': resultado,
@@ -84,6 +101,11 @@ class PaCrudUserM implements ModelWithFields {
       name: json['name'] as String? ?? '',
       celular: json['celular'] as String? ?? '',
       eMail: json['eMail'] as String? ?? '',
+      passKey: json['pass_Key'] as Uint8List,
+      disable: json['disable'] as bool,
+      empresa: json['empresa'] as int?,
+      estacionTrabajo: json['estacionTrabajo'] as int?,
+      application: json['application'] as int?,
       fechaHora: json['fecha_Hora'] != null
           ? DateTime.tryParse(json['fecha_Hora'])
           : null,

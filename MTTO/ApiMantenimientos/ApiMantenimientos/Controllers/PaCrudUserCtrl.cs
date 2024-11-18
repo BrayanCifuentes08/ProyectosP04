@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ApiMantenimientos.Controllers
 {
@@ -26,10 +27,15 @@ namespace ApiMantenimientos.Controllers
             [FromQuery] int accion,
             [FromQuery] string? pCriterioBusqueda,
             [FromQuery] string? pUserName,
+            [FromQuery] int? pEmpresa,
+            [FromQuery] int? pEstacion_Trabajo,
+            [FromQuery] int? pApplication,
             [FromQuery] string? pName,
             [FromQuery] string? pCelular,
             [FromQuery] string? pEMail,
-            [FromQuery] DateTime? pFecha_Hora
+            [FromQuery] string? pPass,
+            [FromQuery] bool? pDisable,
+            [FromQuery] DateTime? pFecha_Hora       
             )
         {
             try
@@ -42,9 +48,14 @@ namespace ApiMantenimientos.Controllers
                     parameters.Add("@accion", accion);
                     parameters.Add("@pCriterioBusqueda", pCriterioBusqueda);
                     parameters.Add("@pUserName", pUserName);
+                    parameters.Add("@pEmpresa", pEmpresa);
+                    parameters.Add("@pEstacion_Trabajo", pEstacion_Trabajo);
+                    parameters.Add("@pApplication", pApplication);
                     parameters.Add("@pName", pName);
                     parameters.Add("@pCelular", pCelular);
                     parameters.Add("@pEMail", pEMail);
+                    parameters.Add("@pPass", pPass);
+                    parameters.Add("@pDisable", pDisable);
                     parameters.Add("@pFecha_Hora", pFecha_Hora);
 
                     if (accion == 1) // SELECT
@@ -56,6 +67,12 @@ namespace ApiMantenimientos.Controllers
                             model.Name,
                             model.Celular,
                             model.EMail,
+                            model.Pass_Key,
+                            model.Disable,
+                            model.Empresa,
+                            model.Estacion_Trabajo,
+                            model.Application,
+                            model.Language_ID,
                             model.Fecha_Hora,
                             model.Mensaje,
                             model.Resultado
