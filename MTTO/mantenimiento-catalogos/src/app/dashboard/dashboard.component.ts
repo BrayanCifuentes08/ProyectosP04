@@ -835,8 +835,6 @@ export default class DashboardComponent implements OnInit {
   limpiarBusqueda(inputElement: HTMLInputElement): void {
     inputElement.value = ''; // Limpiar el valor del input
     this.mostrarBtnAgregar = true;
-    this.generarRegistros(this.catalogoSeleccionado ?? '')
-    
+    this.generarRegistros(this.catalogoSeleccionado ?? '') 
   }
-  
 }

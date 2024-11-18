@@ -8,7 +8,7 @@ export interface User {
     resultado:  boolean;
 }
 
-export interface InputEstadoUser {
+  export interface InputEstadoUser {
     [key: string]: boolean; // La clave es el nombre del input y el valor es true si está bloqueado, false si está editable
   }
   export interface TiposCampo {
