@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Practicas\Apis\ApiTestTrasladoDatos\ApiTestTrasladoDatos\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2024-11-14T20:51:02.7389777Z;True|2024-11-14T14:30:52.6052497-06:00;True|2024-11-14T12:56:05.5478041-06:00;True|2024-06-04T10:43:13.0161990-06:00;True|2024-06-04T10:41:26.3795059-06:00;True|2024-06-04T10:30:16.5625709-06:00;True|2024-06-04T10:25:14.1504007-06:00;True|2024-06-04T10:09:39.0484110-06:00;True|2024-06-04T10:03:30.4552752-06:00;True|2024-06-04T09:55:34.5063751-06:00;True|2024-06-04T09:54:34.3567773-06:00;True|2024-06-04T09:48:49.2717555-06:00;True|2024-06-04T09:47:33.8950658-06:00;True|2024-06-04T09:47:24.4123929-06:00;True|2024-06-03T13:06:37.1940525-06:00;True|2024-06-03T11:05:00.5563822-06:00;True|2024-06-03T11:03:24.2881654-06:00;True|2024-06-03T09:30:19.8927204-06:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
