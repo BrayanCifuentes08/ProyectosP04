@@ -1,0 +1,92 @@
+<div class="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 p-8 bg-gray-50">
+    <!-- Sección izquierda -->
+    <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Sube tu archivo</h2>
+  
+      <div class="mb-6">
+        <div class="relative flex items-center justify-center w-full h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-200 transition-all">
+          <input 
+            id="fileInput"
+            type="file" 
+            accept=".xlsx, .xls" 
+            class="absolute inset-0 opacity-0 cursor-pointer"
+            (change)="onFileSeleccionado($event)"
+            #fileInput
+          />
+          <div class="text-center">
+            <p class="text-gray-500 text-lg">Haz clic o arrastra tu archivo aquí</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mostrar el archivo subido con su tamaño -->
+      <div *ngIf="fileSeleccionado" class="mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg flex justify-between items-center">
+        <div>
+          <p class="text-gray-600">Archivo seleccionado: <span class="font-semibold text-gray-800">{{ fileSeleccionado.name }}</span></p>
+          <p class="text-gray-600">Tamaño: <span class="font-semibold text-gray-800">{{ fileSeleccionado.size / 1024 | number: '1.0-0' }} KB</span></p>
+        </div>
+        <button 
+          (click)="removerFile(fileInput)"
+          class="text-red-500 hover:text-red-700 focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+  
+      <!-- Mostrar las hojas del archivo -->
+      <div class="mb-6">
+        <label for="sheetSelect" class="block text-gray-700">Selecciona una hoja</label>
+        <select 
+          id="sheetSelect" 
+          class="block w-full mt-2 border rounded-lg py-3 px-4 bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          [(ngModel)]="hojaSeleccionada"
+          (change)="onHojaSeleccionada()">
+          <option *ngFor="let sheet of hojas" [value]="sheet">{{ sheet }}</option>
+        </select>
+      </div>
+  
+      <!-- Mostrar la hoja seleccionada -->
+      <div class="mb-6">
+        <p class="text-gray-600">Hoja seleccionada: <span class="font-bold text-gray-800">{{ hojaSeleccionada }}</span></p>
+      </div>
+  
+      <!-- Botón para trasladar los datos -->
+      <div>
+        <button 
+          class="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" 
+          [disabled]="!hojaSeleccionada || !hojaSeleccionada"
+          (click)="trasladarDatos()">
+          Trasladar Datos
+        </button>
+      </div>
+    </div>
+  
+    <!-- Sección derecha: Vista previa de los datos -->
+    <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Vista Previa de los Datos</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table-auto border-collapse border border-gray-300">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Columna 1</th>
+                <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Columna 2</th>
+                <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Columna 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="py-3 px-4 border text-sm text-gray-700">Dato 1</td>
+                <td class="py-3 px-4 border text-sm text-gray-700">Dato 2</td>
+                <td class="py-3 px-4 border text-sm text-gray-700">Dato 3</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 border text-sm text-gray-700">Dato 4</td>
+                <td class="py-3 px-4 border text-sm text-gray-700">Dato 5</td>
+                <td class="py-3 px-4 border text-sm text-gray-700">Dato 6</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>
