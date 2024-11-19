@@ -352,14 +352,15 @@ export default class DashboardComponent implements OnInit {
     const user = this.apiService.getUser();
     const empresa = this.apiService.getEmpresa();
     const model: any = {
-        accion: accion,
-        pDescripcion: '',
-        pCriterioBusqueda: '',
-        pTipoCanalDistribucion: 0,
-        pEstado: 1,
-        pFecha_Hora: '',
-        pUserName: user
+      accion: accion,
+      pDescripcion: '',
+      pCriterioBusqueda: '',
+      pTipoCanalDistribucion: 0,
+      pEstado: 1,
+      pFecha_Hora: '',
+      pUserName: user
     };
+    console.log("MODEL ANTES DE SOLICITUD (INPUTS): ", model)
 
     // Captura los valores de los inputs
     const inputs: HTMLCollectionOf<HTMLInputElement> = document.getElementsByTagName('input');
@@ -376,11 +377,12 @@ export default class DashboardComponent implements OnInit {
                 model.pTipoCanalDistribucion = Number(input.value);
                 break;
             case 'estado':
-              model.pEstado = input.checked ? 1 : 0;
+                console.log("ESTADO INPUT: ", input.checked)
+                model.pEstado = input.checked ? 1 : 0;
+                console.log("ESTADO INPUT DESPUES: ", input.checked)
                 break;
-            case 'userName':
+                case 'userName':
                 model.pUserName = input.value || user;
-                console.log('Valor de pUser_Name capturado:', model.pUserName);
                 break;
             case 'fecha_Hora':
                 if (input.value) {
@@ -402,8 +404,12 @@ export default class DashboardComponent implements OnInit {
 
     this.cargando = true;
     this.errorMessage = null;
+    console.log("MODEL ANTES DE SOLICITUD: ", model)
     this.apiService.getTipoCanalDistribucion(model).subscribe({
+      
         next: (data: any) => {
+        console.log("MODEL EN SOLICITUD: ", model)
+
             console.log('Datos recibidos:', data);
             
             if (data && data.resultado === false) {
@@ -679,17 +685,17 @@ export default class DashboardComponent implements OnInit {
 
         let input: HTMLInputElement;
 
-        if (key === 'estado' || key === 'disable') {
+        if (key === 'estado') {
           // Crear un checkbox para 'estado'
           input = document.createElement('input');
           input.type = 'checkbox';
           input.className = 'toggle-switch';
-
-          // Si no hay registro seleccionado, el checkbox debe estar activo (checked)
-          input.checked = registro ? valor === 1 : true;
-
+          input.checked = registro ? Boolean(valor) : true; // Establecer el valor booleano correctamente
+  
+          // Actualizar el valor de pEstado cuando el checkbox cambie
           input.addEventListener('change', () => {
-            input.value = input.checked ? '1' : '0'; // Capturar 0 o 1 según el estado
+            registro[key] = input.checked ? 1 : 0; // Asignamos el valor '1' o '0' según el estado del checkbox
+            console.log(`Nuevo valor de ${key}:`, registro[key]); // Verificación en consola
           });
         } else {
           input = document.createElement('input');
