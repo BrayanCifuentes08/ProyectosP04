@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mantenimiento_catalogos/common/CatalogoProvider.dart';
-import 'package:mantenimiento_catalogos/common/ThemeNotifier.dart';
-import 'package:mantenimiento_catalogos/components/Login.dart';
-import 'package:mantenimiento_catalogos/components/Mantenimiento.dart';
-import 'package:mantenimiento_catalogos/components/Plantillas/PlantillaImagen.dart';
-import 'package:mantenimiento_catalogos/components/Plantillas/SeleccionFondo.dart';
-import 'package:mantenimiento_catalogos/components/SplashScreen.dart';
-import 'package:mantenimiento_catalogos/services/LoginService.dart';
-import 'package:mantenimiento_catalogos/services/PreferenciasService.dart';
-import 'package:mantenimiento_catalogos/services/Shared.dart';
+import 'package:traslado_datos/common/CatalogoProvider.dart';
+import 'package:traslado_datos/common/ThemeNotifier.dart';
+import 'package:traslado_datos/components/Login.dart';
+import 'package:traslado_datos/components/Plantillas/PlantillaImagen.dart';
+import 'package:traslado_datos/components/Plantillas/SeleccionFondo.dart';
+import 'package:traslado_datos/components/SplashScreen.dart';
+import 'package:traslado_datos/services/LoginService.dart';
+import 'package:traslado_datos/services/PreferenciasService.dart';
+import 'package:traslado_datos/services/Shared.dart';
 import 'package:provider/provider.dart';
 import 'generated/l10n.dart';
 
