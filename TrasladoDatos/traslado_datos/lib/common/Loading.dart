@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:mantenimiento_catalogos/generated/l10n.dart';
+import 'package:traslado_datos/generated/l10n.dart';
 
 class LoadingComponent extends StatefulWidget {
   final Color color;

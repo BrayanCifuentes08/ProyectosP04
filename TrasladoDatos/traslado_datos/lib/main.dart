@@ -172,14 +172,14 @@ class _MyAppState extends State<MyApp> {
                 onSelectBackground: _changeBackgroundImage,
               ),
         },
-        // locale: _locale,
-        // localizationsDelegates: [
-        //   S.delegate,
-        //   GlobalMaterialLocalizations.delegate,
-        //   GlobalWidgetsLocalizations.delegate,
-        //   GlobalCupertinoLocalizations.delegate,
-        // ],
-        // supportedLocales: S.delegate.supportedLocales,
+        locale: _locale,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       ),
     );
   }
