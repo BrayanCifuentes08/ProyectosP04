@@ -240,8 +240,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             });
                             widget.changeLanguage(newLocale);
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              accionService
-                                  .setAccion("${S.of(context).inicioInicio}");
+                              accionService.setAccion(
+                                  "${S.of(context).inicioInicio}",
+                                  Icons.person);
                             });
                           }
                         },

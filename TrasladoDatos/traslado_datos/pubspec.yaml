@@ -48,6 +48,7 @@ dependencies:
   intl_utils: ^2.8.7
   flutter_initicon: ^3.0.1
   dropdown_button2: ^2.3.9
+  font_awesome_flutter: ^10.8.0
 
 dev_dependencies:
   flutter_test:

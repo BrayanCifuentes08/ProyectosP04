@@ -1,7 +1,7 @@
 import 'package:traslado_datos/common/FloatingActionButtonNotifier.dart';
 import 'package:traslado_datos/common/ThemeNotifier.dart';
-import 'package:traslado_datos/components/Dashboard.dart';
 import 'package:traslado_datos/components/Drawer.dart';
+import 'package:traslado_datos/components/trasladoDatos.dart';
 import 'package:traslado_datos/generated/l10n.dart';
 import 'package:traslado_datos/services/Shared.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +83,8 @@ class _LayoutState extends State<Layout> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       accionService = Provider.of<AccionService>(context, listen: false);
-      accionService.setAccion("${S.of(context).inicioInicio}");
+      accionService.setAccion(
+          "${S.of(context).inicioInicio}", Icons.import_contacts);
     });
     _idiomaActual = widget.idiomaDropDown;
   }
@@ -254,7 +255,7 @@ class _LayoutState extends State<Layout> {
               ],
             ),
             //LLAMADA DEL DASHBOARD
-            Dashboard(
+            TrasladoDatos(
               isBackgroundSet: widget.isBackgroundSet,
               imagePath: widget.imagePath,
               changeLanguage: widget.changeLanguage,
