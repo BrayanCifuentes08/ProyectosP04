@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:traslado_datos/components/Layout.dart';
 import 'package:traslado_datos/components/Login.dart';
 import 'package:traslado_datos/generated/l10n.dart';
 import 'package:traslado_datos/services/LoginService.dart';
@@ -72,10 +73,9 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return Mantenimiento(
+            return Layout(
               imagePath: widget.imagePath,
               isBackgroundSet: widget.isBackgroundSet,
-              catalogo: null,
               changeLanguage: widget.changeLanguage,
               idiomaDropDown: widget.idiomaDropDown,
               temaClaro: widget.temaClaro,

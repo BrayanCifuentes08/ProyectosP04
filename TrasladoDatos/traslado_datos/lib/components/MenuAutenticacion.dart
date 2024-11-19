@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:traslado_datos/common/Loading.dart';
 import 'package:traslado_datos/common/ThemeNotifier.dart';
+import 'package:traslado_datos/components/Layout.dart';
 import 'package:traslado_datos/components/Login.dart';
-import 'package:traslado_datos/components/Mantenimiento.dart';
 import 'package:traslado_datos/components/Plantillas/PlantillaImagen.dart';
 import 'package:traslado_datos/generated/l10n.dart';
 import 'package:traslado_datos/models/PaBscApplication1M.dart';
@@ -923,51 +923,41 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  Mantenimiento(
-                                                                    imagePath:
-                                                                        widget
-                                                                            .imagePath,
-                                                                    isBackgroundSet:
-                                                                        widget
-                                                                            .isBackgroundSet,
-                                                                    catalogo:
-                                                                        null,
-                                                                    changeLanguage:
-                                                                        widget
-                                                                            .changeLanguage,
-                                                                    idiomaDropDown:
-                                                                        widget
-                                                                            .idiomaDropDown,
-                                                                    temaClaro:
-                                                                        themeNotifier
-                                                                            .temaClaro,
-                                                                    token: widget
-                                                                        .token,
-                                                                    pUserName: widget
-                                                                        .userController
-                                                                        .text,
-                                                                    pEmpresa:
-                                                                        _selectedEmpresa!
-                                                                            .empresa,
-                                                                    pEstacion_Trabajo:
-                                                                        _selectedEstacionTrabajo!
-                                                                            .estacionTrabajo,
-                                                                    baseUrl: widget
-                                                                        .baseUrl,
-                                                                    fechaSesion:
-                                                                        DateTime
-                                                                            .now(),
-                                                                    fechaExpiracion:
-                                                                        fechaExpiracion,
-                                                                    despEmpresa:
-                                                                        despEmpresa,
-                                                                    despEstacion_Trabajo:
-                                                                        despEstacion_Trabajo,
-                                                                    pApplication:
-                                                                        _selectedApplication!
-                                                                            .application,
-                                                                  )),
+                                                              builder:
+                                                                  (context) =>
+                                                                      Layout(
+                                                                        imagePath:
+                                                                            widget.imagePath,
+                                                                        isBackgroundSet:
+                                                                            widget.isBackgroundSet,
+                                                                        changeLanguage:
+                                                                            widget.changeLanguage,
+                                                                        idiomaDropDown:
+                                                                            widget.idiomaDropDown,
+                                                                        temaClaro:
+                                                                            themeNotifier.temaClaro,
+                                                                        token: widget
+                                                                            .token,
+                                                                        pUserName: widget
+                                                                            .userController
+                                                                            .text,
+                                                                        pEmpresa:
+                                                                            _selectedEmpresa!.empresa,
+                                                                        pEstacion_Trabajo:
+                                                                            _selectedEstacionTrabajo!.estacionTrabajo,
+                                                                        baseUrl:
+                                                                            widget.baseUrl,
+                                                                        fechaSesion:
+                                                                            DateTime.now(),
+                                                                        fechaExpiracion:
+                                                                            fechaExpiracion,
+                                                                        despEmpresa:
+                                                                            despEmpresa,
+                                                                        despEstacion_Trabajo:
+                                                                            despEstacion_Trabajo,
+                                                                        pApplication:
+                                                                            _selectedApplication!.application,
+                                                                      )),
                                                         );
                                                       },
                                                       child: Text(
