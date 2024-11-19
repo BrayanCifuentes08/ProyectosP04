@@ -446,7 +446,6 @@ export default class LoginComponent {
     }
 
     this.cargando = true;
-
     const parametros: ParametrosUserDisplay = {
       UserName: this.usuario,
       Application: aplicacionSeleccionada,
@@ -454,7 +453,7 @@ export default class LoginComponent {
 
     this.apiService.buscarUserDisplay2(parametros).subscribe(
       (data: PaBscUserDisplay2M[]) => {
-        console.log('Datos recibidos:', data);
+        //console.log('Datos recibidos:', data);
 
         this.userDisplaysPadres = [];
         this.userDisplaysHijos = [];
@@ -463,15 +462,15 @@ export default class LoginComponent {
         data.forEach(item => {
           //Es padre si user_Display_Father es null o 0
           if (item.user_Display_Father === null || item.user_Display_Father === 0) {
-            console.log('Este es un padre:', item);
+            //console.log('Este es un padre:', item);
             this.userDisplaysPadres.push(item);
           } else {
             //Aca es un hijo, solo si tiene display_URL_Alter valido
             if (item.display_URL_Alter !== null && item.display_URL_Alter !== undefined) {
-              console.log('Este es un hijo válido con display_URL_Alter:', item);
+              //console.log('Este es un hijo válido con display_URL_Alter:', item);
               this.userDisplaysHijos.push(item);
             } else {
-              console.log('Este hijo no tiene display_URL_Alter, no se procesará:', item);
+              //console.log('Este hijo no tiene display_URL_Alter, no se procesará:', item);
             }
           }
         });
@@ -481,11 +480,10 @@ export default class LoginComponent {
 
         //Se relaciona o asocia cada hijo con su padre
         this.userDisplaysHijos.forEach((hijo: any) => {
-          console.log("Procesando hijo:", hijo);
 
           //se verifica si el valor de user_Display_Father esta presente y es valido
           if (hijo.user_Display_Father === undefined || hijo.user_Display_Father === null) {
-            console.log("El hijo no tiene un user_Display_Father válido");
+            //console.log("El hijo no tiene un user_Display_Father válido");
             return; 
           }
 
@@ -498,10 +496,10 @@ export default class LoginComponent {
           });
 
           if (padre) {
-            console.log('Hijo encontrado con su padre:', padre, hijo);
+            //console.log('Hijo encontrado con su padre:', padre, hijo);
             hijo.padre = padre;
           } else {
-            console.log('No se encontró el padre para el hijo:', hijo);
+            //console.log('No se encontró el padre para el hijo:', hijo);
           }
         });
 
@@ -534,6 +532,7 @@ export default class LoginComponent {
   }
   
   onAplicacionSeleccionada(application: any): void {
+    console.log("Objeto application recibido:", application);
     if (this.aplicacionSeleccionada !== application) {
       this.seleccionados['displays'] = null;
     }
@@ -553,6 +552,7 @@ export default class LoginComponent {
       this.apiService.setEmpresa(item);
     }
     console.log("Item seleccionado: ", item)
+  
   }
   
   validarSeleccion(): boolean {
@@ -581,8 +581,6 @@ export default class LoginComponent {
     return validaciones && seleccionDeDisplayValida;
   }
   
-  
-
   verificarCampos(): void {
     this.errores = {};
   

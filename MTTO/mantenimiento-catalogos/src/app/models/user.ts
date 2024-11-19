@@ -1,11 +1,17 @@
 export interface User {
-    userName:   string;
-    name:       string;
-    celular:    string;
-    eMail:      string;
-    fecha_Hora: string;
-    mensaje:    string;
-    resultado:  boolean;
+    userName:         string;
+    name:             string;
+    celular:          string;
+    eMail:            string;
+    fecha_Hora:       string;
+    pass_Key:         Uint8Array;
+    disable:          boolean;
+    empresa:          number;
+    estacion_Trabajo: number;
+    application:      number;
+    language_Id:      number;
+    mensaje:          string;
+    resultado:        boolean;
 }
 
   export interface InputEstadoUser {
@@ -24,9 +30,9 @@ export interface User {
   };
   
   export const estadoInputsUserUpdate: InputEstadoUser = {
-    "userName": true, // Bloqueado
-    'name': false, // Editables
-    "celular": false, // Editables
-    "eMail": false, // Editables
+    "userName": true, //Bloqueado
+    'name': false, //Editables
+    "celular": false, //Editables
+    "eMail": false, //Editables
     "fecha_Hora": true, // Bloqueado
   };

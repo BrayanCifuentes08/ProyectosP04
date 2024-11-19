@@ -59,6 +59,7 @@ export default class DashboardComponent implements OnInit {
   constructor(private sharedService: SharedService, private apiService: ApiService){}
 
   ngOnInit() {
+    console.log("Aplicacion de login: ", this.apiService.getAplicacion())
     this.sharedService.catalogoSeleccionado$.subscribe((catalogo) => {
       this.catalogoSeleccionado = catalogo;
         //this.descripciones = this.obtenerDescripciones();
@@ -523,13 +524,22 @@ export default class DashboardComponent implements OnInit {
   obtenerUser(accion: number) {
     const user = this.apiService.getUser();
     const empresa = this.apiService.getEmpresa();
+    const estacionTrabajo = this.apiService.getEstacion();
+    const application = this.apiService.getAplicacion();
     const model: any = {
+        pUserName: '',
         accion: accion,
         pCriterioBusqueda: '',
         pName: '',
         pCelular: '',
         pEMail: '',
         pFecha_Hora: '',
+        //Nuevos parametros
+        pEmpresa: empresa,
+        pEstacion_Trabajo: estacionTrabajo.id,
+        pApplication: application,
+        pPass: '',
+        pDisable: false,
     };
 
     // Captura los valores de los inputs
@@ -540,6 +550,9 @@ export default class DashboardComponent implements OnInit {
             case 'descripcion':
                 model.pDescripcion = input.value;
                 break;
+                case 'userName':
+                  model.pUserName = input.value;
+                  break;
             case 'criterioBusqueda':
                 model.pCriterioBusqueda = input.value;
                 break;
@@ -552,6 +565,24 @@ export default class DashboardComponent implements OnInit {
             case 'eMail':
                 model.pEMail = input.value;
                 break;
+            case 'Empresa':
+                model.pEmpresa = input.value || empresa;
+                break;
+            case 'Estacion_Trabajo':
+                model.pEstacion_Trabajo = input.value || estacionTrabajo;
+                break;
+            case 'Application':
+                model.pApplication = input.value || application;
+                break;
+            case 'pass_Key':
+              model.pPass = input.value.trim();  // Quitar espacios en blanco al inicio y al final
+              if (!model.pPass) {
+                  model.pPass = null;  // O asigna un valor predeterminado, como un valor de hash si es necesario
+              }
+                break;
+            case 'disable':
+                  model.pDisable = input.checked ? true : false;
+                  break;
             case 'fecha_Hora':
                 if (input.value) {
                     const fechaInput = new Date(input.value);
@@ -648,7 +679,7 @@ export default class DashboardComponent implements OnInit {
 
         let input: HTMLInputElement;
 
-        if (key === 'estado') {
+        if (key === 'estado' || key === 'disable') {
           // Crear un checkbox para 'estado'
           input = document.createElement('input');
           input.type = 'checkbox';

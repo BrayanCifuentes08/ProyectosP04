@@ -11,6 +11,7 @@ export class ApiService {
   private usuario:  string = ''
   private estacion: any = null;
   private empresa:  any = null;
+  private aplicacion: any = null;
   
   constructor(private http: HttpClient) { }
 
@@ -33,11 +34,12 @@ export class ApiService {
   setUser(usuario: string): void {
     this.usuario = usuario;
     localStorage.setItem('usuario', usuario);
+    sessionStorage.setItem('usuario', usuario);
   }
   
   getUser(): string {
     if (!this.usuario) {
-      const storedUser = localStorage.getItem('usuario');
+      const storedUser = sessionStorage.getItem('usuario') || localStorage.getItem('usuario');
       this.usuario = storedUser !== null ? storedUser : ''; 
     }
     return this.usuario;
@@ -46,11 +48,12 @@ export class ApiService {
   setEstacion(estacion: any): void {
     this.estacion = estacion;
     localStorage.setItem('estacion', JSON.stringify(estacion));
+    sessionStorage.setItem('estacion', JSON.stringify(estacion));
   }
   
   getEstacion(): { id: number | null, descripcion: string | null } {
     if (!this.estacion) {
-      const estacionFromStorage = localStorage.getItem('estacion');
+      const estacionFromStorage = localStorage.getItem('estacion') || sessionStorage.getItem('estacion');
       this.estacion = estacionFromStorage ? JSON.parse(estacionFromStorage) : null;
     }
     // Retornar un objeto con el ID y la descripción
@@ -61,16 +64,31 @@ export class ApiService {
   setEmpresa(empresa: any): void {
     this.empresa = empresa;
     localStorage.setItem('empresa', JSON.stringify(empresa));
+    sessionStorage.setItem('empresa', JSON.stringify(empresa));
   }
   
-  getEmpresa(): number {
+  getEmpresa(): void {
     if (!this.empresa) {
-      const empresaFromStorage = localStorage.getItem('empresa');
+      const empresaFromStorage = localStorage.getItem('empresa') || sessionStorage.getItem('empresa');
       this.empresa = empresaFromStorage ? JSON.parse(empresaFromStorage) : null;
     }
     return this.empresa ? this.empresa.empresa : null;
   }
 
+  setAplicacion(aplicacion: any): void {
+    this.aplicacion = aplicacion;
+    localStorage.setItem('aplicacion', JSON.stringify(aplicacion));
+    sessionStorage.setItem('aplicacion', JSON.stringify(aplicacion));
+  }
+
+  getAplicacion(): any {
+    if (!this.aplicacion) {
+      const aplicacionFromStorage = localStorage.getItem('aplicacion') || sessionStorage.getItem('aplicacion');
+      this.aplicacion = aplicacionFromStorage ? JSON.parse(aplicacionFromStorage) : null;
+    }
+    return this.aplicacion ? this.aplicacion.application : null;
+  }
+  
   getTipoCanalDistribucion(model: any): Observable<any> {
     const url = `${this.baseUrl}PaCrudTipoCanalDistribucionCtrl`;
     const params = new HttpParams({ fromObject: model });
