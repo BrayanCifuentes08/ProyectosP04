@@ -94,6 +94,7 @@ class _DashboardState extends State<Dashboard> {
   int? _indiceSeleccionado;
   ValueNotifier<bool> valorSwitchNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> valorCheckboxNotifier = ValueNotifier<bool>(false);
+
   @override
   void initState() {
     super.initState();
@@ -360,12 +361,12 @@ class _DashboardState extends State<Dashboard> {
     if (tipoCampo == "bool") {
       if (!controllers.containsKey(label)) {
         controllers[label] = TextEditingController(
-            text: '0'); // Inicializa el controlador en '0'
+            text: 'false'); // Inicializa el controlador en '0'
       }
 
       // Determina el valor inicial basándote en si el campo está bloqueado
       valorCheckboxNotifier.value =
-          esCampoBloqueado ? true : (controllers[label]?.text == '1');
+          esCampoBloqueado ? true : (controllers[label]?.text == 'true');
 
       return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -385,13 +386,13 @@ class _DashboardState extends State<Dashboard> {
                           setState(() {
                             // Actualizar el valor con 1 si es activo, 0 si no
                             controllers[label]?.text = nuevoValor
-                                ? '1'
-                                : '0'; // Refleja en el controlador
+                                ? 'true'
+                                : 'false'; // Refleja en el controlador
                             valorCheckboxNotifier.value =
                                 nuevoValor; // Actualiza el ValueNotifier
                             valor = nuevoValor
-                                ? 1
-                                : 0; // Actualiza la variable valor
+                                ? true
+                                : false; // Actualiza la variable valor
                           });
                         },
                   activeColor:
@@ -1665,7 +1666,14 @@ class _DashboardState extends State<Dashboard> {
       "pCelular": valorInputCelular,
       "pEMail": valorInputEMail,
       "pPass": valorInputPass,
-      if (valorInputDisable != null) "pDisable": valorInputDisable.toString(),
+      if (valorInputDisable != null ||
+          valorInputDisable != '0' ||
+          valorInputDisable != '1')
+        "pDisable": valorInputDisable.toString() == 'null' ||
+                valorInputDisable.toString() == '0' ||
+                valorInputDisable.toString() == '1'
+            ? 'false'
+            : valorInputDisable.toString(),
       if (fechaHora != null) "pFecha_Hora": fechaHora.toIso8601String(),
     };
     print(queryParams);
