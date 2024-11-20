@@ -22,7 +22,10 @@
   "loginSeleccionarDisplay":                                   "Wählen Sie Displays",
   "loginIngresar":                                             "Beitreten",
   
-
+  
+  "layoutSiVuelvesADeslizar":                                  "Wenn Sie erneut wischen, wird die Anwendung beendet.",
+  "layoutSubir":                                               "Hochladen",
+  "layoutBajar":                                               "Herunterladen",
 
   "mensajesAdvertencia":                                          "Warnung",
   "mensajesAceptar":                                              "Akzeptieren",

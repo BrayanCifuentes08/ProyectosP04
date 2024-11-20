@@ -95,6 +95,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "inicioInicio": MessageLookupByLibrary.simpleMessage("Inicio"),
         "inicioLaSesionExpira":
             MessageLookupByLibrary.simpleMessage("La sesión expira:"),
+        "layoutBajar": MessageLookupByLibrary.simpleMessage("Bajar"),
+        "layoutSiVuelvesADeslizar": MessageLookupByLibrary.simpleMessage(
+            "Si vuelves a deslizar, saldrás de la aplicación."),
+        "layoutSubir": MessageLookupByLibrary.simpleMessage("Subir"),
         "loadingCargando":
             MessageLookupByLibrary.simpleMessage("Cargando datos..."),
         "locale": MessageLookupByLibrary.simpleMessage("es"),

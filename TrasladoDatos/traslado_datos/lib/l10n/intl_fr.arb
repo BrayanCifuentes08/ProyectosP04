@@ -22,7 +22,9 @@
   "loginSeleccionarDisplay": "Sélectionnez les affichages",
   "loginIngresar":                                             "Rejoindre",
   
-
+  "layoutSiVuelvesADeslizar":                                  "Un nouveau glissement permet de quitter l'application.",
+  "layoutSubir":                                               "Haut",
+  "layoutBajar":                                               "Télécharger",
 
   "mensajesAdvertencia":                                          "Avertissement",
   "mensajesAceptar":                                              "Accepter",

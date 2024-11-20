@@ -22,6 +22,9 @@
   "loginSeleccionarDisplay": "Select Displays",
   "loginIngresar":                                             "Join",
 
+  "layoutSiVuelvesADeslizar":                                  "If you swipe again, you will exit the application.",
+  "layoutSubir":                                               "Up",
+  "layoutBajar":                                               "Down",
 
   "mensajesAdvertencia":                                          "Warning",
   "mensajesAceptar":                                              "Accept",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:traslado_datos/common/CatalogoProvider.dart';
+import 'package:traslado_datos/common/IdiomaNotifier.dart';
 import 'package:traslado_datos/common/ThemeNotifier.dart';
 import 'package:traslado_datos/components/Login.dart';
 import 'package:traslado_datos/components/Plantillas/PlantillaImagen.dart';
@@ -18,7 +19,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => CatalogoProvider()),
-        ChangeNotifierProvider(create: (context) => AccionService())
+        ChangeNotifierProvider(create: (context) => AccionService()),
+        ChangeNotifierProvider(create: (context) => IdiomaNotifier())
       ],
       child: MyApp(),
     ),

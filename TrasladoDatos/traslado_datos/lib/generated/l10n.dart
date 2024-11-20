@@ -250,6 +250,36 @@ class S {
     );
   }
 
+  /// `If you swipe again, you will exit the application.`
+  String get layoutSiVuelvesADeslizar {
+    return Intl.message(
+      'If you swipe again, you will exit the application.',
+      name: 'layoutSiVuelvesADeslizar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Up`
+  String get layoutSubir {
+    return Intl.message(
+      'Up',
+      name: 'layoutSubir',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Down`
+  String get layoutBajar {
+    return Intl.message(
+      'Down',
+      name: 'layoutBajar',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Warning`
   String get mensajesAdvertencia {
     return Intl.message(

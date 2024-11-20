@@ -24,9 +24,9 @@
   "loginIngresar":                                             "Ingresar",
 
 
-
-
-
+  "layoutSiVuelvesADeslizar":                                  "Si vuelves a deslizar, saldrás de la aplicación.",
+  "layoutSubir":                                               "Subir",
+  "layoutBajar":                                               "Bajar",
 
   "mensajesAdvertencia":                                          "Advertencia",
   "mensajesAceptar":                                              "Aceptar",

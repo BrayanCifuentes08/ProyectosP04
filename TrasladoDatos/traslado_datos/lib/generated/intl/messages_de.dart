@@ -92,6 +92,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "inicioInicio": MessageLookupByLibrary.simpleMessage("Startseite"),
         "inicioLaSesionExpira":
             MessageLookupByLibrary.simpleMessage("Die Sitzung läuft ab:"),
+        "layoutBajar": MessageLookupByLibrary.simpleMessage("Herunterladen"),
+        "layoutSiVuelvesADeslizar": MessageLookupByLibrary.simpleMessage(
+            "Wenn Sie erneut wischen, wird die Anwendung beendet."),
+        "layoutSubir": MessageLookupByLibrary.simpleMessage("Hochladen"),
         "loadingCargando":
             MessageLookupByLibrary.simpleMessage("Daten werden geladen..."),
         "locale": MessageLookupByLibrary.simpleMessage("de"),

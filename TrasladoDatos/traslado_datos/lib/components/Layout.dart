@@ -145,7 +145,6 @@ class _LayoutState extends State<Layout> {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-    final fabNotifier = Provider.of<FloatingActionButtonNotifier>(context);
     accionService = Provider.of<AccionService>(context);
 
     return WillPopScope(
@@ -275,34 +274,34 @@ class _LayoutState extends State<Layout> {
             ),
           ]),
           //BOTÓN FLOTANTE PARA SUBIR O BAJAR
-          floatingActionButton: fabNotifier.buttonState == 0
-              ? null // No mostrar el botón
-              : FloatingActionButton(
-                  onPressed: () {
-                    if (fabNotifier.buttonState == 1) {
-                      desplazarScroll();
-                      fabNotifier.setButtonState(2);
-                    } else if (fabNotifier.buttonState == 2) {
-                      desplazarScrollArriba();
-                      fabNotifier.setButtonState(1);
-                    }
-                  },
-                  backgroundColor: Color(0xFF004964),
-                  child: Icon(
-                    fabNotifier.buttonState == 1
-                        ? Icons.keyboard_arrow_down
-                        : Icons.keyboard_arrow_up,
-                    size: 25,
-                    color: Colors.white,
-                  ),
-                  tooltip: fabNotifier.buttonState == 1
-                      ? S.of(context).layoutSubir
-                      : S.of(context).layoutBajar,
-                  mini: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+          // floatingActionButton: fabNotifier.buttonState == 0
+          //     ? null // No mostrar el botón
+          //     : FloatingActionButton(
+          //         onPressed: () {
+          //           if (fabNotifier.buttonState == 1) {
+          //             desplazarScroll();
+          //             fabNotifier.setButtonState(2);
+          //           } else if (fabNotifier.buttonState == 2) {
+          //             desplazarScrollArriba();
+          //             fabNotifier.setButtonState(1);
+          //           }
+          //         },
+          //         backgroundColor: Color(0xFF004964),
+          //         child: Icon(
+          //           fabNotifier.buttonState == 1
+          //               ? Icons.keyboard_arrow_down
+          //               : Icons.keyboard_arrow_up,
+          //           size: 25,
+          //           color: Colors.white,
+          //         ),
+          //         tooltip: fabNotifier.buttonState == 1
+          //             ? S.of(context).layoutSubir
+          //             : S.of(context).layoutBajar,
+          //         mini: true,
+          //         shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(10),
+          //         ),
+          //       ),
         ),
       ]),
     );
