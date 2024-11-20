@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../services/api.service';
 import { estadoInputsTipoCanalDistribucionInsert, estadoInputsTipoCanalDistribucionUpdate, ParamsTipoCanalDistribucion, tipoCanalDistribucion } from '../models/tipo-canal-distribucion';
 import { MessagesComponent } from "../components/messages/messages.component";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { estadoInputsCanalDistribucionInsert, estadoInputsCanalDistribucionUpdate } from '../models/canal-distribucion';
 import { estadoInputsElementoAsignadoInsert, estadoInputsElementoAsignadoUpdate } from '../models/elemento-asignado';
 import { estadoInputsUserInsert, estadoInputsUserUpdate } from '../models/user';
@@ -18,7 +18,7 @@ enum Accion {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslateModule, MessagesComponent, FormsModule],
+  imports: [CommonModule, TranslateModule, MessagesComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
