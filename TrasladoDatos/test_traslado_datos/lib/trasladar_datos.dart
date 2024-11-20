@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -455,27 +456,32 @@ class _TrasladarDatosScreenState extends State<TrasladarDatosScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Conexión a Base de Datos"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _serverController,
-                decoration: InputDecoration(labelText: "Server"),
-              ),
-              TextField(
-                controller: _databaseController,
-                decoration: InputDecoration(labelText: "Database"),
-              ),
-              TextField(
-                controller: _userController,
-                decoration: InputDecoration(labelText: "User"),
-              ),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(labelText: "Password"),
-              ),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _serverController,
+                  decoration: InputDecoration(labelText: "Server"),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _databaseController,
+                  decoration: InputDecoration(labelText: "Database"),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _userController,
+                  decoration: InputDecoration(labelText: "User"),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: "Password"),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -983,43 +989,23 @@ class _TrasladarDatosScreenState extends State<TrasladarDatosScreen> {
                   const EdgeInsets.only(top: 90.0, left: 50.0, right: 50.0),
               child: Row(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0, left: 10.0),
-                    child: Text(
-                      'Traslado de Datos',
-                      style: TextStyle(
+                  Flexible(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20.0, left: 10.0),
+                      child: Text(
+                        'Traslado de Datos',
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 30.0,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis, // Maneja texto largo
+                        maxLines: 1, // Limita a una línea
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            leading: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    MdiIcons.database, // Icono de base de datos
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: () {
-                    _msgConexion(); // Llama a la función de conexión
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    MdiIcons.earthPlus,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                  onPressed: () {
-                    mostrarDialogoBaseUrl();
-                  },
-                ),
-              ],
             ),
             actions: [
               Padding(
@@ -1035,155 +1021,184 @@ class _TrasladarDatosScreenState extends State<TrasladarDatosScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Seleccione la tabla SQL',
-                border: OutlineInputBorder(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: 'Seleccione la tabla SQL',
+                  border: OutlineInputBorder(),
+                ),
+                value: _tablaSeleccionada,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _tablaSeleccionada = newValue;
+                  });
+                },
+                items: <String>[
+                  'Bodega',
+                  'Clase_Producto',
+                  'Marca',
+                  'Producto',
+                  'Tipo_Precio',
+                  'Unidad_Medida',
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
-              value: _tablaSeleccionada,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _tablaSeleccionada = newValue;
-                });
-              },
-              items: <String>[
-                'Bodega',
-                'Clase_Producto',
-                'Marca',
-                'Producto',
-                'Tipo_Precio',
-                'Unidad_Medida',
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 20),
-            GestureDetector(
-              onTap: () {
-                if (_tablaSeleccionada == null) {
-                  _msgSeleccionarTablaSQL();
-                }
-              },
-              child: AbsorbPointer(
-                absorbing: _tablaSeleccionada == null,
-                child: ExpansionTile(
-                  backgroundColor: Color.fromARGB(255, 230, 244, 245),
-                  title: Text(
-                    'Seleccionar archivo excel',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onExpansionChanged: (expanded) {
-                    if (expanded && _tablaSeleccionada != null) {
-                      setState(() {
-                        _expandir = expanded;
-                      });
-                    }
-                  },
-                  children: [
-                    Container(
-                      color: Colors.transparent,
-                      child: ListTile(
-                        onTap: () {
-                          _seleccionarArchivo();
-                        },
-                        title: Text(_archivoSeleccionado?.name ??
-                            'Seleccionar archivo de Excel'),
-                        leading: _archivoSeleccionado == null
-                            ? Icon(Icons.attach_file)
-                            : Icon(
-                                MdiIcons.fileExcel,
-                                color: Color(0xFFDD952A),
-                              ),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  if (_tablaSeleccionada == null) {
+                    _msgSeleccionarTablaSQL();
+                  }
+                },
+                child: AbsorbPointer(
+                  absorbing: _tablaSeleccionada == null,
+                  child: ExpansionTile(
+                    backgroundColor: Color.fromARGB(255, 230, 244, 245),
+                    title: Text(
+                      'Seleccionar archivo excel',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    if (_archivoSeleccionado != null)
-                      Text(
-                        'Seleccionar una hoja excel',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    onExpansionChanged: (expanded) {
+                      if (expanded && _tablaSeleccionada != null) {
+                        setState(() {
+                          _expandir = expanded;
+                        });
+                      }
+                    },
+                    children: [
+                      Container(
+                        color: Colors.transparent,
+                        child: ListTile(
+                          onTap: () {
+                            _seleccionarArchivo();
+                          },
+                          title: Text(_archivoSeleccionado?.name ??
+                              'Seleccionar archivo de Excel'),
+                          leading: _archivoSeleccionado == null
+                              ? Icon(Icons.attach_file)
+                              : Icon(
+                                  MdiIcons.fileExcel,
+                                  color: Color(0xFFDD952A),
+                                ),
                         ),
-                        textAlign: TextAlign.start,
                       ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    if (_nombresHojas.isNotEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _nombresHojas
-                            .map(
-                              (sheetName) => Row(
-                                children: [
-                                  Checkbox(
-                                    value: _nombreHojaSeleccionada == sheetName,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (value!) {
-                                          _nombreHojaSeleccionada = sheetName;
-                                        } else {
-                                          _nombreHojaSeleccionada = null;
-                                        }
-                                      });
-                                    },
-                                    fillColor: MaterialStateProperty
-                                        .resolveWith<Color>(
-                                      (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.selected)) {
-                                          return Color(0xFFDC9525);
-                                        }
-                                        return Colors.white;
+                      SizedBox(
+                        height: 10,
+                      ),
+                      if (_archivoSeleccionado != null)
+                        Text(
+                          'Seleccionar una hoja excel',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      if (_nombresHojas.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _nombresHojas
+                              .map(
+                                (sheetName) => Row(
+                                  children: [
+                                    Checkbox(
+                                      value:
+                                          _nombreHojaSeleccionada == sheetName,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          if (value!) {
+                                            _nombreHojaSeleccionada = sheetName;
+                                          } else {
+                                            _nombreHojaSeleccionada = null;
+                                          }
+                                        });
                                       },
+                                      fillColor: MaterialStateProperty
+                                          .resolveWith<Color>(
+                                        (Set<MaterialState> states) {
+                                          if (states.contains(
+                                              MaterialState.selected)) {
+                                            return Color(0xFFDC9525);
+                                          }
+                                          return Colors.white;
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  Text(sheetName),
-                                ],
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    if (_archivoSeleccionado != null &&
-                        _nombreHojaSeleccionada != null)
-                      TextButton(
-                        onPressed: () {
-                          _msgConfirmar();
-                        },
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.add_task_sharp,
-                              color: Color(0xFFDC9525),
-                            ),
-                            SizedBox(width: 5.0),
-                            Text(
-                              'Insertar datos',
-                              style: TextStyle(
-                                color: Color(0xFFDC9525),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ],
+                                    Text(sheetName),
+                                  ],
+                                ),
+                              )
+                              .toList(),
                         ),
-                      ),
-                  ],
+                      if (_archivoSeleccionado != null &&
+                          _nombreHojaSeleccionada != null)
+                        TextButton(
+                          onPressed: () {
+                            _msgConfirmar();
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.add_task_sharp,
+                                color: Color(0xFFDC9525),
+                              ),
+                              SizedBox(width: 5.0),
+                              Text(
+                                'Insertar datos',
+                                style: TextStyle(
+                                  color: Color(0xFFDC9525),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: Colors.cyan,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.5,
+        children: [
+          SpeedDialChild(
+            child: Icon(MdiIcons.database, color: Colors.white),
+            backgroundColor: Colors.blue,
+            label: 'Base de Datos',
+            labelStyle: TextStyle(fontSize: 16.0),
+            onTap: () {
+              _msgConexion();
+            },
+          ),
+          SpeedDialChild(
+            child: Icon(MdiIcons.earthPlus, color: Colors.white),
+            backgroundColor: Colors.green,
+            label: 'Configurar URL',
+            labelStyle: TextStyle(fontSize: 16.0),
+            onTap: () {
+              mostrarDialogoBaseUrl();
+            },
+          ),
+        ],
       ),
     );
   }
