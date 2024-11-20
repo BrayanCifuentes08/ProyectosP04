@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/Loading.dart';
+import 'package:traslado_datos/common/Mensajes.dart';
 import 'package:traslado_datos/components/Layout.dart';
 import 'package:traslado_datos/generated/l10n.dart';
 import 'package:traslado_datos/services/Shared.dart';
@@ -79,6 +80,52 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void _mostrarAlerta(
+    BuildContext context,
+    String titulo,
+    String mensaje,
+    IconData? icono,
+    Color colorIcono,
+    int cantidadBotones,
+    String textoPrimerBoton,
+    VoidCallback? funcionPrimerBoton,
+    String? textoSegundoBoton,
+    VoidCallback? funcionSegundoBoton,
+  ) async {
+    await mostrarDialogo(
+      context: context,
+      titulo: titulo,
+      mensaje: mensaje,
+      icono: icono,
+      colorIcono: colorIcono,
+      cantidadBotones: cantidadBotones,
+      textoPrimerBoton: textoPrimerBoton,
+      funcionPrimerBoton: funcionPrimerBoton,
+      textoSegundoBoton: textoSegundoBoton,
+      funcionSegundoBoton: funcionSegundoBoton,
+    );
+  }
+
+  void _mostrarMensajeScaffold(
+    BuildContext context,
+    String mensaje,
+    IconData? icono,
+    Color colorIcono,
+    Color colorText,
+    Color colorFondo,
+    Duration duracion,
+  ) async {
+    await mostrarMensajeScaffold(
+      context: context,
+      mensaje: mensaje,
+      icono: icono,
+      colorIcono: colorIcono,
+      duracion: duracion,
+      colorText: colorText,
+      colorFondo: colorFondo,
+    );
   }
 
   void _seleccionarArchivo() async {
