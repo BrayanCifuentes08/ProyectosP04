@@ -50,6 +50,9 @@ dependencies:
   dropdown_button2: ^2.3.9
   font_awesome_flutter: ^10.8.0
   country_icons: ^3.0.0
+  file_picker: ^8.1.4
+  flutter_speed_dial: ^7.0.0
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:

@@ -113,6 +113,8 @@ Future<void> mostrarMensajeScaffold({
   required String mensaje,
   IconData? icono,
   required Color colorIcono,
+  required Color colorText,
+  required Color colorFondo,
   Duration duracion = const Duration(seconds: 3), // Duración predeterminada
 }) async {
   final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
@@ -131,17 +133,14 @@ Future<void> mostrarMensajeScaffold({
             child: Text(
               mensaje,
               style: TextStyle(
-                color: !themeNotifier.temaClaro
-                    ? Color(0xFFF15803D)
-                    : Color(0xFFF15803D),
+                color: !themeNotifier.temaClaro ? colorText : colorText,
                 fontSize: 16,
               ),
             ),
           ),
         ],
       ),
-      backgroundColor:
-          themeNotifier.temaClaro ? Color(0xFFFDCFCE7) : Color(0xFFFDCFCE7),
+      backgroundColor: themeNotifier.temaClaro ? colorFondo : colorFondo,
       behavior: SnackBarBehavior.floating, // Hace que el mensaje flote
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),

@@ -52,6 +52,7 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
+  String baseUrl = 'http://192.168.10.39:9091/api/';
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
