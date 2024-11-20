@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-traslado',
@@ -13,16 +14,29 @@ export class TrasladoComponent {
   fileSeleccionado: File | null = null;
   hojas: string[] = [];
   hojaSeleccionada: string = '';
-
+  cargandoHojas: boolean = false;
+  constructor(private apiService: ApiService){}
 
   onFileSeleccionado(event: any): void {
     const file: File = event.target.files[0];
+    this.hojas = [];
     if (file) {
       this.fileSeleccionado = file;
+      console.log("Hojas antes de solicitud: ", this.hojas)
       console.log('Archivo seleccionado:', file);
-      
-      // Simulamos que el archivo tiene 3 hojas
-      this.hojas = ['Hoja 1', 'Hoja 2', 'Hoja 3']; // Aquí usar una librería como xlsx.js para leer las hojas
+      this.cargandoHojas = true;
+      // Llamada al método obtenerHojasExcel
+      this.apiService.obtenerHojasExcel(file).subscribe({
+        next: (hojas: string[]) => {
+          this.hojas = hojas; // Asigna las hojas obtenidas a la variable local
+          this.cargandoHojas = false;
+          console.log('Hojas obtenidas:', hojas);
+        },
+        error: (err) => {
+          console.error('Error al obtener hojas:', err); // Manejo de errores
+          this.cargandoHojas = false;
+        }
+      });
     }
   }
 
