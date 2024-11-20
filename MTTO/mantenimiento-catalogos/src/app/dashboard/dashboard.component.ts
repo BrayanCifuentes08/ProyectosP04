@@ -54,7 +54,8 @@ export default class DashboardComponent implements OnInit {
   elementoAsignadoData:               any[] = [];
   userData:                           any[] = [];
   registros:                          any[] = [];
-  campoEstado:  number = 0;
+  campoEstadoNumber:  number = 0;
+  campoEstadoBoolean:  boolean = false;
   accionConfirmar:                    { catalogo: string, accion: Accion } | null = null;
 
   constructor(private sharedService: SharedService, private apiService: ApiService){}
@@ -291,7 +292,7 @@ export default class DashboardComponent implements OnInit {
                 model.pTipoCanalDistribucion = Number(input.value);
                 break;
             case 'estado':
-              model.pEstado = this.campoEstado  ;
+              model.pEstado = this.campoEstadoNumber  ;
                 break;
             case 'bodega':
                 model.pBodega = Number(input.value);
@@ -376,7 +377,7 @@ export default class DashboardComponent implements OnInit {
                 model.pTipoCanalDistribucion = Number(input.value);
                 break;
             case 'estado':
-                model.pEstado = this.campoEstado;
+                model.pEstado = this.campoEstadoNumber;
                 break;
                 case 'userName':
                 model.pUserName = input.value || user;
@@ -460,7 +461,7 @@ export default class DashboardComponent implements OnInit {
                 model.pElementoAsignado = Number(input.value);
                 break;
             case 'estado':
-              model.pEstado = this.campoEstado;
+              model.pEstado = this.campoEstadoNumber;
                 break;
             case 'elemento_Id':
                 model.pElementoId = Number(input.value);
@@ -575,13 +576,13 @@ export default class DashboardComponent implements OnInit {
                 model.pApplication = input.value || application;
                 break;
             case 'pass_Key':
-              model.pPass = input.value.trim();  // Quitar espacios en blanco al inicio y al final
+              model.pPass = input.value.trim(); 
               if (!model.pPass) {
-                  model.pPass = null;  // O asigna un valor predeterminado, como un valor de hash si es necesario
+                  model.pPass = null; 
               }
                 break;
             case 'disable':
-                  model.pDisable = this.campoEstado == 1 ? true : false;
+                  model.pDisable = this.campoEstadoBoolean ;
                   break;
             case 'fecha_Hora':
                 if (input.value) {
@@ -590,10 +591,10 @@ export default class DashboardComponent implements OnInit {
                         model.pFecha_Hora = fechaInput.toISOString(); // Solo convertir si es una fecha válida
                     } else {
                         console.warn('Valor de fecha inválido:', input.value);
-                        model.pFecha_Hora = ''; // O asigna un valor predeterminado si lo prefieres
+                        model.pFecha_Hora = '';
                     }
                 } else {
-                    model.pFecha_Hora = ''; // Si está vacío, asigna una cadena vacía o un valor predeterminado
+                    model.pFecha_Hora = '';
                 }
                 break; 
             default:
@@ -679,7 +680,7 @@ export default class DashboardComponent implements OnInit {
 
         let input: HTMLInputElement;
 
-        if (key === 'estado' || key == 'disable') {
+        if (key === 'estado' ) {
           // Crear un checkbox para 'estado'
           input = document.createElement('input');
           input.type = 'checkbox';
@@ -690,10 +691,26 @@ export default class DashboardComponent implements OnInit {
           // Actualizar el valor de pEstado cuando el checkbox cambie
           input.addEventListener('change', () => {
             registro[key] = input.checked ? 1 : 0; // Asignamos el valor '1' o '0' según el estado del checkbox
-            this.campoEstado = input.checked ? 1 : 0;
+            this.campoEstadoNumber = input.checked ? 1 : 0;
             console.log(`Nuevo valor de ${key}:`, registro[key]); // Verificación en consola
           });
-        } else {
+        } else if (key == 'disable')
+          {
+            // Crear un checkbox para 'estado'
+            input = document.createElement('input');
+            input.type = 'checkbox';
+            input.className = 'toggle-switch';
+            input.checked = registro ? Boolean(valor) : true; // Establecer el valor booleano correctamente
+            input.name = key; // Asegúrate de que esto esté configurado
+
+            // Actualizar el valor de pEstado cuando el checkbox cambie
+            input.addEventListener('change', () => {
+              registro[key] = input.checked ? true : false; // Asignamos el valor '1' o '0' según el estado del checkbox
+              this.campoEstadoBoolean = input.checked ? true : false;
+              console.log(`Nuevo valor de ${key}:`, registro[key]); // Verificación en consola
+            });
+          }
+          else {
           input = document.createElement('input');
           input.id = key;
           input.name = key;
