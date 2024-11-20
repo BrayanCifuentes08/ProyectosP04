@@ -2,8 +2,9 @@
     <!-- Sección izquierda -->
     <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Sube tu archivo</h2>
-  
+      
       <div class="mb-6">
+        <span class="text-lg">Solo archivos <strong>.xlsx, .xls</strong></span>
         <div class="relative flex items-center justify-center w-full h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-200 transition-all">
           <input 
             id="fileInput"
@@ -34,17 +35,27 @@
         </button>
       </div>
   
-      <!-- Mostrar las hojas del archivo -->
+      <!-- Selección de hojas del archivo Excel -->
       <div class="mb-6">
-        <label for="sheetSelect" class="block text-gray-700">Selecciona una hoja</label>
+        <label for="sheetSelect" class="block text-gray-700 font-semibold">
+          Selecciona una hoja del archivo
+        </label>
+
+        <!-- Indicador de carga -->
+        <p *ngIf="cargandoHojas" class="text-sm text-blue-600 mt-1">
+          Cargando hojas, por favor espere...
+        </p>
+
+        <!-- Selector de hojas -->
         <select 
           id="sheetSelect" 
-          class="block w-full mt-2 border rounded-lg py-3 px-4 bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          class="block w-full mt-3 border border-gray-300 rounded-lg py-2 px-4 bg-white text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
           [(ngModel)]="hojaSeleccionada"
           (change)="onHojaSeleccionada()">
           <option *ngFor="let sheet of hojas" [value]="sheet">{{ sheet }}</option>
         </select>
       </div>
+
   
       <!-- Mostrar la hoja seleccionada -->
       <div class="mb-6">
