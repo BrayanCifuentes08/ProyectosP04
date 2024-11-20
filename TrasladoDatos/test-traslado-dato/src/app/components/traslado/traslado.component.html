@@ -72,12 +72,14 @@
       <!-- Botón para trasladar los datos -->
       <div class="flex flex-col items-center justify-center space-y-4">
         <!-- Botón -->
-        <button 
-          class="bg-blue-500 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" 
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out"
           [disabled]="!hojaSeleccionada || cargandoTraslado"
-          (click)="trasladarDatos()">
-          Trasladar Datos
-        </button>
+          (click)="mostrarModalTraslado()"
+        >
+        Trasladar Datos
+      </button>
+      
       
         <!-- Spinner y texto informativo -->
         <div *ngIf="cargandoTraslado" class="flex flex-col items-center justify-center mt-4 space-y-2">
@@ -116,3 +118,9 @@
         </div>
     </div>
 </div>
+<app-messages
+  [isVisibleModal]="isVisibleModal"
+  [mensajeModal]="'¿Está seguro de que desea trasladar los datos seleccionados?'"
+  (confirmarAccion)="trasladarDatos()"
+  (cancelarAccion)="isVisibleModal = false"
+></app-messages>

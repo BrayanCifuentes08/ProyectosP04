@@ -50,7 +50,7 @@
   <div class="fixed inset-0 bg-black/30 backdrop-blur-sm"></div>
 
   <!-- Contenido del modal -->
-  <div class="relative bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-lg rounded-lg p-6 transition-transform duration-300 max-w-lg w-full mx-4 md:mx-0"
+  <div class="relative bg-white text-gray-700 shadow-lg rounded-lg p-6 transition-transform duration-300 max-w-lg w-full mx-4 md:mx-0"
        [ngClass]="{'animate-modalBounceIn': isVisibleModal, 'animate-modalBounceOut': !isVisibleModal}">
     
     <!-- Icono de alerta -->
@@ -66,7 +66,7 @@
     
     <!-- Botones de acción -->
     <div class="flex justify-center space-x-4">
-      <button (click)="cancelar()" class="px-6 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
+      <button (click)="cancelar()" class="px-6 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded hover:bg-gray-300 transition-colors duration-200">
         Cancelar
       </button>
       <button (click)="confirmar()" class="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors duration-200">

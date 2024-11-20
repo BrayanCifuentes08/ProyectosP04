@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import * as XLSX from 'xlsx';
+import { MessagesComponent } from "../messages/messages.component";
 
 @Component({
   selector: 'app-traslado',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MessagesComponent],
   templateUrl: './traslado.component.html',
   styleUrl: './traslado.component.css'
 })
@@ -18,7 +19,7 @@ export class TrasladoComponent {
   cargandoHojas: boolean = false;
   cargandoTraslado: boolean = false;
   mostrarMensajeAdvertencia: boolean = false;
-
+  isVisibleModal: boolean = false;
   
   constructor(private apiService: ApiService){}
 
@@ -61,6 +62,7 @@ export class TrasladoComponent {
   }
 
   trasladarDatos(): void {
+    this.isVisibleModal = false;
     if (!this.fileSeleccionado) {
       console.error('No se ha seleccionado ningún archivo.');
       return;
@@ -90,7 +92,6 @@ export class TrasladoComponent {
     });
   }
   
-
   // Función para borrar el archivo
   removerFile(fileInput: HTMLInputElement): void {
     this.fileSeleccionado = null;
@@ -100,5 +101,9 @@ export class TrasladoComponent {
     fileInput.value = '';
 
     console.log('Archivo eliminado');
+  }
+
+  mostrarModalTraslado(): void {
+    this.isVisibleModal = true;
   }
 }
