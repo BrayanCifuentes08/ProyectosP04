@@ -11,12 +11,17 @@
             type="file" 
             accept=".xlsx, .xls" 
             class="absolute inset-0 opacity-0 cursor-pointer"
-            (change)="onFileSeleccionado($event)"
+            (change)="cargarFile($event)"
             #fileInput
           />
           <div class="text-center">
             <p class="text-gray-500 text-lg">Haz clic o arrastra tu archivo aquí</p>
           </div>
+        </div>
+      
+        <!-- Mensaje de advertencia si ya hay un archivo cargado -->
+        <div *ngIf="mostrarMensajeAdvertencia" class="mt-2 text-red-600 text-sm">
+          <p>Ya tienes un archivo cargado. Si deseas cargar otro archivo, elimina el archivo actual primero.</p>
         </div>
       </div>
       
@@ -28,15 +33,17 @@
         </div>
         <button 
           (click)="removerFile(fileInput)"
+          *ngIf="!cargandoHojas"
           class="text-red-500 hover:text-red-700 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
       </div>
+      
   
       <!-- Selección de hojas del archivo Excel -->
-      <div class="mb-6">
+      <div class="mb-6 mt-2">
         <label for="sheetSelect" class="block text-gray-700 font-semibold">
           Selecciona una hoja del archivo
         </label>
@@ -63,19 +70,27 @@
       </div>
   
       <!-- Botón para trasladar los datos -->
-      <div>
+      <div class="flex flex-col items-center justify-center space-y-4">
+        <!-- Botón -->
         <button 
-          class="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" 
-          [disabled]="!hojaSeleccionada || !hojaSeleccionada"
+          class="bg-blue-500 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out" 
+          [disabled]="!hojaSeleccionada || cargandoTraslado"
           (click)="trasladarDatos()">
           Trasladar Datos
         </button>
+      
+        <!-- Spinner y texto informativo -->
+        <div *ngIf="cargandoTraslado" class="flex flex-col items-center justify-center mt-4 space-y-2">
+          <div class="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+          <p class="text-gray-600 text-sm">Terminando de trasladar datos...</p>
+        </div>
       </div>
+      
     </div>
   
-    <!-- Sección derecha: Vista previa de los datos -->
+    <!-- Sección derecha: Vista de los datos -->
     <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Vista Previa de los Datos</h2>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Vista de los Datos registrados</h2>
         <div class="overflow-x-auto">
           <table class="min-w-full table-auto border-collapse border border-gray-300">
             <thead>
@@ -99,5 +114,5 @@
             </tbody>
           </table>
         </div>
-      </div>
+    </div>
 </div>

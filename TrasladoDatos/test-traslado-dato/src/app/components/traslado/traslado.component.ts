@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-traslado',
@@ -15,10 +16,24 @@ export class TrasladoComponent {
   hojas: string[] = [];
   hojaSeleccionada: string = '';
   cargandoHojas: boolean = false;
+  cargandoTraslado: boolean = false;
+  mostrarMensajeAdvertencia: boolean = false;
+
+  
   constructor(private apiService: ApiService){}
 
-  onFileSeleccionado(event: any): void {
+  cargarFile(event: any): void {
     const file: File = event.target.files[0];
+    // Validar si ya hay un archivo cargado
+    if (this.fileSeleccionado) {
+      this.mostrarMensajeAdvertencia = true;
+      event.target.value = '';  // Limpiar el input de archivo
+      setTimeout(() => {
+        this.mostrarMensajeAdvertencia = false;
+      }, 7000);
+      return;
+    }
+
     this.hojas = [];
     if (file) {
       this.fileSeleccionado = file;
@@ -45,18 +60,43 @@ export class TrasladoComponent {
     console.log('Hoja seleccionada:', this.hojaSeleccionada);
   }
 
-  // Función para trasladar los datos
   trasladarDatos(): void {
-    console.log('Datos trasladados desde la hoja:', this.hojaSeleccionada);
-    // Aquí iría la lógica para trasladar los datos a la base de datos
+    if (!this.fileSeleccionado) {
+      console.error('No se ha seleccionado ningún archivo.');
+      return;
+    }
+  
+    const model = {
+      tAccion: 1,
+      tOpcion: 1,
+      pUserName: 'ds',
+      pConsecutivoInterno: 0,
+      pTipoEstructura: 1,
+      pEstado: 1,
+      archivo: this.fileSeleccionado,
+      nombreHoja: this.hojaSeleccionada
+    };
+    this.cargandoTraslado = true;
+    // Llamada a la API para trasladar los datos
+    this.apiService.enviarDatosExcel(model).subscribe({
+      next: (data: Response) => {
+        this.cargandoTraslado = false;
+        console.log('Datos trasladados correctamente:', data);
+      },
+      error: (err) => {
+        this.cargandoTraslado = false;
+        console.error('Error al trasladar los datos:', err);
+      }
+    });
   }
+  
 
   // Función para borrar el archivo
   removerFile(fileInput: HTMLInputElement): void {
     this.fileSeleccionado = null;
     this.hojas = []; 
     this.hojaSeleccionada = '';
-
+    this.mostrarMensajeAdvertencia = false; 
     fileInput.value = '';
 
     console.log('Archivo eliminado');

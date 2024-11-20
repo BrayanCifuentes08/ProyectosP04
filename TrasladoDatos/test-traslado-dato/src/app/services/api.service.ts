@@ -23,5 +23,24 @@ export class ApiService {
         map(response => response)
       );
   }
+
+  enviarDatosExcel(model: any): Observable<any> {
+    const url = `${this.apiUrl}PaTblDocumentoEstructuraCtrl`;
+    const formData = new FormData();
+
+    if (model.archivo) {
+      formData.append('ArchivoExcel', model.archivo, model.archivo.name);
+    }
+    formData.append('NombreHojaExcel', model.nombreHoja);
+    formData.append('TAccion', model.tAccion.toString());
+    formData.append('TOpcion', model.tOpcion.toString());
+    formData.append('pUserName', model.pUserName);
+    formData.append('pConsecutivo_Interno', model.pConsecutivoInterno.toString());
+    formData.append('pTipo_Estructura', model.pTipoEstructura.toString());
+    formData.append('pEstado', model.pEstado.toString());
+  
+    return this.http.post<any>(url, formData);
+  }
+  
   
 }

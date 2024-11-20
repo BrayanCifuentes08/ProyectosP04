@@ -1,0 +1,50 @@
+<div class="relative">
+    <!-- Botón para abrir el menú -->
+    <button
+      class="p-2 bg-gray-200 hover:bg-gray-300 rounded-lg shadow-md lg:hidden"
+      (click)="toggleMenu()"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+  
+    <!-- Menú principal -->
+    <div
+      class="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 space-y-4 w-64 lg:static lg:w-auto lg:shadow-none lg:space-y-0 lg:flex lg:items-center lg:space-x-4"
+      [class.hidden]="!menuAbierto && isSmallScreen"
+    >
+      <button class="w-full text-left lg:w-auto text-gray-800 hover:text-blue-500" (click)="cerrarSesion()">
+        Cerrar Sesión
+      </button>
+      <button class="w-full text-left lg:w-auto text-gray-800 hover:text-blue-500" (click)="cambiarIdioma()">
+        Cambiar Idioma
+      </button>
+  
+      <!-- Menú desplegable -->
+      <div class="relative group">
+        <button
+          class="w-full text-left lg:w-auto text-gray-800 hover:text-blue-500 flex items-center justify-between"
+          (click)="toggleSubMenu()"
+        >
+          <span>Cambiar URL</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform transition-transform duration-200"
+            [class.rotate-180]="subMenuAbierto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div
+          class="absolute right-0 top-10 bg-gray-100 shadow-md rounded-lg p-2 space-y-2 w-48 hidden group-hover:block lg:group-hover:hidden"
+          [class.hidden]="!subMenuAbierto"
+        >
+          <button class="w-full text-left text-gray-700 hover:text-blue-500" (click)="cambiarURL('https://url1.com')">
+            URL 1
+          </button>
+          <button class="w-full text-left text-gray-700 hover:text-blue-500" (click)="cambiarURL('https://url2.com')">
+            URL 2
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
