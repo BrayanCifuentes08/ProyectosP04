@@ -129,15 +129,28 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   }
 
   void _seleccionarArchivo() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xls', 'xlsx'],
-    );
-    if (result != null) {
-      setState(() {
-        _archivoSeleccionado = result.files.firstOrNull;
-      });
-      _obtenerHojasExcel(_archivoSeleccionado!);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xls', 'xlsx'],
+      );
+      if (result != null) {
+        setState(() {
+          _archivoSeleccionado = result.files.firstOrNull;
+        });
+        _obtenerHojasExcel(_archivoSeleccionado!);
+      }
+    } catch (e) {
+      _mostrarAlerta(
+          context,
+          S.of(context).mensajesConfimar,
+          'Error al seleccionar el archivo: $e',
+          FontAwesomeIcons.circleExclamation,
+          Color(0xFFFEAB308),
+          1,
+          S.of(context).mensajesAceptar, () async {
+        Navigator.pop(context);
+      }, null, null);
     }
   }
 
@@ -164,8 +177,6 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
       print('Error al enviar el archivo al servidor: $e');
     }
   }
-
-  void _msgConfirmar() async {}
 
   void _msgSeleccionarArchivo() {
     showDialog(
@@ -215,7 +226,12 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
           filename: selectedFile.name,
         ),
         'NombreHojaExcel': _nombreHojaSeleccionada,
-        'userName': 'ds'
+        'pUserName': widget.pUserName,
+        'TAccion': 1,
+        'TOpcion': 1,
+        'pConsecutivo_Interno': 0,
+        'pTipo_Estructura': 1,
+        'pEstado': 1,
       });
 
       final response = await _dio.post(
@@ -227,7 +243,14 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         print(
             'Datos insertados correctamente en la tabla de la base de datos.');
 
-        _msgInsertadoCorrectamente();
+        _mostrarMensajeScaffold(
+            context,
+            "Datos trasladados correctamente",
+            MdiIcons.checkboxMarkedCircle,
+            Color(0xFFF15803D),
+            Color(0xFFF15803D),
+            Color(0xFFFDCFCE7),
+            Duration(seconds: 2));
       } else {
         print('Error en la solicitud al servidor: ${response.statusCode}');
         showDialog(
@@ -265,7 +288,16 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
       }
     } catch (e) {
       print('Error al insertar los datos: $e');
-      _msgPosiblesInconvenientes();
+      _mostrarAlerta(
+          context,
+          S.of(context).mensajesConfimar,
+          '$e',
+          FontAwesomeIcons.circleExclamation,
+          Color(0xFFFEAB308),
+          1,
+          S.of(context).mensajesAceptar, () async {
+        Navigator.pop(context);
+      }, null, null);
     }
   }
 
@@ -313,6 +345,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ExpansionTile(
+                    initiallyExpanded: true,
                     backgroundColor: Color.fromARGB(255, 230, 244, 245),
                     title: Text(
                       'Seleccionar archivo Excel',
@@ -449,7 +482,16 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                           padding: const EdgeInsets.only(top: 10.0),
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              _msgConfirmar();
+                              _mostrarAlerta(
+                                  context,
+                                  S.of(context).mensajesConfimar,
+                                  "Confirmar el traslado de datos de la hoja ${_nombreHojaSeleccionada}",
+                                  FontAwesomeIcons.circleExclamation,
+                                  Color(0xFFFEAB308),
+                                  1,
+                                  S.of(context).mensajesConfimar, () async {
+                                await _trasladarDatos();
+                              }, null, null);
                             },
                             icon: Icon(
                               Icons.add_task_sharp,
