@@ -1,19 +1,14 @@
-import 'dart:convert';
+import 'dart:async';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/Loading.dart';
 import 'package:traslado_datos/common/Mensajes.dart';
-import 'package:traslado_datos/components/Layout.dart';
 import 'package:traslado_datos/generated/l10n.dart';
-import 'package:traslado_datos/services/Shared.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:traslado_datos/common/FloatingActionButtonNotifier.dart';
 import 'package:traslado_datos/common/ThemeNotifier.dart';
 
 // ignore: must_be_immutable
@@ -58,7 +53,8 @@ class TrasladoDatos extends StatefulWidget {
 }
 
 class _TrasladoDatosState extends State<TrasladoDatos> {
-  bool _cargando = false;
+  bool _cargandoTraslado = false;
+  bool _cargandoHojas = false;
   bool isAsignarElemento = true;
   bool isDesasignarElemento = true;
   bool mostrarGridElementosUsuario = true;
@@ -155,6 +151,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   }
 
   void _obtenerHojasExcel(PlatformFile file) async {
+    setState(() {
+      _cargandoHojas = true;
+    });
     try {
       // ignore: unnecessary_null_comparison
       if (file != null) {
@@ -175,6 +174,13 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
       }
     } catch (e) {
       print('Error al enviar el archivo al servidor: $e');
+    } finally {
+      setState(() {
+        _cargandoHojas = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
     }
   }
 
@@ -212,6 +218,10 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   }
 
   Future<void> _trasladarDatos() async {
+    setState(() {
+      _cargandoTraslado =
+          true; // Establecer isLoading a true al inicio de la carga
+    });
     try {
       PlatformFile? selectedFile = _archivoSeleccionado;
 
@@ -235,7 +245,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
       });
 
       final response = await _dio.post(
-        '${widget.baseUrl}Ctrl_PaExternalBodega',
+        '${widget.baseUrl}PaTblDocumentoEstructuraCtrl',
         data: formData,
       );
 
@@ -253,51 +263,78 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
             Duration(seconds: 2));
       } else {
         print('Error en la solicitud al servidor: ${response.statusCode}');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                'Error',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF154790),
-                ),
-              ),
-              content: Text(
-                'Hubo un error al insertar los datos en la base de datos',
-                style: TextStyle(color: Color(0xFF154790)),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF154790),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
+        String errorMessage = 'Error desconocido';
+        if (response.data != null && response.data is Map) {
+          // Aquí se captura el mensaje de error específico desde la respuesta
+          errorMessage = response.data['Message'] ?? 'Error desconocido';
+        }
+        _mostrarAlerta(
+            context,
+            'Error al realizar la solicitud',
+            response.data['Message'] ?? errorMessage,
+            FontAwesomeIcons.circleExclamation,
+            Color(0xFFFEAB308),
+            0,
+            "",
+            null,
+            null,
+            null);
       }
     } catch (e) {
-      print('Error al insertar los datos: $e');
-      _mostrarAlerta(
-          context,
-          S.of(context).mensajesConfimar,
-          '$e',
-          FontAwesomeIcons.circleExclamation,
-          Color(0xFFFEAB308),
-          1,
-          S.of(context).mensajesAceptar, () async {
-        Navigator.pop(context);
-      }, null, null);
+      if (e is DioError) {
+        // Si el error es de tipo DioError
+        if (e.response != null) {
+          // El servidor respondió con un código de estado no 2xx
+          print(
+              "Error al insertar los datos: ${e.response?.statusCode} - ${e.response?.data}");
+          _mostrarAlerta(
+              context,
+              'Error al realizar la solicitud',
+              '${e.response?.data}', // El mensaje de error del servidor
+              FontAwesomeIcons.circleExclamation,
+              Color(0xFFFEAB308),
+              0,
+              "",
+              null,
+              null,
+              null);
+        } else {
+          // Si no hay respuesta, es un error de conexión o de tiempo de espera
+          print("Error de red: ${e.message}");
+          _mostrarAlerta(
+              context,
+              'Error de red',
+              e.message, // Mostrar el mensaje de error de la red
+              FontAwesomeIcons.circleExclamation,
+              Color(0xFFFEAB308),
+              0,
+              "",
+              null,
+              null,
+              null);
+        }
+      } else {
+        // Captura errores no relacionados con Dio
+        print('Error inesperado: $e');
+        _mostrarAlerta(
+            context,
+            'Error inesperado',
+            'Ocurrió un error inesperado: $e',
+            FontAwesomeIcons.circleExclamation,
+            Color(0xFFFEAB308),
+            0,
+            "",
+            null,
+            null,
+            null);
+      }
+    } finally {
+      setState(() {
+        _cargandoTraslado = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
     }
   }
 
@@ -422,6 +459,8 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     icon: Icon(Icons.close, color: Colors.red),
                                     onPressed: () {
                                       setState(() {
+                                        _nombresHojas = [];
+                                        _nombreHojaSeleccionada = null;
                                         _archivoSeleccionado = null;
                                       });
                                     },
@@ -440,6 +479,10 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                           textAlign: TextAlign.start,
                         ),
                       SizedBox(height: 10),
+                      if (_cargandoHojas)
+                        LoadingComponent(
+                            color: Colors.blue,
+                            changeLanguage: widget.changeLanguage),
                       if (_nombresHojas.isNotEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -476,10 +519,15 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                               )
                               .toList(),
                         ),
+                      if (_cargandoTraslado)
+                        LoadingComponent(
+                            color: Colors.blue,
+                            changeLanguage: widget.changeLanguage),
                       if (_archivoSeleccionado != null &&
-                          _nombreHojaSeleccionada != null)
+                          _nombreHojaSeleccionada != null &&
+                          !_cargandoHojas)
                         Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
+                          padding: const EdgeInsets.all(16),
                           child: ElevatedButton.icon(
                             onPressed: () {
                               _mostrarAlerta(
