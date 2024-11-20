@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TrasladoComponent } from "./components/traslado/traslado.component";
+import { MenuComponent } from "./components/menu/menu.component";
+import { LayoutComponent } from "./layout/layout.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TrasladoComponent],
+  imports: [RouterOutlet, LayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
