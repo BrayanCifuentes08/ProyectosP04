@@ -120,6 +120,108 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
 
   void _msgConfirmar() async {}
 
+  void _msgSeleccionarArchivo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Error',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF154790),
+            ),
+          ),
+          content: Text(
+            'No se ha seleccionado un archivo',
+            style: TextStyle(color: Color(0xFF154790)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Color(0xFFDC9525)),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _trasladarDatos() async {
+    try {
+      PlatformFile? selectedFile = _archivoSeleccionado;
+
+      if (selectedFile == null) {
+        _msgSeleccionarArchivo();
+        return;
+      }
+
+      FormData formData = FormData.fromMap({
+        'ArchivoExcel': await dio.MultipartFile.fromFile(
+          selectedFile.path!,
+          filename: selectedFile.name,
+        ),
+        'NombreHojaExcel': _nombreHojaSeleccionada,
+        'userName': 'ds'
+      });
+
+      final response = await _dio.post(
+        '${widget.baseUrl}Ctrl_PaExternalBodega',
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        print(
+            'Datos insertados correctamente en la tabla de la base de datos.');
+
+        _msgInsertadoCorrectamente();
+      } else {
+        print('Error en la solicitud al servidor: ${response.statusCode}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Error',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF154790),
+                ),
+              ),
+              content: Text(
+                'Hubo un error al insertar los datos en la base de datos',
+                style: TextStyle(color: Color(0xFF154790)),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF154790),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      print('Error al insertar los datos: $e');
+      _msgPosiblesInconvenientes();
+    }
+  }
+
   //WIDGET PRINCIPAL
   @override
   Widget build(BuildContext context) {
