@@ -54,6 +54,7 @@ export default class DashboardComponent implements OnInit {
   elementoAsignadoData:               any[] = [];
   userData:                           any[] = [];
   registros:                          any[] = [];
+  campoEstado:  number = 0;
   accionConfirmar:                    { catalogo: string, accion: Accion } | null = null;
 
   constructor(private sharedService: SharedService, private apiService: ApiService){}
@@ -290,7 +291,7 @@ export default class DashboardComponent implements OnInit {
                 model.pTipoCanalDistribucion = Number(input.value);
                 break;
             case 'estado':
-              model.pEstado = input.checked ? 1 : 0;
+              model.pEstado = this.campoEstado  ;
                 break;
             case 'bodega':
                 model.pBodega = Number(input.value);
@@ -356,7 +357,7 @@ export default class DashboardComponent implements OnInit {
       pDescripcion: '',
       pCriterioBusqueda: '',
       pTipoCanalDistribucion: 0,
-      pEstado: 1,
+      pEstado: 0,
       pFecha_Hora: '',
       pUserName: user
     };
@@ -375,7 +376,7 @@ export default class DashboardComponent implements OnInit {
                 model.pTipoCanalDistribucion = Number(input.value);
                 break;
             case 'estado':
-                model.pEstado = input.checked ? 1 : 0;
+                model.pEstado = this.campoEstado;
                 break;
                 case 'userName':
                 model.pUserName = input.value || user;
@@ -459,7 +460,7 @@ export default class DashboardComponent implements OnInit {
                 model.pElementoAsignado = Number(input.value);
                 break;
             case 'estado':
-              model.pEstado = input.checked ? 1 : 0;
+              model.pEstado = this.campoEstado;
                 break;
             case 'elemento_Id':
                 model.pElementoId = Number(input.value);
@@ -580,7 +581,7 @@ export default class DashboardComponent implements OnInit {
               }
                 break;
             case 'disable':
-                  model.pDisable = input.checked ? true : false;
+                  model.pDisable = this.campoEstado == 1 ? true : false;
                   break;
             case 'fecha_Hora':
                 if (input.value) {
@@ -678,16 +679,18 @@ export default class DashboardComponent implements OnInit {
 
         let input: HTMLInputElement;
 
-        if (key === 'estado') {
+        if (key === 'estado' || key == 'disable') {
           // Crear un checkbox para 'estado'
           input = document.createElement('input');
           input.type = 'checkbox';
           input.className = 'toggle-switch';
           input.checked = registro ? Boolean(valor) : true; // Establecer el valor booleano correctamente
-  
+          input.name = key; // Asegúrate de que esto esté configurado
+
           // Actualizar el valor de pEstado cuando el checkbox cambie
           input.addEventListener('change', () => {
             registro[key] = input.checked ? 1 : 0; // Asignamos el valor '1' o '0' según el estado del checkbox
+            this.campoEstado = input.checked ? 1 : 0;
             console.log(`Nuevo valor de ${key}:`, registro[key]); // Verificación en consola
           });
         } else {
