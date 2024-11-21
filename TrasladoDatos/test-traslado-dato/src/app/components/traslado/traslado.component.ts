@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import * as XLSX from 'xlsx';
@@ -20,7 +20,12 @@ export class TrasladoComponent {
   cargandoTraslado: boolean = false;
   mostrarMensajeAdvertencia: boolean = false;
   isVisibleModal: boolean = false;
-  
+  isVisibleExito: boolean = false;
+  mensajeExito: string = ''; 
+  isVisibleAlerta: boolean = false;
+  mensajeAlerta: string = ''; 
+  dropdownAbierto: boolean = false;
+  @ViewChild('fileInput') fileInput: ElementRef | undefined;
   constructor(private apiService: ApiService){}
 
   cargarFile(event: any): void {
@@ -56,15 +61,14 @@ export class TrasladoComponent {
     }
   }
 
-  // Función para manejar la selección de la hoja
-  onHojaSeleccionada(): void {
-    console.log('Hoja seleccionada:', this.hojaSeleccionada);
+  toggleDropdown(): void {
+    this.dropdownAbierto = !this.dropdownAbierto;
   }
 
   trasladarDatos(): void {
     this.isVisibleModal = false;
     if (!this.fileSeleccionado) {
-      console.error('No se ha seleccionado ningún archivo.');
+      this.manejarMensajeError('No se ha seleccionado ningún archivo.');
       return;
     }
   
@@ -84,26 +88,63 @@ export class TrasladoComponent {
       next: (data: Response) => {
         this.cargandoTraslado = false;
         console.log('Datos trasladados correctamente:', data);
+        this.manejarMensajeExito('Datos trasladados correctamente.')
       },
       error: (err) => {
         this.cargandoTraslado = false;
         console.error('Error al trasladar los datos:', err);
+        this.manejarMensajeError('Error al trasladar los datos.');
       }
     });
   }
   
   // Función para borrar el archivo
-  removerFile(fileInput: HTMLInputElement): void {
+  removerFile(): void {
+    // Si existe el fileInput, limpiamos el valor
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = ''; // Limpiar el input
+    }
     this.fileSeleccionado = null;
     this.hojas = []; 
-    this.hojaSeleccionada = '';
     this.mostrarMensajeAdvertencia = false; 
-    fileInput.value = '';
+    this.hojaSeleccionada = ''
 
     console.log('Archivo eliminado');
   }
 
   mostrarModalTraslado(): void {
     this.isVisibleModal = true;
+  }
+
+  seleccionarHoja(sheet: string): void {
+    this.hojaSeleccionada = sheet;
+    this.dropdownAbierto = false; // Cerrar el dropdown
+    console.log('Hoja seleccionada:', sheet);
+  }
+
+
+  manejarMensajeExito(mensaje: string): void {
+    this.mensajeExito = mensaje;
+    this.isVisibleExito = true;
+
+    setTimeout(() => {
+      this.ocultarExito();
+    }, 5000);
+  }
+
+  manejarMensajeError(mensaje: string): void {
+    this.mensajeAlerta = mensaje;
+    this.isVisibleAlerta = true;
+    setTimeout(() => {
+      this.ocultarAlerta();
+    }, 5000);
+  }
+
+  ocultarExito(){
+    this.isVisibleExito = false;
+  }
+
+  ocultarAlerta(){
+    this.isVisibleAlerta = false;
   }
 }

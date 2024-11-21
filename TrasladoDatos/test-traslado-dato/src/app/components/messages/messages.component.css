@@ -1,0 +1,68 @@
+@keyframes bounceIn {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(10%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(100%); /* Desplazamiento lateral a la derecha al salir */
+    }
+  }
+  
+  .animate-bounceIn {
+    animation: bounceIn 0.5s ease forwards; /* Animación de entrada */
+  }
+  
+  .animate-fadeOut {
+    animation: fadeOut 0.3s ease forwards; /* Animación de salida */
+  }
+  
+  @keyframes modalBounceIn {
+    0% {
+      transform: scale(0.5) translateY(-20px); /* Inicia más pequeño y se desplaza hacia arriba */
+      opacity: 0; /* Comienza completamente transparente */
+    }
+    60% {
+      transform: scale(1.05); /* Aumenta un poco más que su tamaño original */
+    }
+    100% {
+      transform: scale(1) translateY(0); /* Finaliza en su tamaño original y posición */
+      opacity: 1; /* Termina completamente visible */
+    }
+  }
+  
+  @keyframes modalBounceOut {
+    0% {
+      opacity: 1; /* Comienza completamente visible */
+      transform: scale(1) translateY(0); /* Mantiene su tamaño original */
+    }
+    50% {
+      transform: scale(1.05); /* Aumenta un poco más que su tamaño original */
+    }
+    100% {
+      opacity: 0; /* Se vuelve completamente transparente */
+      transform: scale(0.5) translateY(-20px); /* Se reduce a la mitad y se desplaza hacia arriba */
+    }
+  }
+  
+  .animate-modalBounceIn {
+    animation: modalBounceIn 0.5s ease forwards; /* Animación de entrada */
+  }
+  
+  .animate-modalBounceOut {
+    animation: modalBounceOut 0.5s ease forwards; /* Animación de salida */
+  }
