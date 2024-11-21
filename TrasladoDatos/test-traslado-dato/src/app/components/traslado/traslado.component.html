@@ -4,17 +4,22 @@
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Sube tu archivo</h2>
       
       <div class="mb-6">
-        <span class="text-lg">Solo archivos <strong>.xlsx, .xls</strong></span>
-        <div class="relative flex items-center justify-center w-full h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-200 transition-all">
-          <input 
+        <label for="sheetSelect" class="block text-gray-700 font-semibold mb-2">
+          Solo archivos <strong>.xlsx, .xls</strong>
+        </label>
+        
+        <!-- Solo mostrar el área de carga cuando no hay un archivo cargado -->
+        <div *ngIf="!fileSeleccionado" class="relative flex items-center justify-center w-full h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-200 transition-all">
+          <input
             id="fileInput"
-            type="file" 
-            accept=".xlsx, .xls" 
+            type="file"
+            accept=".xlsx, .xls"
             class="absolute inset-0 opacity-0 cursor-pointer"
             (change)="cargarFile($event)"
             #fileInput
           />
           <div class="text-center">
+            <i class="fa-solid fa-upload text-gray-500 text-3xl mb-2"></i> <!-- Icono -->
             <p class="text-gray-500 text-lg">Haz clic o arrastra tu archivo aquí</p>
           </div>
         </div>
@@ -25,15 +30,16 @@
         </div>
       </div>
       
-      <!-- Mostrar el archivo subido con su tamaño -->
+      <!-- Mostrar el archivo subido con su tamaño y opción para eliminar -->
       <div *ngIf="fileSeleccionado" class="mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg flex justify-between items-center">
         <div>
           <p class="text-gray-600">Archivo seleccionado: <span class="font-semibold text-gray-800">{{ fileSeleccionado.name }}</span></p>
           <p class="text-gray-600">Tamaño: <span class="font-semibold text-gray-800">{{ fileSeleccionado.size / 1024 | number: '1.0-0' }} KB</span></p>
         </div>
+        
         <button 
-          (click)="removerFile(fileInput)"
-          *ngIf="!cargandoHojas"
+          (click)="removerFile()" 
+          *ngIf="!cargandoHojas" 
           class="text-red-500 hover:text-red-700 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -41,27 +47,63 @@
         </button>
       </div>
       
+      
   
       <!-- Selección de hojas del archivo Excel -->
       <div class="mb-6 mt-2">
-        <label for="sheetSelect" class="block text-gray-700 font-semibold">
+        <label for="sheetSelect" class="block text-gray-700 font-semibold mb-2">
           Selecciona una hoja del archivo
         </label>
-
+      
         <!-- Indicador de carga -->
-        <p *ngIf="cargandoHojas" class="text-sm text-blue-600 mt-1">
+        <p *ngIf="cargandoHojas" class="text-sm text-blue-600 mt-1 flex items-center gap-2">
+          <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>
           Cargando hojas, por favor espere...
         </p>
-
-        <!-- Selector de hojas -->
-        <select 
-          id="sheetSelect" 
-          class="block w-full mt-3 border border-gray-300 rounded-lg py-2 px-4 bg-white text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-          [(ngModel)]="hojaSeleccionada"
-          (change)="onHojaSeleccionada()">
-          <option *ngFor="let sheet of hojas" [value]="sheet">{{ sheet }}</option>
-        </select>
+      
+        <!-- Dropdown personalizado -->
+        <div class="relative" *ngIf="!cargandoHojas && hojas.length > 0">
+          <button
+            (click)="toggleDropdown()"
+            class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 text-left text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none flex justify-between items-center"
+          >
+            <span>{{ hojaSeleccionada || 'Selecciona una hoja' }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 transition-transform duration-300"
+              [ngClass]="{ 'rotate-180': dropdownAbierto }"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+      
+          <!-- Opciones -->
+          <ul
+            *ngIf="dropdownAbierto"
+            class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-md mt-2 max-h-60 overflow-y-auto"
+          >
+            <li
+              *ngFor="let sheet of hojas"
+              (click)="seleccionarHoja(sheet)"
+              class="px-4 py-2 hover:bg-blue-500 hover:text-white cursor-pointer transition-colors"
+            >
+              {{ sheet }}
+            </li>
+          </ul>
+        </div>
+      
+        <!-- Mensaje de error si no hay hojas disponibles -->
+        <p *ngIf="!cargandoHojas && hojas.length === 0" class="text-sm text-red-600 mt-1">
+          No se encontraron hojas en el archivo.
+        </p>
       </div>
+      
 
   
       <!-- Mostrar la hoja seleccionada -->
@@ -123,4 +165,8 @@
   [mensajeModal]="'¿Está seguro de que desea trasladar los datos seleccionados?'"
   (confirmarAccion)="trasladarDatos()"
   (cancelarAccion)="isVisibleModal = false"
+  [mensajeExito]="isVisibleExito ? mensajeExito : ''" 
+  [mensajeAlerta]="isVisibleAlerta ? mensajeAlerta : ''"
+  [isVisibleExito]="isVisibleExito" 
+  [isVisibleAlerta]="isVisibleAlerta" 
 ></app-messages>
