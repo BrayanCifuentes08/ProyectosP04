@@ -67,6 +67,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   PlatformFile? _archivoSeleccionado;
   String? _tablaSeleccionada;
   List<String> _nombresHojas = [];
+  List<String> _nombresHojasSeleccionadas = [];
   Dio _dio = Dio();
   String? _nombreHojaSeleccionada;
   final TextEditingController _urlController = TextEditingController();
@@ -220,8 +221,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   Future<void> _trasladarDatos() async {
     setState(() {
       _cargandoTraslado =
-          true; // Establecer isLoading a true al inicio de la carga
+          true; // Establecer cargando al inicio de la operación.
     });
+
     try {
       PlatformFile? selectedFile = _archivoSeleccionado;
 
@@ -230,67 +232,67 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         return;
       }
 
-      FormData formData = FormData.fromMap({
-        'ArchivoExcel': await dio.MultipartFile.fromFile(
-          selectedFile.path!,
-          filename: selectedFile.name,
-        ),
-        'NombreHojaExcel': _nombreHojaSeleccionada,
-        'pUserName': widget.pUserName,
-        'TAccion': 1,
-        'TOpcion': 1,
-        'pConsecutivo_Interno': 0,
-        'pTipo_Estructura': 1,
-        'pEstado': 1,
-      });
+      for (String hojaSeleccionada in _nombresHojasSeleccionadas) {
+        // Configura el FormData para cada hoja seleccionada
+        FormData formData = FormData.fromMap({
+          'ArchivoExcel': await dio.MultipartFile.fromFile(
+            selectedFile.path!,
+            filename: selectedFile.name,
+          ),
+          'NombreHojaExcel': hojaSeleccionada, // Cambia la hoja aquí
+          'pUserName': widget.pUserName,
+          'TAccion': 1,
+          'TOpcion': 1,
+          'pConsecutivo_Interno': 0,
+          'pTipo_Estructura': 1,
+          'pEstado': 1,
+        });
 
-      final response = await _dio.post(
-        '${widget.baseUrl}PaTblDocumentoEstructuraCtrl',
-        data: formData,
-      );
+        final response = await _dio.post(
+          '${widget.baseUrl}PaTblDocumentoEstructuraCtrl',
+          data: formData,
+        );
 
-      if (response.statusCode == 200) {
-        print(
-            'Datos insertados correctamente en la tabla de la base de datos.');
+        if (response.statusCode == 200) {
+          print(
+              'Datos insertados correctamente para la hoja: $hojaSeleccionada.');
 
-        _mostrarMensajeScaffold(
-            context,
-            "Datos trasladados correctamente",
-            MdiIcons.checkboxMarkedCircle,
-            Color(0xFFF15803D),
-            Color(0xFFF15803D),
-            Color(0xFFFDCFCE7),
-            Duration(seconds: 2));
-      } else {
-        print('Error en la solicitud al servidor: ${response.statusCode}');
-        String errorMessage = 'Error desconocido';
-        if (response.data != null && response.data is Map) {
-          // Aquí se captura el mensaje de error específico desde la respuesta
-          errorMessage = response.data['Message'] ?? 'Error desconocido';
+          _mostrarMensajeScaffold(
+              context,
+              "Datos trasladados correctamente para la hoja $hojaSeleccionada",
+              MdiIcons.checkboxMarkedCircle,
+              Color(0xFFF15803D),
+              Color(0xFFF15803D),
+              Color(0xFFFDCFCE7),
+              Duration(seconds: 2));
+        } else {
+          print('Error en la solicitud al servidor: ${response.statusCode}');
+          String errorMessage = 'Error desconocido';
+          if (response.data != null && response.data is Map) {
+            errorMessage = response.data['Message'] ?? 'Error desconocido';
+          }
+          _mostrarAlerta(
+              context,
+              'Error al realizar la solicitud',
+              response.data['Message'] ?? errorMessage,
+              FontAwesomeIcons.circleExclamation,
+              Color(0xFFFEAB308),
+              0,
+              "",
+              null,
+              null,
+              null);
         }
-        _mostrarAlerta(
-            context,
-            'Error al realizar la solicitud',
-            response.data['Message'] ?? errorMessage,
-            FontAwesomeIcons.circleExclamation,
-            Color(0xFFFEAB308),
-            0,
-            "",
-            null,
-            null,
-            null);
       }
     } catch (e) {
       if (e is DioError) {
-        // Si el error es de tipo DioError
         if (e.response != null) {
-          // El servidor respondió con un código de estado no 2xx
           print(
               "Error al insertar los datos: ${e.response?.statusCode} - ${e.response?.data}");
           _mostrarAlerta(
               context,
               'Error al realizar la solicitud',
-              '${e.response?.data}', // El mensaje de error del servidor
+              '${e.response?.data}',
               FontAwesomeIcons.circleExclamation,
               Color(0xFFFEAB308),
               0,
@@ -299,12 +301,11 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
               null,
               null);
         } else {
-          // Si no hay respuesta, es un error de conexión o de tiempo de espera
           print("Error de red: ${e.message}");
           _mostrarAlerta(
               context,
               'Error de red',
-              e.message, // Mostrar el mensaje de error de la red
+              e.message,
               FontAwesomeIcons.circleExclamation,
               Color(0xFFFEAB308),
               0,
@@ -314,7 +315,6 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
               null);
         }
       } else {
-        // Captura errores no relacionados con Dio
         print('Error inesperado: $e');
         _mostrarAlerta(
             context,
@@ -403,32 +403,42 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 16.0),
                         child: _archivoSeleccionado == null
-                            ? ListTile(
-                                onTap: () {
-                                  _seleccionarArchivo();
-                                },
-                                title: Text(
-                                  'Seleccionar archivo de Excel',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                            ? Card(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                leading: Icon(
-                                  Icons.attach_file,
-                                  color: Colors.grey,
-                                ),
-                                trailing: ElevatedButton.icon(
-                                  onPressed: () {
+                                child: InkWell(
+                                  onTap: () {
                                     _seleccionarArchivo();
                                   },
-                                  icon: Icon(Icons.upload_file,
-                                      color: Colors.white),
-                                  label: Text(
-                                    'Cargar',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFFDC9525),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: ListTile(
+                                      leading: Icon(
+                                        MdiIcons
+                                            .folderOpenOutline, // Ícono moderno de carpeta
+                                        color: Color(0xFFDC9525),
+                                        size: 40.0,
+                                      ),
+                                      title: Text(
+                                        "Cargar archivo",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        "Toca aquí para seleccionar un archivo",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               )
@@ -460,6 +470,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     onPressed: () {
                                       setState(() {
                                         _nombresHojas = [];
+                                        _nombresHojasSeleccionadas = [];
                                         _nombreHojaSeleccionada = null;
                                         _archivoSeleccionado = null;
                                       });
@@ -488,33 +499,25 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: _nombresHojas
                               .map(
-                                (sheetName) => Row(
-                                  children: [
-                                    Checkbox(
-                                      value:
-                                          _nombreHojaSeleccionada == sheetName,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          if (value!) {
-                                            _nombreHojaSeleccionada = sheetName;
-                                          } else {
-                                            _nombreHojaSeleccionada = null;
-                                          }
-                                        });
-                                      },
-                                      fillColor: MaterialStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                          if (states.contains(
-                                              MaterialState.selected)) {
-                                            return Color(0xFFDC9525);
-                                          }
-                                          return Colors.white;
-                                        },
-                                      ),
-                                    ),
-                                    Text(sheetName),
-                                  ],
+                                (sheetName) => CheckboxListTile(
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  title: Text(sheetName),
+                                  value: _nombresHojasSeleccionadas
+                                      .contains(sheetName),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        _nombresHojasSeleccionadas
+                                            .add(sheetName);
+                                      } else {
+                                        _nombresHojasSeleccionadas
+                                            .remove(sheetName);
+                                      }
+                                    });
+                                  },
+                                  activeColor: Color(0xFFDC9525),
+                                  checkColor: Colors.white,
                                 ),
                               )
                               .toList(),
@@ -524,7 +527,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                             color: Colors.blue,
                             changeLanguage: widget.changeLanguage),
                       if (_archivoSeleccionado != null &&
-                          _nombreHojaSeleccionada != null &&
+                          _nombresHojasSeleccionadas.isNotEmpty &&
                           !_cargandoHojas)
                         Padding(
                           padding: const EdgeInsets.all(16),
@@ -533,7 +536,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                               _mostrarAlerta(
                                   context,
                                   S.of(context).mensajesConfimar,
-                                  "Confirmar el traslado de datos de la hoja ${_nombreHojaSeleccionada}",
+                                  "Confirmar el traslado de datos de las hojas seleccionadas: ${_nombresHojasSeleccionadas.join(', ')}",
                                   FontAwesomeIcons.circleExclamation,
                                   Color(0xFFFEAB308),
                                   1,
