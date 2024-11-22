@@ -1,4 +1,4 @@
-﻿namespace ApiSistemaCompra.Connection
+﻿namespace ApiTestTrasladoDatos.Connection
 {
     public class Conexion
     {
@@ -7,7 +7,7 @@
         public Conexion() {
             var constructor = new ConfigurationBuilder().SetBasePath
             (Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
-            connectionString = constructor.GetSection("ConnectionStrings:conexion").Value;
+            connectionString = constructor.GetSection("ConnectionStrings:ConnectionString").Value;
         }
 
         public string cadenaSQL()

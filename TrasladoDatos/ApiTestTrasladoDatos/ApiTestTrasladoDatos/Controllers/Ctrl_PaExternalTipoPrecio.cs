@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace ApiTestTrasladoDatos.Controllers
 {
- 
     [Route("api/[controller]")]
     [ApiController]
     public class Ctrl_PaExternalTipoPrecio : ControllerBase
@@ -24,7 +27,7 @@ namespace ApiTestTrasladoDatos.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromForm] ExcelData request , [FromForm] string userName)
+        public IActionResult Post([FromForm] ExcelData request, [FromForm] string userName)
         {
             try
             {
@@ -32,20 +35,23 @@ namespace ApiTestTrasladoDatos.Controllers
                 using (var package = new ExcelPackage(request.ArchivoExcel.OpenReadStream()))
                 {
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[request.NombreHojaExcel];
-
                     var rowCount = worksheet.Dimension.Rows;
                     var colCount = worksheet.Dimension.Columns;
 
-                    var expectedColumnNames = new List<string> { "TipoPrecio", "Descripcion" };
-
-
-                    var actualColumnNames = GetActualColumnNamesFromWorksheet(worksheet);
-
-                    if (colCount != 2 || !expectedColumnNames.All(actualColumnNames.Contains))
+                    // Nombres esperados y mapeo
+                    var expectedColumns = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                     {
-                        return BadRequest("Las columnas de la hoja excel seleccionada no coinciden (TipoPrecio, Descripcion): " + string.Join(", ", actualColumnNames));
-                    }
+                        { "TipoPrecio", "TipoPrecio" },
+                        { "Descripcion", "Descripcion" }
+                    };
 
+                    // Obtenemos el mapeo de las columnas reales en el Excel
+                    var columnMapping = ObtenerMapeoDeColumnas(worksheet, expectedColumns);
+
+                    if (columnMapping.Count != expectedColumns.Count)
+                    {
+                        return BadRequest("No se encontraron todas las columnas requeridas: " + string.Join(", ", expectedColumns.Keys));
+                    }
 
                     using (var connection = new SqlConnection(_connectionString))
                     {
@@ -53,12 +59,11 @@ namespace ApiTestTrasladoDatos.Controllers
 
                         for (int row = 2; row <= rowCount; row++)
                         {
-                            var firstCell = worksheet.Cells[row, 1].Value;
+                            var firstCell = worksheet.Cells[row, columnMapping["TipoPrecio"]].Value;
                             if (firstCell != null && !string.IsNullOrWhiteSpace(firstCell.ToString()))
                             {
-                                var tipoPrecio = Convert.ToInt32(worksheet.Cells[row, 1].Value);
-                                var descripcion = worksheet.Cells[row, 2].Value.ToString();
-                              
+                                var tipoPrecio = Convert.ToInt32(worksheet.Cells[row, columnMapping["TipoPrecio"]].Value);
+                                var descripcion = worksheet.Cells[row, columnMapping["Descripcion"]].Value.ToString();
                                 var fechaHora = DateTime.Now;
 
                                 var parameters = new M_TipoPrecio
@@ -87,10 +92,46 @@ namespace ApiTestTrasladoDatos.Controllers
             }
         }
 
-        private List<string> GetActualColumnNamesFromWorksheet(ExcelWorksheet worksheet)
+        // Método para eliminar tildes (diacríticos)
+        private string EliminarDiacriticos(string texto)
         {
+            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
+            var cadenaFinal = new StringBuilder();
+
+            foreach (var caracter in textoNormalizado)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(caracter) != UnicodeCategory.NonSpacingMark)
+                {
+                    cadenaFinal.Append(caracter);
+                }
+            }
+
+            return cadenaFinal.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        // Método para obtener el mapeo de las columnas
+        private Dictionary<string, int> ObtenerMapeoDeColumnas(ExcelWorksheet worksheet, Dictionary<string, string> expectedColumns)
+        {
+            var columnMapping = new Dictionary<string, int>();
             var firstRow = worksheet.Cells[1, 1, 1, worksheet.Dimension.Columns];
-            return firstRow.Select(cell => cell.Value?.ToString().Trim() ?? "").ToList();
+
+            foreach (var cell in firstRow)
+            {
+                var columnName = cell.Value?.ToString().Trim();
+                if (columnName != null)
+                {
+                    columnName = EliminarDiacriticos(columnName);  // Eliminar tildes
+                    foreach (var expectedColumn in expectedColumns)
+                    {
+                        if (string.Equals(columnName, expectedColumn.Key, StringComparison.OrdinalIgnoreCase))
+                        {
+                            columnMapping[expectedColumn.Value] = cell.Start.Column;
+                        }
+                    }
+                }
+            }
+
+            return columnMapping;
         }
 
         public class ExcelData
