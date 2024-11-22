@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import * as XLSX from 'xlsx';
 import { MessagesComponent } from "../messages/messages.component";
+import { DocumentoEstructura } from '../../models/documento-estructura';
 
 @Component({
   selector: 'app-traslado',
@@ -25,6 +26,10 @@ export class TrasladoComponent {
   isVisibleAlerta: boolean = false;
   mensajeAlerta: string = ''; 
   dropdownAbierto: boolean = false;
+  datosTabla: DocumentoEstructura[] = [];
+  estructuraSeleccionada: string | null = null;
+  mostrarEstructura: boolean = false;
+  
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   constructor(private apiService: ApiService){}
 
@@ -61,9 +66,7 @@ export class TrasladoComponent {
     }
   }
 
-  toggleDropdown(): void {
-    this.dropdownAbierto = !this.dropdownAbierto;
-  }
+
 
   trasladarDatos(): void {
     this.isVisibleModal = false;
@@ -85,9 +88,10 @@ export class TrasladoComponent {
     this.cargandoTraslado = true;
     // Llamada a la API para trasladar los datos
     this.apiService.enviarDatosExcel(model).subscribe({
-      next: (data: Response) => {
-        this.cargandoTraslado = false;
+      next: (data) => {
         console.log('Datos trasladados correctamente:', data);
+        this.cargandoTraslado = false;
+        this.datosTabla = data;
         this.manejarMensajeExito('Datos trasladados correctamente.')
       },
       error: (err) => {
@@ -107,8 +111,10 @@ export class TrasladoComponent {
     this.fileSeleccionado = null;
     this.hojas = []; 
     this.mostrarMensajeAdvertencia = false; 
-    this.hojaSeleccionada = ''
-
+    this.hojaSeleccionada = '';
+    this.datosTabla = [];
+    this.mostrarEstructura = false;
+    this.estructuraSeleccionada = ''
     console.log('Archivo eliminado');
   }
 
@@ -121,6 +127,30 @@ export class TrasladoComponent {
     this.dropdownAbierto = false; // Cerrar el dropdown
     console.log('Hoja seleccionada:', sheet);
   }
+
+  seleccionarEstructura(estructura: string): void {
+    try {
+      const json = JSON.parse(estructura); // Convierte la cadena JSON a un objeto
+      this.estructuraSeleccionada = json;
+      this.mostrarEstructura = true;
+    } catch (error) {
+      console.error('No se pudo parsear el JSON:', error);
+      this.estructuraSeleccionada = estructura;
+      this.mostrarEstructura = true;
+    }
+  }
+  
+
+  formatearJSON(json: any): string {
+    const jsonString = JSON.stringify(json, null, 2); // JSON formateado
+    return jsonString
+      .replace(/"([^"]+)":/g, '<span class="text-red-600 font-bold">"$1"</span>:') // Claves en azul
+      .replace(/: "([^"]+)"/g, ': <span class="text-yellow-500">"$1"</span>') // Valores en verde
+      .replace(/: (\d+)/g, ': <span class="text-purple-600">$1</span>') // Números en amarillo
+      .replace(/: (true|false)/g, ': <span class="text-orange-500">$1</span>'); // Booleanos en rojo
+  }
+  
+  
 
 
   manejarMensajeExito(mensaje: string): void {
@@ -146,5 +176,9 @@ export class TrasladoComponent {
 
   ocultarAlerta(){
     this.isVisibleAlerta = false;
+  }
+
+  toggleDropdown(): void {
+    this.dropdownAbierto = !this.dropdownAbierto;
   }
 }
