@@ -97,11 +97,6 @@
             </li>
           </ul>
         </div>
-      
-        <!-- Mensaje de error si no hay hojas disponibles -->
-        <p *ngIf="!cargandoHojas && hojas.length === 0" class="text-sm text-red-600 mt-1">
-          No se encontraron hojas en el archivo.
-        </p>
       </div>
       
 
@@ -131,33 +126,55 @@
       </div>
       
     </div>
-  
-    <!-- Sección derecha: Vista de los datos -->
+
     <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Vista de los Datos registrados</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full table-auto border-collapse border border-gray-300">
-            <thead>
-              <tr class="bg-gray-100">
-                <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Columna 1</th>
-                <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Columna 2</th>
-                <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Columna 3</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="py-3 px-4 border text-sm text-gray-700">Dato 1</td>
-                <td class="py-3 px-4 border text-sm text-gray-700">Dato 2</td>
-                <td class="py-3 px-4 border text-sm text-gray-700">Dato 3</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4 border text-sm text-gray-700">Dato 4</td>
-                <td class="py-3 px-4 border text-sm text-gray-700">Dato 5</td>
-                <td class="py-3 px-4 border text-sm text-gray-700">Dato 6</td>
-              </tr>
-            </tbody>
-          </table>
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Vista de los Datos registrados</h2>
+      <div class="overflow-x-auto" style="max-height: 400px;">
+        <table class="min-w-full table-auto border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Consecutivo</th>
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Estructura</th>
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Usuario</th>
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Fecha y Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dato of datosTabla">
+              <td class="py-3 px-4 border text-sm text-gray-700">{{ dato.consecutivo_Interno }}</td>
+              <td class="py-3 px-4 border text-sm text-gray-700 hover:bg-gray-200 transition-all cursor-pointer" (click)="seleccionarEstructura(dato.estructura)">
+                <div class="overflow-x-auto " style="max-width: 300px; white-space: nowrap;">
+                  {{ dato.estructura }}
+                </div>
+                <span class="text-xs text-blue-500">Clic para ver mas detalles</span>
+              </td>
+              <td class="py-3 px-4 border text-sm text-gray-700">{{ dato.userName }}</td>
+              <td class="py-3 px-4 border text-sm text-gray-700">{{ dato.fecha_Hora | date: 'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+      <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 rounded-lg border border-gray-300">
+        <h3 class="text-lg font-semibold mb-2">Detalle de la Estructura Seleccionada:</h3>
+      
+        <!-- Mostrar JSON formateado con colores -->
+        <pre *ngIf="estructuraSeleccionada && estructuraSeleccionada.length" 
+              class="bg-gray-800 p-3 rounded-lg border border-gray-300 text-sm text-gray-100 overflow-auto max-h-64"
+              [innerHTML]="formatearJSON(estructuraSeleccionada)">
+        </pre>
+      
+        <!-- Manejo de caso cuando no es JSON o no tiene contenido -->
+        <div *ngIf="!estructuraSeleccionada || estructuraSeleccionada.length === 0">
+          No se pudo procesar el contenido o está vacío.
         </div>
+      
+        <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" 
+                (click)="mostrarEstructura = false">
+          Cerrar
+        </button>
+      </div>
+      
     </div>
 </div>
 <app-messages
