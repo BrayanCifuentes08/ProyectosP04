@@ -381,188 +381,209 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ExpansionTile(
-                    initiallyExpanded: true,
-                    backgroundColor: Color.fromARGB(255, 230, 244, 245),
-                    title: Text(
-                      'Seleccionar archivo Excel',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onExpansionChanged: (expanded) {
-                      if (expanded && _tablaSeleccionada != null) {
-                        setState(() {
-                          _expandir = expanded;
-                        });
-                      }
-                    },
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 16.0),
-                        child: _archivoSeleccionado == null
-                            ? Card(
-                                elevation: 4.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    _seleccionarArchivo();
-                                  },
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    child: ListTile(
-                                      leading: Icon(
-                                        MdiIcons
-                                            .folderOpenOutline, // Ícono moderno de carpeta
-                                        color: Color(0xFFDC9525),
-                                        size: 40.0,
-                                      ),
-                                      title: Text(
-                                        "Cargar archivo",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        "Toca aquí para seleccionar un archivo",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Card(
-                                elevation: 4.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: ListTile(
-                                  leading: Icon(
-                                    MdiIcons.fileExcel,
-                                    color: Color(0xFFDD952A),
-                                    size: 40.0,
-                                  ),
-                                  title: Text(
-                                    _archivoSeleccionado!.name,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    'Tamaño: ${(_archivoSeleccionado!.size) / 1024} KB',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.grey[700]),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.close, color: Colors.red),
-                                    onPressed: () {
-                                      setState(() {
-                                        _nombresHojas = [];
-                                        _nombresHojasSeleccionadas = [];
-                                        _nombreHojaSeleccionada = null;
-                                        _archivoSeleccionado = null;
-                                      });
-                                    },
-                                  ),
-                                ),
+                  ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(16.0), // Bordes redondeados
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 230, 244, 245),
+                            borderRadius: BorderRadius.circular(16.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
                               ),
-                      ),
-                      SizedBox(height: 10),
-                      if (_archivoSeleccionado != null)
-                        Text(
-                          'Seleccionar una hoja Excel',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            ],
                           ),
-                          textAlign: TextAlign.start,
-                        ),
-                      SizedBox(height: 10),
-                      if (_cargandoHojas)
-                        LoadingComponent(
-                            color: Colors.blue,
-                            changeLanguage: widget.changeLanguage),
-                      if (_nombresHojas.isNotEmpty)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _nombresHojas
-                              .map(
-                                (sheetName) => CheckboxListTile(
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: Text(sheetName),
-                                  value: _nombresHojasSeleccionadas
-                                      .contains(sheetName),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      if (value == true) {
-                                        _nombresHojasSeleccionadas
-                                            .add(sheetName);
-                                      } else {
-                                        _nombresHojasSeleccionadas
-                                            .remove(sheetName);
-                                      }
-                                    });
-                                  },
-                                  activeColor: Color(0xFFDC9525),
-                                  checkColor: Colors.white,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      if (_cargandoTraslado)
-                        LoadingComponent(
-                            color: Colors.blue,
-                            changeLanguage: widget.changeLanguage),
-                      if (_archivoSeleccionado != null &&
-                          _nombresHojasSeleccionadas.isNotEmpty &&
-                          !_cargandoHojas)
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              _mostrarAlerta(
-                                  context,
-                                  S.of(context).mensajesConfimar,
-                                  "Confirmar el traslado de datos de las hojas seleccionadas: ${_nombresHojasSeleccionadas.join(', ')}",
-                                  FontAwesomeIcons.circleExclamation,
-                                  Color(0xFFFEAB308),
-                                  1,
-                                  S.of(context).mensajesConfimar, () async {
-                                await _trasladarDatos();
-                              }, null, null);
-                            },
-                            icon: Icon(
-                              Icons.add_task_sharp,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              'Trasladar datos',
+                          child: ExpansionTile(
+                            initiallyExpanded: true,
+                            backgroundColor: Color.fromARGB(0, 230, 244, 245),
+                            title: Text(
+                              'Seleccionar archivo Excel',
                               style: TextStyle(
-                                color: Colors.white,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
                               ),
                             ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFFDC9525),
-                            ),
-                          ),
-                        ),
-                    ],
-                  )
+                            onExpansionChanged: (expanded) {
+                              if (expanded && _tablaSeleccionada != null) {
+                                setState(() {
+                                  _expandir = expanded;
+                                });
+                              }
+                            },
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 16.0),
+                                child: _archivoSeleccionado == null
+                                    ? Card(
+                                        elevation: 4.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            _seleccionarArchivo();
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: ListTile(
+                                              leading: Icon(
+                                                MdiIcons
+                                                    .folderOpenOutline, // Ícono moderno de carpeta
+                                                color: Color(0xFFDC9525),
+                                                size: 40.0,
+                                              ),
+                                              title: Text(
+                                                "Cargar archivo",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                "Toca aquí para seleccionar un archivo",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey[600],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Card(
+                                        elevation: 4.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        child: ListTile(
+                                          leading: Icon(
+                                            MdiIcons.fileExcel,
+                                            color: Color(0xFFDD952A),
+                                            size: 40.0,
+                                          ),
+                                          title: Text(
+                                            _archivoSeleccionado!.name,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            'Tamaño: ${(_archivoSeleccionado!.size) / 1024} KB',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[700]),
+                                          ),
+                                          trailing: IconButton(
+                                            icon: Icon(Icons.close,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              setState(() {
+                                                _nombresHojas = [];
+                                                _nombresHojasSeleccionadas = [];
+                                                _nombreHojaSeleccionada = null;
+                                                _archivoSeleccionado = null;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                              SizedBox(height: 10),
+                              if (_archivoSeleccionado != null)
+                                Text(
+                                  'Seleccionar una hoja Excel',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                ),
+                              SizedBox(height: 10),
+                              if (_cargandoHojas)
+                                LoadingComponent(
+                                    color: Colors.blue,
+                                    changeLanguage: widget.changeLanguage),
+                              if (_nombresHojas.isNotEmpty)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: _nombresHojas
+                                      .map(
+                                        (sheetName) => CheckboxListTile(
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          title: Text(sheetName),
+                                          value: _nombresHojasSeleccionadas
+                                              .contains(sheetName),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              if (value == true) {
+                                                _nombresHojasSeleccionadas
+                                                    .add(sheetName);
+                                              } else {
+                                                _nombresHojasSeleccionadas
+                                                    .remove(sheetName);
+                                              }
+                                            });
+                                          },
+                                          activeColor: Color(0xFFDC9525),
+                                          checkColor: Colors.white,
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              if (_cargandoTraslado)
+                                LoadingComponent(
+                                    color: Colors.blue,
+                                    changeLanguage: widget.changeLanguage),
+                              if (_archivoSeleccionado != null &&
+                                  _nombresHojasSeleccionadas.isNotEmpty &&
+                                  !_cargandoHojas)
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      _mostrarAlerta(
+                                          context,
+                                          S.of(context).mensajesConfimar,
+                                          "Confirmar el traslado de datos de las hojas seleccionadas: ${_nombresHojasSeleccionadas.join(', ')}",
+                                          FontAwesomeIcons.circleExclamation,
+                                          Color(0xFFFEAB308),
+                                          1,
+                                          S.of(context).mensajesConfimar,
+                                          () async {
+                                        await _trasladarDatos();
+                                      }, null, null);
+                                    },
+                                    icon: Icon(
+                                      Icons.add_task_sharp,
+                                      color: Colors.white,
+                                    ),
+                                    label: Text(
+                                      'Trasladar datos',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(0xFFDC9525),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          )))
                 ],
               ),
             ),
