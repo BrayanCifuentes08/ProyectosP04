@@ -66,8 +66,6 @@ export class TrasladoComponent {
     }
   }
 
-
-
   trasladarDatos(): void {
     this.isVisibleModal = false;
     if (!this.fileSeleccionado) {
@@ -140,7 +138,6 @@ export class TrasladoComponent {
     }
   }
   
-
   formatearJSON(json: any): string {
     const jsonString = JSON.stringify(json, null, 2); // JSON formateado
     return jsonString
@@ -149,9 +146,6 @@ export class TrasladoComponent {
       .replace(/: (\d+)/g, ': <span class="text-purple-600">$1</span>') // Números en amarillo
       .replace(/: (true|false)/g, ': <span class="text-orange-500">$1</span>'); // Booleanos en rojo
   }
-  
-  
-
 
   manejarMensajeExito(mensaje: string): void {
     this.mensajeExito = mensaje;
