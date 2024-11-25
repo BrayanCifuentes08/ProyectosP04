@@ -4,10 +4,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/atom-one-dark.dart';
-import 'package:flutter_highlight/themes/atom-one-light.dart';
-import 'package:flutter_highlight/themes/github-gist.dart';
-import 'package:flutter_highlight/themes/github.dart';
 import 'package:flutter_highlight/themes/monokai-sublime.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/Loading.dart';
@@ -405,7 +401,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                           decoration: BoxDecoration(
                             color: themeNotifier.temaClaro
                                 ? Color.fromARGB(255, 230, 244, 245)
-                                : Color.fromARGB(255, 105, 112, 112),
+                                : Color.fromARGB(255, 34, 44, 59),
                             borderRadius: BorderRadius.circular(16.0),
                             boxShadow: [
                               BoxShadow(
@@ -423,6 +419,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: themeNotifier.temaClaro
+                                    ? Colors.black
+                                    : Colors.white,
                               ),
                             ),
                             onExpansionChanged: (expanded) {
@@ -438,6 +437,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     vertical: 10.0, horizontal: 16.0),
                                 child: _archivoSeleccionado == null
                                     ? Card(
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Color.fromARGB(255, 43, 56, 75),
                                         elevation: 4.0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -456,7 +458,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                               leading: Icon(
                                                 MdiIcons
                                                     .folderOpenOutline, // Ícono moderno de carpeta
-                                                color: Color(0xFFDC9525),
+                                                color: themeNotifier.temaClaro
+                                                    ? Color(0xFFDC9525)
+                                                    : Color(0xFFDC9525),
                                                 size: 40.0,
                                               ),
                                               title: Text(
@@ -464,14 +468,18 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.black87,
+                                                  color: themeNotifier.temaClaro
+                                                      ? Colors.black87
+                                                      : Colors.white,
                                                 ),
                                               ),
                                               subtitle: Text(
                                                 "Toca aquí para seleccionar un archivo",
                                                 style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Colors.grey[600],
+                                                  color: themeNotifier.temaClaro
+                                                      ? Colors.grey[600]
+                                                      : Colors.grey[400],
                                                 ),
                                               ),
                                             ),
@@ -479,6 +487,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                         ),
                                       )
                                     : Card(
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Color.fromARGB(255, 43, 56, 75),
                                         elevation: 4.0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -495,13 +506,19 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
+                                              color: themeNotifier.temaClaro
+                                                  ? Colors.black87
+                                                  : Colors.white,
                                             ),
                                           ),
                                           subtitle: Text(
                                             'Tamaño: ${(_archivoSeleccionado!.size) / 1024} KB',
                                             style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey[700]),
+                                              fontSize: 14,
+                                              color: themeNotifier.temaClaro
+                                                  ? Colors.grey[700]
+                                                  : Colors.grey[400],
+                                            ),
                                           ),
                                           trailing: IconButton(
                                             icon: Icon(Icons.close,
@@ -526,6 +543,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
+                                    color: themeNotifier.temaClaro
+                                        ? Colors.black
+                                        : Colors.white,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
@@ -542,7 +562,14 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                         (sheetName) => CheckboxListTile(
                                           controlAffinity:
                                               ListTileControlAffinity.leading,
-                                          title: Text(sheetName),
+                                          title: Text(
+                                            sheetName,
+                                            style: TextStyle(
+                                              color: themeNotifier.temaClaro
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                            ),
+                                          ),
                                           value: _nombresHojasSeleccionadas
                                               .contains(sheetName),
                                           onChanged: (value) {
@@ -613,7 +640,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: widget.temaClaro
+                          color: themeNotifier.temaClaro
                               ? Colors.white
                               : Colors.grey[400]!,
                           borderRadius: BorderRadius.circular(20),
@@ -626,12 +653,12 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                             child: DataTable(
                               // COLOR DE COLUMNAS TABLA CLIENTES:
                               headingRowColor: MaterialStateColor.resolveWith(
-                                (states) => widget.temaClaro
+                                (states) => themeNotifier.temaClaro
                                     ? Color(0xFFDD952A)
                                     : Colors.grey[800]!,
                               ),
                               dataRowColor: MaterialStateColor.resolveWith(
-                                (states) => widget.temaClaro
+                                (states) => themeNotifier.temaClaro
                                     ? Colors.white
                                     : Colors.grey[600]!,
                               ),
@@ -643,7 +670,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Detalles",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -654,7 +681,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Consecutivo_Interno",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -665,7 +692,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Estructura",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -676,7 +703,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "UserName",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -687,7 +714,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Fecha_Hora",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -760,7 +787,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                       child: Icon(
                                         Icons
                                             .info_outline, // Icono de información
-                                        color: widget.temaClaro
+                                        color: themeNotifier.temaClaro
                                             ? Colors.black
                                             : Colors.white,
                                       ),
@@ -907,10 +934,10 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   ],
                                   color: MaterialStateColor.resolveWith(
                                     (states) => index % 2 == 0
-                                        ? (widget.temaClaro
+                                        ? (themeNotifier.temaClaro
                                             ? Colors.white
                                             : Colors.grey[400]!)
-                                        : (widget.temaClaro
+                                        : (themeNotifier.temaClaro
                                             ? Colors.grey[200]!
                                             : Colors.grey[500]!),
                                   ),
