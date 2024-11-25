@@ -403,7 +403,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                           BorderRadius.circular(16.0), // Bordes redondeados
                       child: Container(
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 230, 244, 245),
+                            color: themeNotifier.temaClaro
+                                ? Color.fromARGB(255, 230, 244, 245)
+                                : Color.fromARGB(255, 105, 112, 112),
                             borderRadius: BorderRadius.circular(16.0),
                             boxShadow: [
                               BoxShadow(
