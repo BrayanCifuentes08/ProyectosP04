@@ -1,9 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { UtilidadService } from '../../services/utilidad.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
@@ -11,30 +14,30 @@ export class MenuComponent {
   menuAbierto = false;
   subMenuAbierto = false;
   isSmallScreen = false;
+  isMenuOpen = false;
+  isLanguageMenuOpen = false;
+  esModoOscuro = false;
 
-  @HostListener('window:resize')
-  onResize() {
-    this.isSmallScreen = window.innerWidth < 1024;
+  
+  constructor(private utilidadService: UtilidadService){
+    //Inicializar tema oscuro
+    this.utilidadService.inicializacionTema();
   }
 
   toggleMenu() {
-    this.menuAbierto = !this.menuAbierto;
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
-  toggleSubMenu() {
-    this.subMenuAbierto = !this.subMenuAbierto;
+  toggleLanguageMenu() {
+    this.isLanguageMenuOpen = !this.isLanguageMenuOpen;
   }
 
-  cerrarSesion() {
-    console.log('Cerrando sesión...');
+  //*Seccion de funciones para el modo de la interfaz
+  toggleTheme(): void {
+    this.utilidadService.alternarTema();
   }
 
-  cambiarIdioma() {
-    console.log('Cambiando idioma...');
+  get isDarkMode(): boolean {
+    return this.utilidadService.esModoOscuroHabilitado();
   }
-
-  cambiarURL(url: string) {
-    console.log(`Cambiando a URL: ${url}`);
-  }
-
 }

@@ -1,15 +1,15 @@
 <div class="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 p-8 bg-gray-50">
     <!-- Sección izquierda -->
-    <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Sube tu archivo</h2>
+    <div class="w-full lg:w-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Sube tu archivo</h2>
       
       <div class="mb-6">
-        <label for="sheetSelect" class="block text-gray-700 font-semibold mb-2">
+        <label for="sheetSelect" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
           Solo archivos <strong>.xlsx, .xls</strong>
         </label>
         
         <!-- Solo mostrar el área de carga cuando no hay un archivo cargado -->
-        <div *ngIf="!fileSeleccionado" class="relative flex items-center justify-center w-full h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-200 transition-all">
+        <div *ngIf="!fileSeleccionado" class="relative flex items-center justify-center w-full h-32 bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-500 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
           <input
             id="fileInput"
             type="file"
@@ -19,28 +19,28 @@
             #fileInput
           />
           <div class="text-center">
-            <i class="fa-solid fa-upload text-gray-500 text-3xl mb-2"></i> <!-- Icono -->
-            <p class="text-gray-500 text-lg">Haz clic o arrastra tu archivo aquí</p>
+            <i class="fa-solid fa-upload text-gray-500 dark:text-gray-400 text-3xl mb-2"></i> <!-- Icono -->
+            <p class="text-gray-500 dark:text-gray-400 text-lg">Haz clic o arrastra tu archivo aquí</p>
           </div>
         </div>
       
         <!-- Mensaje de advertencia si ya hay un archivo cargado -->
-        <div *ngIf="mostrarMensajeAdvertencia" class="mt-2 text-red-600 text-sm">
+        <div *ngIf="mostrarMensajeAdvertencia" class="mt-2 text-red-600 dark:text-red-400 text-sm">
           <p>Ya tienes un archivo cargado. Si deseas cargar otro archivo, elimina el archivo actual primero.</p>
         </div>
       </div>
       
       <!-- Mostrar el archivo subido con su tamaño y opción para eliminar -->
-      <div *ngIf="fileSeleccionado" class="mt-4 p-4 bg-gray-100 border border-gray-300 rounded-lg flex justify-between items-center">
+      <div *ngIf="fileSeleccionado" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg flex justify-between items-center">
         <div>
-          <p class="text-gray-600">Archivo seleccionado: <span class="font-semibold text-gray-800">{{ fileSeleccionado.name }}</span></p>
-          <p class="text-gray-600">Tamaño: <span class="font-semibold text-gray-800">{{ fileSeleccionado.size / 1024 | number: '1.0-0' }} KB</span></p>
+          <p class="text-gray-600 dark:text-gray-300">Archivo seleccionado: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.name }}</span></p>
+          <p class="text-gray-600 dark:text-gray-300">Tamaño: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.size / 1024 | number: '1.0-0' }} KB</span></p>
         </div>
         
         <button 
           (click)="removerFile()" 
           *ngIf="!cargandoHojas" 
-          class="text-red-500 hover:text-red-700 focus:outline-none">
+          class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-500 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
@@ -49,21 +49,22 @@
       
       <!-- Selección de hojas del archivo Excel -->
       <div class="mb-6 mt-2">
-        <label for="sheetSelect" class="block text-gray-700 font-semibold mb-2">
+        <label for="sheetSelect" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
           Selecciona una hoja del archivo
         </label>
       
         <!-- Indicador de carga -->
-        <p *ngIf="cargandoHojas" class="text-sm text-blue-600 mt-1 flex items-center gap-2">
-          <span class="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></span>
+        <p *ngIf="cargandoHojas" class="text-sm text-blue-600 dark:text-blue-400 mt-1 flex items-center gap-2">
+          <span class="w-4 h-4 border-2 border-gray-500 dark:border-gray-400 border-t-transparent rounded-full animate-spin"></span>
           Cargando hojas, por favor espere...
         </p>
+      
       
         <!-- Dropdown personalizado -->
         <div class="relative" *ngIf="!cargandoHojas && hojas.length > 0">
           <button
             (click)="toggleDropdown()"
-            class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 text-left text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none flex justify-between items-center"
+            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none flex justify-between items-center"
           >
             <span>{{ hojaSeleccionada || 'Selecciona una hoja' }}</span>
             <svg
@@ -81,32 +82,34 @@
             </svg>
           </button>
       
-          <!-- Opciones -->
-          <ul
-            *ngIf="dropdownAbierto"
-            class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-md mt-2 max-h-60 overflow-y-auto"
+        <!-- Opciones -->
+        <ul
+        *ngIf="dropdownAbierto"
+        class="absolute z-10 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-md mt-2 max-h-60 overflow-y-auto"
+        >
+          <li
+            *ngFor="let sheet of hojas"
+            (click)="seleccionarHoja(sheet)"
+            class="px-4 py-2 text-black dark:text-white hover:bg-blue-400 hover:text-white cursor-pointer transition-colors"
           >
-            <li
-              *ngFor="let sheet of hojas"
-              (click)="seleccionarHoja(sheet)"
-              class="px-4 py-2 hover:bg-blue-500 hover:text-white cursor-pointer transition-colors"
-            >
-              {{ sheet }}
-            </li>
-          </ul>
+            {{ sheet }}
+          </li>
+        </ul>
+
         </div>
       </div>
       
       <!-- Mostrar la hoja seleccionada -->
       <div class="mb-6">
-        <p class="text-gray-600">Hoja seleccionada: <span class="font-bold text-gray-800">{{ hojaSeleccionada }}</span></p>
+        <p class="text-gray-600 dark:text-gray-300">Hoja seleccionada: <span class="font-bold text-gray-800 dark:text-gray-100">{{ hojaSeleccionada }}</span></p>
       </div>
+    
   
       <!-- Botón para trasladar los datos -->
       <div class="flex flex-col items-center justify-center space-y-4">
         <!-- Botón -->
         <button
-          class="bg-blue-500 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out"
+          class="bg-blue-500 dark:bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ease-in-out"
           [disabled]="!hojaSeleccionada || cargandoTraslado"
           (click)="mostrarModalTraslado()"
         >
@@ -116,42 +119,42 @@
       
         <!-- Spinner y texto informativo -->
         <div *ngIf="cargandoTraslado" class="flex flex-col items-center justify-center mt-4 space-y-2">
-          <div class="w-8 h-8 border-4 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
-          <p class="text-gray-600 text-sm">Terminando de trasladar datos...</p>
+          <div class="w-8 h-8 border-4 border-gray-600 dark:border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+          <p class="text-gray-600 dark:text-gray-300 text-sm">Terminando de trasladar datos...</p>
         </div>
       </div>
     </div>
 
     <!-- Sección derecha -->
-    <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Vista de los Datos registrados</h2>
+    <div class="w-full lg:w-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Vista de los Datos registrados</h2>
       <div class="overflow-x-auto" style="max-height: 400px;">
-        <table class="min-w-full table-auto border-collapse border border-gray-300">
+        <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
           <thead>
-            <tr class="bg-gray-100">
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Consecutivo</th>
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Estructura</th>
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Usuario</th>
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Fecha y Hora</th>
+            <tr class="bg-gray-100 dark:bg-gray-700">
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Consecutivo</th>
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Estructura</th>
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Usuario</th>
+              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Fecha y Hora</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let dato of datosTabla">
-              <td class="py-3 px-4 border text-sm text-gray-700">{{ dato.consecutivo_Interno }}</td>
-              <td class="py-3 px-4 border text-sm text-gray-700 hover:bg-gray-200 transition-all cursor-pointer" (click)="seleccionarEstructura(dato.estructura)">
+              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300">{{ dato.consecutivo_Interno }}</td>
+              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600  transition-all cursor-pointer" (click)="seleccionarEstructura(dato.estructura)">
                 <div class="overflow-x-auto" style="max-width: 300px; white-space: nowrap;">
                   {{ dato.estructura }}
                 </div>
                 <span class="text-xs text-blue-500">Clic para ver mas detalles</span>
               </td>
-              <td class="py-3 px-4 border text-sm text-gray-700">{{ dato.userName }}</td>
-              <td class="py-3 px-4 border text-sm text-gray-700">{{ dato.fecha_Hora | date: 'short' }}</td>
+              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300">{{ dato.userName }}</td>
+              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300">{{ dato.fecha_Hora | date: 'short' }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     
-      <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 rounded-lg border border-gray-300">
+      <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300">
         <h3 class="text-lg font-semibold mb-2">Detalle de la Estructura Seleccionada:</h3>
       
         <!-- Mostrar JSON formateado con colores -->

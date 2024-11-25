@@ -1,50 +1,53 @@
-<div class="relative">
-    <!-- Botón para abrir el menú -->
-    <button
-      class="p-2 bg-gray-200 hover:bg-gray-300 rounded-lg shadow-md lg:hidden"
-      (click)="toggleMenu()"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-      </svg>
-    </button>
-  
-    <!-- Menú principal -->
-    <div
-      class="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 space-y-4 w-64 lg:static lg:w-auto lg:shadow-none lg:space-y-0 lg:flex lg:items-center lg:space-x-4"
-      [class.hidden]="!menuAbierto && isSmallScreen"
-    >
-      <button class="w-full text-left lg:w-auto text-gray-800 hover:text-blue-500" (click)="cerrarSesion()">
-        Cerrar Sesión
+<nav class="bg-gray-200 dark:bg-gray-800 p-4 flex items-center justify-between">
+
+  <!-- Botones principales -->
+  <div class="flex items-center space-x-4">
+    <!-- Botón para desplegar menú -->
+    <div class="relative">
+      <button 
+      disabled 
+        (click)="toggleMenu()" 
+        class="cursor-not-allowed bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-white px-4 py-2 rounded-md shadow-md hover:bg-gray-400 dark:hover:bg-gray-700">
+        Menú
       </button>
-      <button class="w-full text-left lg:w-auto text-gray-800 hover:text-blue-500" (click)="cambiarIdioma()">
-        Cambiar Idioma
-      </button>
-  
-      <!-- Menú desplegable -->
-      <div class="relative group">
-        <button
-          class="w-full text-left lg:w-auto text-gray-800 hover:text-blue-500 flex items-center justify-between"
-          (click)="toggleSubMenu()"
-        >
-          <span>Cambiar URL</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform transition-transform duration-200"
-            [class.rotate-180]="subMenuAbierto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <div
-          class="absolute right-0 top-10 bg-gray-100 shadow-md rounded-lg p-2 space-y-2 w-48 hidden group-hover:block lg:group-hover:hidden"
-          [class.hidden]="!subMenuAbierto"
-        >
-          <button class="w-full text-left text-gray-700 hover:text-blue-500" (click)="cambiarURL('https://url1.com')">
-            URL 1
-          </button>
-          <button class="w-full text-left text-gray-700 hover:text-blue-500" (click)="cambiarURL('https://url2.com')">
-            URL 2
-          </button>
-        </div>
-      </div>
+      <ul 
+        *ngIf="isMenuOpen" 
+        class="absolute mt-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 w-48 shadow-lg rounded-md">
+        <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Opción 1</li>
+        <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Opción 2</li>
+        <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Opción 3</li>
+      </ul>
     </div>
+
+    <!-- Botón para cambiar idioma -->
+    <div class="relative">
+      <button 
+      disabled 
+        (click)="toggleLanguageMenu()" 
+        class="cursor-not-allowed bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-white px-4 py-2 rounded-md shadow-md hover:bg-gray-400 dark:hover:bg-gray-700">
+        Idiomas
+      </button>
+      <ul 
+        *ngIf="isLanguageMenuOpen" 
+        class="absolute mt-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 w-48 shadow-lg rounded-md">
+        <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Español</li>
+        <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Inglés</li>
+        <li class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Francés</li>
+      </ul>
+    </div>
+
+    <!-- Switch de tema -->
+    <button 
+      (click)="toggleTheme()" 
+      class="relative w-14 h-8 bg-gray-300 dark:bg-indigo-500 rounded-full shadow-inner flex items-center p-1 transition-all duration-200 ease-in-out ml-4">
+      <span class="w-6 h-6 bg-white rounded-full flex items-center justify-center 
+                transform transition-transform duration-200 ease-in-out 
+                hover:shadow-[0_0_10px_rgba(255,221,51,0.7)] hover:bg-opacity-80 
+                hover:scale-105" 
+          [ngClass]="{ 'translate-x-0': !isDarkMode, 'translate-x-6': isDarkMode }">
+        <i *ngIf="!isDarkMode" class="fas fa-sun w-4 h-4 text-yellow-400 transition-colors duration-200 ease-in-out"></i>
+        <i *ngIf="isDarkMode" class="fas fa-moon w-4 h-4 text-indigo-600 transition-colors duration-200 ease-in-out"></i>
+      </span>
+    </button>
   </div>
-  
+</nav>
