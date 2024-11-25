@@ -686,13 +686,12 @@ export default class DashboardComponent implements OnInit {
           input.type = 'checkbox';
           input.className = 'toggle-switch';
           input.checked = registro ? Boolean(valor) : true; // Establecer el valor booleano correctamente
-          input.name = key; // Asegúrate de que esto esté configurado
+          input.name = key;
 
           // Actualizar el valor de pEstado cuando el checkbox cambie
           input.addEventListener('change', () => {
-            registro[key] = input.checked ? 1 : 0; // Asignamos el valor '1' o '0' según el estado del checkbox
+            registro[key] = input.checked ? 1 : 0;
             this.campoEstadoNumber = input.checked ? 1 : 0;
-            console.log(`Nuevo valor de ${key}:`, registro[key]); // Verificación en consola
           });
         } else if (key == 'disable')
           {
@@ -701,13 +700,12 @@ export default class DashboardComponent implements OnInit {
             input.type = 'checkbox';
             input.className = 'toggle-switch';
             input.checked = registro ? Boolean(valor) : true; // Establecer el valor booleano correctamente
-            input.name = key; // Asegúrate de que esto esté configurado
+            input.name = key;
 
             // Actualizar el valor de pEstado cuando el checkbox cambie
             input.addEventListener('change', () => {
-              registro[key] = input.checked ? true : false; // Asignamos el valor '1' o '0' según el estado del checkbox
+              registro[key] = input.checked ? true : false;
               this.campoEstadoBoolean = input.checked ? true : false;
-              console.log(`Nuevo valor de ${key}:`, registro[key]); // Verificación en consola
             });
           }
           else {
@@ -746,8 +744,6 @@ export default class DashboardComponent implements OnInit {
           return true;
         };
 
-
-         // Cambiar lógica para bloquear los inputs necesarios para cada catálogo
          const allEmpty = allInputsEmpty();
 
          // Aplicar el modelo de estado correspondiente según si el registro está vacío o no
