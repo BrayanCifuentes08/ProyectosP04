@@ -1,7 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:flutter_highlight/themes/atom-one-dark.dart';
+import 'package:flutter_highlight/themes/atom-one-light.dart';
+import 'package:flutter_highlight/themes/github-gist.dart';
+import 'package:flutter_highlight/themes/github.dart';
+import 'package:flutter_highlight/themes/monokai-sublime.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/Loading.dart';
 import 'package:traslado_datos/common/Mensajes.dart';
@@ -10,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:traslado_datos/common/ThemeNotifier.dart';
+import 'package:traslado_datos/models/PaTblDocumentoEstructuraM.dart';
 
 // ignore: must_be_immutable
 class TrasladoDatos extends StatefulWidget {
@@ -73,6 +81,8 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   final TextEditingController _urlController = TextEditingController();
   bool _isChecking = false;
   String? _checkResult;
+
+  List<PaTblDocumentoEstructuraM> _documentoEstructura = [];
 
   @override
   void initState() {
@@ -256,6 +266,12 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         if (response.statusCode == 200) {
           print(
               'Datos insertados correctamente para la hoja: $hojaSeleccionada.');
+          List<dynamic> jsonResponse = response.data;
+          List<PaTblDocumentoEstructuraM> documentoEstructura = jsonResponse
+              .map((data) => PaTblDocumentoEstructuraM.fromJson(data))
+              .toList();
+
+          _documentoEstructura.addAll(documentoEstructura);
 
           _mostrarMensajeScaffold(
               context,
@@ -265,6 +281,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
               Color(0xFFF15803D),
               Color(0xFFFDCFCE7),
               Duration(seconds: 2));
+          setState(() {});
         } else {
           print('Error en la solicitud al servidor: ${response.statusCode}');
           String errorMessage = 'Error desconocido';
@@ -489,6 +506,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                                 color: Colors.red),
                                             onPressed: () {
                                               setState(() {
+                                                _documentoEstructura.clear();
                                                 _nombresHojas = [];
                                                 _nombresHojasSeleccionadas = [];
                                                 _nombreHojaSeleccionada = null;
@@ -583,7 +601,324 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   ),
                                 ),
                             ],
-                          )))
+                          ))),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  if (_documentoEstructura.isNotEmpty)
+                    Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: widget.temaClaro
+                              ? Colors.white
+                              : Colors.grey[400]!,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        width: double.infinity,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: DataTable(
+                              // COLOR DE COLUMNAS TABLA CLIENTES:
+                              headingRowColor: MaterialStateColor.resolveWith(
+                                (states) => widget.temaClaro
+                                    ? Color(0xFFDD952A)
+                                    : Colors.grey[800]!,
+                              ),
+                              dataRowColor: MaterialStateColor.resolveWith(
+                                (states) => widget.temaClaro
+                                    ? Colors.white
+                                    : Colors.grey[600]!,
+                              ),
+                              columnSpacing: 20,
+                              // NOMBRE DE COLUMNAS TABLA CLIENTES:
+                              columns: [
+                                DataColumn(
+                                  label: Text(
+                                    "Detalles",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.temaClaro
+                                          ? Colors.white
+                                          : Color(0xFFDD952A),
+                                    ),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    "Consecutivo_Interno",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.temaClaro
+                                          ? Colors.white
+                                          : Color(0xFFDD952A),
+                                    ),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    "Estructura",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.temaClaro
+                                          ? Colors.white
+                                          : Color(0xFFDD952A),
+                                    ),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    "UserName",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.temaClaro
+                                          ? Colors.white
+                                          : Color(0xFFDD952A),
+                                    ),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    "Fecha_Hora",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.temaClaro
+                                          ? Colors.white
+                                          : Color(0xFFDD952A),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              // FILAS TABLA CLIENTES:
+                              rows: List.generate(
+                                _documentoEstructura.length,
+                                (index) => DataRow(
+                                  // Aquí eliminamos la propiedad 'onSelectChanged' y la gestión de checkboxes
+                                  cells: [
+                                    DataCell(GestureDetector(
+                                      onTap: () {
+                                        // Mostrar el diálogo al hacer clic en el icono
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                              'Estructura Seleccionada',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[
+                                                    900], // Fondo opcional
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10), // Bordes redondeados
+                                              ),
+                                              padding: const EdgeInsets.all(
+                                                  8), // Espaciado interno
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis
+                                                    .horizontal, // Scroll horizontal añadido
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis
+                                                      .vertical, // Mantener scroll vertical
+                                                  child: HighlightView(
+                                                    JsonEncoder.withIndent('  ')
+                                                        .convert(
+                                                      json.decode(
+                                                          _documentoEstructura[
+                                                                  index]
+                                                              .estructura),
+                                                    ),
+                                                    language: 'json',
+                                                    theme: monokaiSublimeTheme,
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily: 'Courier',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: Text('Cerrar'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: Icon(
+                                        Icons
+                                            .info_outline, // Icono de información
+                                        color: widget.temaClaro
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
+                                    )),
+                                    DataCell(GestureDetector(
+                                      onTap: () {
+                                        // Mostrar el diálogo al hacer clic en esta celda
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                              'Estructura Seleccionada',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[
+                                                    900], // Fondo opcional
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10), // Bordes redondeados
+                                              ),
+                                              padding: const EdgeInsets.all(
+                                                  8), // Espaciado interno
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis
+                                                    .horizontal, // Scroll horizontal añadido
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis
+                                                      .vertical, // Mantener scroll vertical
+                                                  child: HighlightView(
+                                                    JsonEncoder.withIndent('  ')
+                                                        .convert(
+                                                      json.decode(
+                                                          _documentoEstructura[
+                                                                  index]
+                                                              .estructura),
+                                                    ),
+                                                    language: 'json',
+                                                    theme: monokaiSublimeTheme,
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily: 'Courier',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: Text('Cerrar'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        '${_documentoEstructura[index].consecutivoInterno}',
+                                        style: TextStyle(color: Colors.black87),
+                                      ),
+                                    )),
+                                    DataCell(GestureDetector(
+                                      onTap: () {
+                                        // Mostrar el diálogo al hacer clic en esta celda
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                              'Estructura Seleccionada',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            content: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[
+                                                    900], // Fondo opcional
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10), // Bordes redondeados
+                                              ),
+                                              padding: const EdgeInsets.all(
+                                                  8), // Espaciado interno
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis
+                                                    .horizontal, // Scroll horizontal añadido
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis
+                                                      .vertical, // Mantener scroll vertical
+                                                  child: HighlightView(
+                                                    JsonEncoder.withIndent('  ')
+                                                        .convert(
+                                                      json.decode(
+                                                          _documentoEstructura[
+                                                                  index]
+                                                              .estructura),
+                                                    ),
+                                                    language: 'json',
+                                                    theme: monokaiSublimeTheme,
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily: 'Courier',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: Text('Cerrar'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: SizedBox(
+                                        width: 200, // Tamaño definido
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Text(
+                                            '${_documentoEstructura[index].estructura}',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                                    DataCell(Text(
+                                      '${_documentoEstructura[index].userName}',
+                                      style: TextStyle(color: Colors.black87),
+                                    )),
+                                    DataCell(Text(
+                                      '${_documentoEstructura[index].fechaHora}',
+                                      style: TextStyle(color: Colors.black87),
+                                    )),
+                                  ],
+                                  color: MaterialStateColor.resolveWith(
+                                    (states) => index % 2 == 0
+                                        ? (widget.temaClaro
+                                            ? Colors.white
+                                            : Colors.grey[400]!)
+                                        : (widget.temaClaro
+                                            ? Colors.grey[200]!
+                                            : Colors.grey[500]!),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                 ],
               ),
             ),

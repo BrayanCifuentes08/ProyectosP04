@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using ApiTestTrasladoDatos.Models;
+using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -43,10 +44,10 @@ namespace ApiTestTrasladoDatos.Controllers
                     Console.WriteLine($"Nombre de la hoja: {request.NombreHojaExcel}");
 
                     if (worksheet == null)
-                        return BadRequest("No se encontró la hoja especificada en el archivo Excel.");
+                        return BadRequest(new { Message = "No se encontró la hoja especificada en el archivo Excel." });
 
                     if (worksheet.Dimension == null || worksheet.Dimension.Rows < 2 || worksheet.Dimension.Columns < 1)
-                        return BadRequest("La hoja de Excel no contiene los datos esperados.");
+                        return BadRequest(new { Message = "La hoja de Excel no contiene los datos esperados." });
 
                     Console.WriteLine($"Filas detectadas: {worksheet.Dimension.Rows}");
                     Console.WriteLine($"Columnas detectadas: {worksheet.Dimension.Columns}");
@@ -64,25 +65,13 @@ namespace ApiTestTrasladoDatos.Controllers
                     {
                         if (string.IsNullOrWhiteSpace(columnNames[i]))
                         {
-                            return BadRequest($"Se encontró un encabezado vacío en la columna {i + 1}. Todos los encabezados deben tener un valor.");
+                            return BadRequest(new { Message = $"Se encontró un encabezado vacío en la columna {i + 1}. Todos los encabezados deben tener un valor." });
                         }
                     }
 
                     if (!columnNames.Any())
-                        return BadRequest("La hoja no contiene encabezados válidos.");
+                        return BadRequest(new { Message = "La hoja no contiene encabezados válidos." });
 
-                
-                    // Verificar si hay encabezados vacíos, pero desde el último hasta el primero
-                    for (int i = columnNames.Count - 1; i >= 0; i--)
-                    {
-                        if (string.IsNullOrWhiteSpace(columnNames[i]))
-                        {
-                            return BadRequest($"Se encontró un encabezado vacío en la columna {i + 1}. Todos los encabezados deben tener un valor.");
-                        }
-                    }
-
-                    if (!columnNames.Any())
-                        return BadRequest("La hoja no contiene encabezados válidos.");
 
                     // Determinar el tipo de cada columna (string, int o decimal)
                     var columnTypes = new Dictionary<string, Type>();
@@ -94,20 +83,28 @@ namespace ApiTestTrasladoDatos.Controllers
 
                         for (int row = 2; row <= rowCount; row++)
                         {
-                            var cellValue = worksheet.Cells[row, col].Value?.ToString()?.Trim();
-
-                            if (!string.IsNullOrWhiteSpace(cellValue))
+                            // Validar que el índice de la celda está dentro del rango
+                            if (row <= worksheet.Dimension.Rows && col <= worksheet.Dimension.Columns)
                             {
-                                if (!decimal.TryParse(cellValue, out decimal decimalValue))
-                                {
-                                    allNumeric = false;
-                                    break;
-                                }
+                                var cellValue = worksheet.Cells[row, col].Value?.ToString()?.Trim();
 
-                                if (decimalValue != Math.Floor(decimalValue))
+                                if (!string.IsNullOrWhiteSpace(cellValue))
                                 {
-                                    allIntegers = false;
+                                    if (!decimal.TryParse(cellValue, out decimal decimalValue))
+                                    {
+                                        allNumeric = false;
+                                        break;
+                                    }
+
+                                    if (decimalValue != Math.Floor(decimalValue))
+                                    {
+                                        allIntegers = false;
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                return BadRequest(new { Message = $"Se ha intentado acceder a un índice fuera del rango de la hoja de Excel en la fila {row}, columna {col}." });
                             }
                         }
 
@@ -164,7 +161,7 @@ namespace ApiTestTrasladoDatos.Controllers
                         var firstFieldValue = record[columnNames.First()];
                         if (string.IsNullOrWhiteSpace(firstFieldValue?.ToString()))
                         {
-                            return BadRequest($"El primer campo del registro en la fila {row} es obligatorio y está vacío.");
+                            return BadRequest(new { Message = $"El primer campo del registro en la fila {row} es obligatorio y está vacío." });
                         }
 
                         // Verificar si la fila tiene algún valor, ignorar si todos son null
@@ -176,7 +173,6 @@ namespace ApiTestTrasladoDatos.Controllers
 
                     string estructuraJson = System.Text.Json.JsonSerializer.Serialize(records);
                     Console.WriteLine($"JSON generado: {estructuraJson}");
-
 
                     var parameters = new DynamicParameters();
                     parameters.Add("@TAccion", TAccion);
@@ -192,18 +188,32 @@ namespace ApiTestTrasladoDatos.Controllers
                     using (var connection = new SqlConnection(_connectionString))
                     {
                         connection.Open();
-                        connection.Execute("PA_tbl_Documento_Estructura", parameters, commandType: CommandType.StoredProcedure);
-                    }
 
-                    return Ok(new
-                    {
-                        Message = "Procedimiento almacenado ejecutado correctamente.",
-                    });
+                        // Ejecutar el procedimiento almacenado y obtener los resultados
+                        var resultados = connection.Query<PaTblDocumentoEstructuraM>(
+                            "PA_tbl_Documento_Estructura",
+                            parameters,
+                            commandType: CommandType.StoredProcedure);
+
+                        // Transformar los resultados si es necesario
+                        var resultadoFinal = resultados.Select(model => new
+                        {
+                            model.Consecutivo_Interno,
+                            model.Estructura,
+                            model.UserName,
+                            model.Fecha_Hora,
+                            model.Tipo_Estructura,
+                            model.Estado
+                        }).ToList();
+
+                        // Devolver los datos como respuesta
+                        return Ok(resultadoFinal);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al procesar el Excel: {ex.Message}. StackTrace: {ex.StackTrace}");
+                return StatusCode(500, new { Message = $"Error: {ex.Message}. StackTrace: {ex.StackTrace}" });
             }
         }
 

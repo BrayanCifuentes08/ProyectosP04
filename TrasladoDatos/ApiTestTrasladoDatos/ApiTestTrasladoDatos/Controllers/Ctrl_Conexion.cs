@@ -4,6 +4,7 @@ using System;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace ApiTestTrasladoDatos.Controllers
 {
@@ -16,17 +17,6 @@ namespace ApiTestTrasladoDatos.Controllers
         public Ctrl_Conexion(IConfiguration configuration)
         {
             _configuration = configuration;
-        }
-
-        public class AppSettings
-        {
-            public ConnectionStrings ConnectionStrings { get; set; }    
-
-        }
-
-        public class ConnectionStrings
-        {
-            public string ConnectionString { get; set; }
         }
 
         public class ConnectionSettings
@@ -44,19 +34,38 @@ namespace ApiTestTrasladoDatos.Controllers
             {
                 // Nueva cadena de conexión
                 string newConnectionString = $"Server={settings.ServerName}; Database={settings.DatabaseName}; User Id={settings.UserId}; Password={settings.Password};";
-                // Prueba la conexión para verificar errores específicos
+
+                // Prueba la conexión antes de guardar
                 using (var connection = new SqlConnection(newConnectionString))
                 {
                     connection.Open();
-                    //  actualiza la configuración en appsettings.json
-                    var appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
-                    var appSettingsJson = System.IO.File.ReadAllText(appSettingsPath);
-                    var appSettings = JsonSerializer.Deserialize<AppSettings>(appSettingsJson);
-                    appSettings.ConnectionStrings.ConnectionString = newConnectionString;
-                    var updatedJson = JsonSerializer.Serialize(appSettings, new JsonSerializerOptions { WriteIndented = true });
-                    System.IO.File.WriteAllText(appSettingsPath, updatedJson);
-                    return Ok(new { message = "Conexión realizada correctamente." });
                 }
+
+                // Ruta del archivo appsettings.json
+                var appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+                if (!System.IO.File.Exists(appSettingsPath))
+                {
+                    return BadRequest(new { message = "El archivo appsettings.json no existe." });
+                }
+
+                // Leer y deserializar el contenido actual
+                var appSettingsJson = System.IO.File.ReadAllText(appSettingsPath);
+                var jsonObject = JsonNode.Parse(appSettingsJson);
+
+                // Cambia el tipo JsonNode a JsonObject explícitamente
+                if (jsonObject["ConnectionStrings"] is JsonObject connectionStrings)
+                {
+                    // Actualiza el campo ConnectionString
+                    connectionStrings["ConnectionString"] = newConnectionString;
+
+                    // Escribe los cambios en el archivo
+                    System.IO.File.WriteAllText(appSettingsPath, jsonObject.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+
+                    return Ok(new { message = "Conexión actualizada correctamente." });
+                }
+
+
+                return BadRequest(new { message = "No se encontró la sección 'ConnectionStrings' en el archivo de configuración." });
             }
             catch (SqlException ex)
             {
@@ -66,7 +75,7 @@ namespace ApiTestTrasladoDatos.Controllers
             catch (Exception ex)
             {
                 // Otros errores generales
-                return BadRequest(new { message = $"Error inesperado al actualizar la cadena de conexión: {ex.Message}" });
+                return BadRequest(new { message = $"Error inesperado: {ex.Message}" });
             }
         }
     }
