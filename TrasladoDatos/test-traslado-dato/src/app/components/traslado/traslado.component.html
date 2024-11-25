@@ -47,8 +47,6 @@
         </button>
       </div>
       
-      
-  
       <!-- Selección de hojas del archivo Excel -->
       <div class="mb-6 mt-2">
         <label for="sheetSelect" class="block text-gray-700 font-semibold mb-2">
@@ -99,8 +97,6 @@
         </div>
       </div>
       
-
-  
       <!-- Mostrar la hoja seleccionada -->
       <div class="mb-6">
         <p class="text-gray-600">Hoja seleccionada: <span class="font-bold text-gray-800">{{ hojaSeleccionada }}</span></p>
@@ -115,7 +111,7 @@
           (click)="mostrarModalTraslado()"
         >
         Trasladar Datos
-      </button>
+        </button>
       
       
         <!-- Spinner y texto informativo -->
@@ -124,9 +120,9 @@
           <p class="text-gray-600 text-sm">Terminando de trasladar datos...</p>
         </div>
       </div>
-      
     </div>
 
+    <!-- Sección derecha -->
     <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-300">
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Vista de los Datos registrados</h2>
       <div class="overflow-x-auto" style="max-height: 400px;">
@@ -143,7 +139,7 @@
             <tr *ngFor="let dato of datosTabla">
               <td class="py-3 px-4 border text-sm text-gray-700">{{ dato.consecutivo_Interno }}</td>
               <td class="py-3 px-4 border text-sm text-gray-700 hover:bg-gray-200 transition-all cursor-pointer" (click)="seleccionarEstructura(dato.estructura)">
-                <div class="overflow-x-auto " style="max-width: 300px; white-space: nowrap;">
+                <div class="overflow-x-auto" style="max-width: 300px; white-space: nowrap;">
                   {{ dato.estructura }}
                 </div>
                 <span class="text-xs text-blue-500">Clic para ver mas detalles</span>
