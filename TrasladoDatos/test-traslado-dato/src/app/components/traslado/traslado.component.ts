@@ -29,7 +29,13 @@ export class TrasladoComponent {
   datosTabla: DocumentoEstructura[] = [];
   estructuraSeleccionada: string | null = null;
   mostrarEstructura: boolean = false;
-  
+  mostrarFiltros: boolean = false;
+  mostrarComoTabla: boolean = false;
+  datosTablaDetalle: any[] = [];
+  encabezadosTabla: string[] = []; 
+  datosFiltrados: any[] = [];
+  columnaSeleccionada: boolean = false;
+
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   constructor(private apiService: ApiService){}
 
@@ -68,6 +74,13 @@ export class TrasladoComponent {
 
   trasladarDatos(): void {
     this.isVisibleModal = false;
+    this.datosTabla = []; 
+    this.datosTablaDetalle = []; 
+    this.encabezadosTabla = [];
+    this.estructuraSeleccionada = null; 
+    this.mostrarEstructura = false;
+    this.mostrarComoTabla = false;
+    this.columnaSeleccionada = false;
     if (!this.fileSeleccionado) {
       this.manejarMensajeError('No se ha seleccionado ningún archivo.');
       return;
@@ -99,6 +112,51 @@ export class TrasladoComponent {
       }
     });
   }
+
+  seleccionarEstructura(estructura: string | any): void {
+    try {
+      // Establecer columna seleccionada como verdadera
+      this.columnaSeleccionada = true;
+
+      // Validar si el contenido es una cadena JSON o ya es un objeto
+      const json = typeof estructura === 'string' ? JSON.parse(estructura) : estructura;
+
+      if (!json || (typeof json !== 'object' && !Array.isArray(json))) {
+        throw new Error('El JSON no tiene un formato válido.');
+      }
+
+      this.estructuraSeleccionada = json; // Asignar el JSON parseado
+      this.mostrarEstructura = false; // Mostrar JSON
+      this.mostrarComoTabla = true; // Ocultar la tabla
+
+      // Si es un arreglo, determinar encabezados automáticamente para la tabla
+      if (Array.isArray(json)) {
+        this.datosTablaDetalle = json;
+        this.encabezadosTabla = Object.keys(json[0] || {});
+      } else {
+        // Convertir el objeto en un arreglo de un solo elemento para la tabla
+        this.datosTablaDetalle = [json];
+        this.encabezadosTabla = Object.keys(json);
+      }
+    } catch (error) {
+      console.error('No se pudo procesar el JSON:', error);
+      this.estructuraSeleccionada = null;
+      this.mostrarEstructura = false;
+      this.mostrarComoTabla = true; // Volver a mostrar la tabla si hay un error
+      this.columnaSeleccionada = false; // Resetear columna seleccionada
+    }
+  }
+  
+  formatearJSON(json: any): string {
+    if (!json) return 'No hay datos para mostrar.';
+    
+    const jsonString = JSON.stringify(json, null, 2); // JSON formateado
+    return jsonString
+      .replace(/"([^"]+)":/g, '<span class="text-red-600 font-bold">"$1"</span>:') // Claves en rojo
+      .replace(/: "([^"]+)"/g, ': <span class="text-yellow-500">"$1"</span>') // Valores en amarillo
+      .replace(/: (\d+)/g, ': <span class="text-purple-600">$1</span>') // Números en morado
+      .replace(/: (true|false)/g, ': <span class="text-orange-500">$1</span>'); // Booleanos en naranja
+  }
   
   // Función para borrar el archivo
   removerFile(): void {
@@ -124,27 +182,6 @@ export class TrasladoComponent {
     this.hojaSeleccionada = sheet;
     this.dropdownAbierto = false; // Cerrar el dropdown
     console.log('Hoja seleccionada:', sheet);
-  }
-
-  seleccionarEstructura(estructura: string): void {
-    try {
-      const json = JSON.parse(estructura); // Convierte la cadena JSON a un objeto
-      this.estructuraSeleccionada = json;
-      this.mostrarEstructura = true;
-    } catch (error) {
-      console.error('No se pudo parsear el JSON:', error);
-      this.estructuraSeleccionada = estructura;
-      this.mostrarEstructura = true;
-    }
-  }
-  
-  formatearJSON(json: any): string {
-    const jsonString = JSON.stringify(json, null, 2); // JSON formateado
-    return jsonString
-      .replace(/"([^"]+)":/g, '<span class="text-red-600 font-bold">"$1"</span>:') // Claves en azul
-      .replace(/: "([^"]+)"/g, ': <span class="text-yellow-500">"$1"</span>') // Valores en verde
-      .replace(/: (\d+)/g, ': <span class="text-purple-600">$1</span>') // Números en amarillo
-      .replace(/: (true|false)/g, ': <span class="text-orange-500">$1</span>'); // Booleanos en rojo
   }
 
   manejarMensajeExito(mensaje: string): void {
@@ -175,4 +212,12 @@ export class TrasladoComponent {
   toggleDropdown(): void {
     this.dropdownAbierto = !this.dropdownAbierto;
   }
+
+  cerrarVista(): void {
+    this.mostrarComoTabla = false; // Ocultar tabla
+    this.mostrarEstructura = false; // Ocultar JSON
+    this.columnaSeleccionada = false; // Resetear columna seleccionada
+  }
+  
+  
 }

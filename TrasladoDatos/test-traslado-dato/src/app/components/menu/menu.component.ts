@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UtilidadService } from '../../services/utilidad.service';
+import { TraduccionService } from '../../services/traduccion.service';
 
 @Component({
   selector: 'app-menu',
@@ -17,9 +18,9 @@ export class MenuComponent {
   isMenuOpen = false;
   isLanguageMenuOpen = false;
   esModoOscuro = false;
-
+  isIdiomaMenuOpen = false;
   
-  constructor(private utilidadService: UtilidadService){
+  constructor(private utilidadService: UtilidadService, public traduccionService: TraduccionService){
     //Inicializar tema oscuro
     this.utilidadService.inicializacionTema();
   }
@@ -40,4 +41,28 @@ export class MenuComponent {
   get isDarkMode(): boolean {
     return this.utilidadService.esModoOscuroHabilitado();
   }
+
+  toggleIdiomaMenu() {
+    this.isIdiomaMenuOpen = !this.isIdiomaMenuOpen;
+  }
+
+  onCambioIdioma(idioma: string) {
+    this.traduccionService.cambiarIdioma(idioma);
+    this.isIdiomaMenuOpen = false;
+  }
+  
+  getFlagUrl(idioma: string): string {
+    if (idioma === 'en') {
+      return 'images/us.png';
+    } else if (idioma === 'es') {
+      return 'images/es.png';
+    } else if (idioma === 'fr') {
+      return 'images/fr.png';
+    } else if (idioma === 'de'){
+      return 'images/de.png'
+    }
+    return 'images/default.png'; // Bandera por defecto si el idioma no es reconocido
+  }
+
+
 }

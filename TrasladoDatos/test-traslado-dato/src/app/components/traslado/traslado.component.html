@@ -153,9 +153,85 @@
           </tbody>
         </table>
       </div>
-    
-      <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300">
-        <h3 class="text-lg font-semibold mb-2">Detalle de la Estructura Seleccionada:</h3>
+
+      <!-- Botón de filtros (mostrar tabla o json) -->
+      <div class="mt-4 flex justify-end relative">
+        <!-- Botón de filtros -->
+        <button 
+          [disabled]="!columnaSeleccionada"
+          (click)="mostrarFiltros = !mostrarFiltros" 
+          class="px-3 py-1.5 text-sm font-medium rounded-lg focus:outline-none transition-all"
+          [ngClass]="{
+            'bg-gray-400 cursor-not-allowed': !columnaSeleccionada, 
+            'bg-blue-500 text-white hover:bg-blue-600': columnaSeleccionada, 
+            'bg-gray-300 text-gray-600 hover:bg-gray-400': !columnaSeleccionada && !mostrarFiltros  
+          }">
+          Filtrar Datos
+        </button>
+        
+        <!-- Dropdown de filtro, se muestra cuando mostrarFiltros es true -->
+        <div *ngIf="mostrarFiltros" class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 z-10 origin-top-right">
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            <!-- Opción de mostrar Tabla -->
+            <li>
+              <button (click)="mostrarComoTabla = true; mostrarFiltros = false; mostrarEstructura = false" 
+                      class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-t-lg w-full text-left">
+                <span class="flex items-center justify-between">
+                  Tabla
+                  <i *ngIf="mostrarComoTabla" class="fas fa-check text-green-500"></i> <!-- Ícono de check para 'Tabla' -->
+                </span>
+              </button>
+            </li>
+            <!-- Opción de mostrar JSON -->
+            <li>
+              <button (click)="mostrarEstructura = true; mostrarComoTabla = false; mostrarFiltros = false" 
+                      class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left">
+                <span class="flex items-center justify-between">
+                  JSON
+                  <i *ngIf="mostrarEstructura" class="fas fa-check text-green-500"></i> <!-- Ícono de check para 'JSON' -->
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tabla para mostrar datos de JSON -->
+      <div *ngIf="mostrarComoTabla" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600">
+        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Tabla Detallada</h3>
+        <!-- Contenedor con desplazamiento horizontal -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
+            <thead>
+              <tr class="bg-gray-200 dark:bg-gray-600">
+                <!-- Mostrar los encabezados dinámicamente -->
+                <th *ngFor="let encabezado of encabezadosTabla" 
+                    class="py-2 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ encabezado }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Mostrar las filas dinámicamente -->
+              <tr *ngFor="let fila of datosTablaDetalle" class="hover:bg-gray-100 dark:hover:bg-gray-600">
+                <td *ngFor="let encabezado of encabezadosTabla" 
+                    class="py-2 px-4 border text-sm text-gray-700 dark:text-gray-300">
+                  {{ fila[encabezado] }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Botón para cerrar -->
+        <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500" 
+                (click)="cerrarVista()">
+          Cerrar
+        </button>
+      </div>
+
+      <!-- Estructura o apartado para JSON FOMATEADO-->
+      <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600">
+        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Detalle de la Estructura Seleccionada:</h3>
       
         <!-- Mostrar JSON formateado con colores -->
         <pre *ngIf="estructuraSeleccionada && estructuraSeleccionada.length" 
@@ -169,7 +245,7 @@
         </div>
       
         <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" 
-                (click)="mostrarEstructura = false">
+                (click)="cerrarVista()">
           Cerrar
         </button>
       </div>
