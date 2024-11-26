@@ -4,10 +4,6 @@ import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/atom-one-dark.dart';
-import 'package:flutter_highlight/themes/atom-one-light.dart';
-import 'package:flutter_highlight/themes/github-gist.dart';
-import 'package:flutter_highlight/themes/github.dart';
 import 'package:flutter_highlight/themes/monokai-sublime.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/Loading.dart';
@@ -355,6 +351,184 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
     }
   }
 
+  Future<void> mostrarDialogoEstructura({
+    required BuildContext context,
+    required String estructuraJSON,
+    required bool temaClaro,
+  }) async {
+    String _vistaSeleccionada = 'Tabla'; // Vista inicial
+
+    final estructuraDecodificada =
+        json.decode(estructuraJSON); // Decodificar JSON
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Estructura Seleccionada',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  DropdownButton<String>(
+                    value: _vistaSeleccionada,
+                    items: [
+                      DropdownMenuItem(
+                        value: 'JSON',
+                        child: Text('Ver como: JSON'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Tabla',
+                        child: Text('Ver como: Tabla'),
+                      ),
+                    ],
+                    onChanged: (valor) {
+                      setState(() {
+                        _vistaSeleccionada = valor!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              content: Container(
+                decoration: BoxDecoration(
+                  color: _vistaSeleccionada == 'JSON'
+                      ? Colors.grey[900]
+                      : Colors.grey[300], // Fondo para vista JSON o Tabla
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: _vistaSeleccionada == 'JSON'
+                    ? SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: HighlightView(
+                            JsonEncoder.withIndent('  ')
+                                .convert(estructuraDecodificada),
+                            language: 'json',
+                            theme: monokaiSublimeTheme,
+                            padding: const EdgeInsets.all(8),
+                            textStyle: const TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Courier',
+                            ),
+                          ),
+                        ),
+                      )
+                    : Material(
+                        elevation: 5,
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: temaClaro ? Colors.white : Colors.grey[400]!,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          width: double.infinity,
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: DataTable(
+                                  headingRowColor:
+                                      MaterialStateColor.resolveWith(
+                                    (states) => temaClaro
+                                        ? Color(0xFFDD952A)
+                                        : Colors.grey[800]!,
+                                  ),
+                                  dataRowColor: MaterialStateColor.resolveWith(
+                                    (states) => temaClaro
+                                        ? Colors.white
+                                        : Colors.grey[600]!,
+                                  ),
+                                  columnSpacing: 20,
+                                  columns: estructuraDecodificada is List &&
+                                          estructuraDecodificada.isNotEmpty
+                                      ? (estructuraDecodificada.first is Map
+                                          ? (estructuraDecodificada.first
+                                                  as Map<String, dynamic>)
+                                              .keys
+                                              .map((key) => DataColumn(
+                                                    label: Text(
+                                                      key,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: temaClaro
+                                                            ? Colors.black
+                                                            : Colors.white,
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList()
+                                          : [])
+                                      : estructuraDecodificada is Map
+                                          ? estructuraDecodificada.keys
+                                              .map((key) => DataColumn(
+                                                    label: Text(
+                                                      key,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: temaClaro
+                                                            ? Colors.black
+                                                            : Colors.white,
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList()
+                                          : [],
+                                  rows: estructuraDecodificada is List
+                                      ? estructuraDecodificada.map(
+                                          (item) {
+                                            if (item is Map) {
+                                              return DataRow(
+                                                cells: item.values
+                                                    .map((value) => DataCell(
+                                                        Text(value.toString())))
+                                                    .toList(),
+                                              );
+                                            } else {
+                                              return DataRow(cells: [
+                                                DataCell(Text(item.toString()))
+                                              ]);
+                                            }
+                                          },
+                                        ).toList()
+                                      : estructuraDecodificada is Map
+                                          ? [
+                                              DataRow(
+                                                cells: estructuraDecodificada
+                                                    .values
+                                                    .map((value) => DataCell(
+                                                        Text(value.toString())))
+                                                    .toList(),
+                                              ),
+                                            ]
+                                          : [],
+                                ),
+                              )),
+                        ),
+                      ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cerrar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   //WIDGET PRINCIPAL
   @override
   Widget build(BuildContext context) {
@@ -405,7 +579,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                           decoration: BoxDecoration(
                             color: themeNotifier.temaClaro
                                 ? Color.fromARGB(255, 230, 244, 245)
-                                : Color.fromARGB(255, 105, 112, 112),
+                                : Color.fromARGB(255, 34, 44, 59),
                             borderRadius: BorderRadius.circular(16.0),
                             boxShadow: [
                               BoxShadow(
@@ -423,6 +597,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: themeNotifier.temaClaro
+                                    ? Colors.black
+                                    : Colors.white,
                               ),
                             ),
                             onExpansionChanged: (expanded) {
@@ -438,6 +615,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     vertical: 10.0, horizontal: 16.0),
                                 child: _archivoSeleccionado == null
                                     ? Card(
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Color.fromARGB(255, 43, 56, 75),
                                         elevation: 4.0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -456,7 +636,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                               leading: Icon(
                                                 MdiIcons
                                                     .folderOpenOutline, // Ícono moderno de carpeta
-                                                color: Color(0xFFDC9525),
+                                                color: themeNotifier.temaClaro
+                                                    ? Color(0xFFDC9525)
+                                                    : Color(0xFFDC9525),
                                                 size: 40.0,
                                               ),
                                               title: Text(
@@ -464,14 +646,18 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.black87,
+                                                  color: themeNotifier.temaClaro
+                                                      ? Colors.black87
+                                                      : Colors.white,
                                                 ),
                                               ),
                                               subtitle: Text(
                                                 "Toca aquí para seleccionar un archivo",
                                                 style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Colors.grey[600],
+                                                  color: themeNotifier.temaClaro
+                                                      ? Colors.grey[600]
+                                                      : Colors.grey[400],
                                                 ),
                                               ),
                                             ),
@@ -479,6 +665,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                         ),
                                       )
                                     : Card(
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Color.fromARGB(255, 43, 56, 75),
                                         elevation: 4.0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -495,13 +684,19 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
+                                              color: themeNotifier.temaClaro
+                                                  ? Colors.black87
+                                                  : Colors.white,
                                             ),
                                           ),
                                           subtitle: Text(
                                             'Tamaño: ${(_archivoSeleccionado!.size) / 1024} KB',
                                             style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey[700]),
+                                              fontSize: 14,
+                                              color: themeNotifier.temaClaro
+                                                  ? Colors.grey[700]
+                                                  : Colors.grey[400],
+                                            ),
                                           ),
                                           trailing: IconButton(
                                             icon: Icon(Icons.close,
@@ -526,6 +721,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
+                                    color: themeNotifier.temaClaro
+                                        ? Colors.black
+                                        : Colors.white,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
@@ -542,7 +740,14 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                         (sheetName) => CheckboxListTile(
                                           controlAffinity:
                                               ListTileControlAffinity.leading,
-                                          title: Text(sheetName),
+                                          title: Text(
+                                            sheetName,
+                                            style: TextStyle(
+                                              color: themeNotifier.temaClaro
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                            ),
+                                          ),
                                           value: _nombresHojasSeleccionadas
                                               .contains(sheetName),
                                           onChanged: (value) {
@@ -583,6 +788,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                           S.of(context).mensajesConfimar,
                                           () async {
                                         await _trasladarDatos();
+                                        await widget.onScrollToDown();
                                       }, null, null);
                                     },
                                     icon: Icon(
@@ -613,7 +819,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: widget.temaClaro
+                          color: themeNotifier.temaClaro
                               ? Colors.white
                               : Colors.grey[400]!,
                           borderRadius: BorderRadius.circular(20),
@@ -626,12 +832,12 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                             child: DataTable(
                               // COLOR DE COLUMNAS TABLA CLIENTES:
                               headingRowColor: MaterialStateColor.resolveWith(
-                                (states) => widget.temaClaro
+                                (states) => themeNotifier.temaClaro
                                     ? Color(0xFFDD952A)
                                     : Colors.grey[800]!,
                               ),
                               dataRowColor: MaterialStateColor.resolveWith(
-                                (states) => widget.temaClaro
+                                (states) => themeNotifier.temaClaro
                                     ? Colors.white
                                     : Colors.grey[600]!,
                               ),
@@ -643,7 +849,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Detalles",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -654,7 +860,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Consecutivo_Interno",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -665,7 +871,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Estructura",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -676,7 +882,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "UserName",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -687,7 +893,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     "Fecha_Hora",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: widget.temaClaro
+                                      color: themeNotifier.temaClaro
                                           ? Colors.white
                                           : Color(0xFFDD952A),
                                     ),
@@ -698,190 +904,41 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                               rows: List.generate(
                                 _documentoEstructura.length,
                                 (index) => DataRow(
-                                  // Aquí eliminamos la propiedad 'onSelectChanged' y la gestión de checkboxes
                                   cells: [
-                                    DataCell(GestureDetector(
-                                      onTap: () {
-                                        // Mostrar el diálogo al hacer clic en el icono
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: Text(
-                                              'Estructura Seleccionada',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            content: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[
-                                                    900], // Fondo opcional
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10), // Bordes redondeados
-                                              ),
-                                              padding: const EdgeInsets.all(
-                                                  8), // Espaciado interno
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis
-                                                    .horizontal, // Scroll horizontal añadido
-                                                child: SingleChildScrollView(
-                                                  scrollDirection: Axis
-                                                      .vertical, // Mantener scroll vertical
-                                                  child: HighlightView(
-                                                    JsonEncoder.withIndent('  ')
-                                                        .convert(
-                                                      json.decode(
-                                                          _documentoEstructura[
-                                                                  index]
-                                                              .estructura),
-                                                    ),
-                                                    language: 'json',
-                                                    theme: monokaiSublimeTheme,
-                                                    padding:
-                                                        const EdgeInsets.all(8),
-                                                    textStyle: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'Courier',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.of(context).pop(),
-                                                child: Text('Cerrar'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                      child: Icon(
-                                        Icons
-                                            .info_outline, // Icono de información
-                                        color: widget.temaClaro
-                                            ? Colors.black
-                                            : Colors.white,
+                                    DataCell(
+                                      GestureDetector(
+                                        onTap: () {
+                                          mostrarDialogoEstructura(
+                                            context: context,
+                                            estructuraJSON:
+                                                _documentoEstructura[index]
+                                                    .estructura,
+                                            temaClaro: themeNotifier.temaClaro,
+                                          );
+                                        },
+                                        child: Icon(
+                                          Icons
+                                              .info_outline, // Icono de información
+                                          color: themeNotifier.temaClaro
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
                                       ),
-                                    )),
-                                    DataCell(GestureDetector(
-                                      onTap: () {
-                                        // Mostrar el diálogo al hacer clic en esta celda
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: Text(
-                                              'Estructura Seleccionada',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            content: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[
-                                                    900], // Fondo opcional
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10), // Bordes redondeados
-                                              ),
-                                              padding: const EdgeInsets.all(
-                                                  8), // Espaciado interno
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis
-                                                    .horizontal, // Scroll horizontal añadido
-                                                child: SingleChildScrollView(
-                                                  scrollDirection: Axis
-                                                      .vertical, // Mantener scroll vertical
-                                                  child: HighlightView(
-                                                    JsonEncoder.withIndent('  ')
-                                                        .convert(
-                                                      json.decode(
-                                                          _documentoEstructura[
-                                                                  index]
-                                                              .estructura),
-                                                    ),
-                                                    language: 'json',
-                                                    theme: monokaiSublimeTheme,
-                                                    padding:
-                                                        const EdgeInsets.all(8),
-                                                    textStyle: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'Courier',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.of(context).pop(),
-                                                child: Text('Cerrar'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
+                                    ),
+                                    DataCell(
+                                      Text(
                                         '${_documentoEstructura[index].consecutivoInterno}',
                                         style: TextStyle(color: Colors.black87),
                                       ),
-                                    )),
+                                    ),
                                     DataCell(GestureDetector(
                                       onTap: () {
-                                        // Mostrar el diálogo al hacer clic en esta celda
-                                        showDialog(
+                                        mostrarDialogoEstructura(
                                           context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: Text(
-                                              'Estructura Seleccionada',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            content: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[
-                                                    900], // Fondo opcional
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10), // Bordes redondeados
-                                              ),
-                                              padding: const EdgeInsets.all(
-                                                  8), // Espaciado interno
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis
-                                                    .horizontal, // Scroll horizontal añadido
-                                                child: SingleChildScrollView(
-                                                  scrollDirection: Axis
-                                                      .vertical, // Mantener scroll vertical
-                                                  child: HighlightView(
-                                                    JsonEncoder.withIndent('  ')
-                                                        .convert(
-                                                      json.decode(
-                                                          _documentoEstructura[
-                                                                  index]
-                                                              .estructura),
-                                                    ),
-                                                    language: 'json',
-                                                    theme: monokaiSublimeTheme,
-                                                    padding:
-                                                        const EdgeInsets.all(8),
-                                                    textStyle: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'Courier',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.of(context).pop(),
-                                                child: Text('Cerrar'),
-                                              ),
-                                            ],
-                                          ),
+                                          estructuraJSON:
+                                              _documentoEstructura[index]
+                                                  .estructura,
+                                          temaClaro: themeNotifier.temaClaro,
                                         );
                                       },
                                       child: SizedBox(
@@ -907,10 +964,10 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   ],
                                   color: MaterialStateColor.resolveWith(
                                     (states) => index % 2 == 0
-                                        ? (widget.temaClaro
+                                        ? (themeNotifier.temaClaro
                                             ? Colors.white
                                             : Colors.grey[400]!)
-                                        : (widget.temaClaro
+                                        : (themeNotifier.temaClaro
                                             ? Colors.grey[200]!
                                             : Colors.grey[500]!),
                                   ),
