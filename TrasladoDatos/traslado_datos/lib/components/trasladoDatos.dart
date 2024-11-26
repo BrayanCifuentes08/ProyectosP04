@@ -533,7 +533,6 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
-
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(0),
