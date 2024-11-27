@@ -171,6 +171,10 @@ export class TrasladoComponent {
     this.datosTabla = [];
     this.mostrarEstructura = false;
     this.estructuraSeleccionada = ''
+    this.datosFiltrados = [];
+    this.datosTablaDetalle = [];
+    this.encabezadosTabla = []; 
+    this.mostrarComoTabla = false;
     console.log('Archivo eliminado');
   }
 
