@@ -34,7 +34,7 @@
       <div *ngIf="fileSeleccionado" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg flex justify-between items-center">
         <div>
           <p class="text-gray-600 dark:text-gray-300">Archivo seleccionado: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.name }}</span></p>
-          <p class="text-gray-600 dark:text-gray-300">Tamaño: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.size / 1024 | number: '1.0-0' }} KB</span></p>
+          <p class="text-gray-600 dark:text-gray-300">Tamaño: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.size / 1024 | number: '1.2-2' }} KB</span></p>
         </div>
         
         <button 
@@ -196,38 +196,45 @@
         </div>
       </div>
 
-      <!-- Tabla para mostrar datos de JSON -->
       <div *ngIf="mostrarComoTabla" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600">
-        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Tabla Detallada</h3>
-        <!-- Contenedor con desplazamiento horizontal -->
+        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
+          Tabla Detallada
+          <span class="text-sm ml-2 text-gray-600 dark:text-gray-100">No. registros: {{ datosTablaDetalle.length }}</span>
+        </h3>
+      
+        <!-- Contenedor con desplazamiento horizontal y vertical -->
         <div class="overflow-x-auto">
-          <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
-            <thead>
-              <tr class="bg-gray-200 dark:bg-gray-600">
-                <!-- Mostrar los encabezados dinámicamente -->
-                <th *ngFor="let encabezado of encabezadosTabla" 
-                    class="py-2 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {{ encabezado }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Mostrar las filas dinámicamente -->
-              <tr *ngFor="let fila of datosTablaDetalle" class="hover:bg-gray-100 dark:hover:bg-gray-600">
-                <td *ngFor="let encabezado of encabezadosTabla" 
-                    class="py-2 px-4 border text-sm text-gray-700 dark:text-gray-300">
-                  {{ fila[encabezado] }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="max-h-80 overflow-y-auto"> <!-- Desplazamiento vertical -->
+            <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
+              <thead>
+                <tr class="bg-gray-200 dark:bg-gray-600">
+                  <!-- Mostrar los encabezados dinámicamente -->
+                  <th *ngFor="let encabezado of encabezadosTabla" 
+                      class="py-2 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {{ encabezado }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Mostrar las filas dinámicamente -->
+                <tr *ngFor="let fila of datosTablaDetalle" class="hover:bg-gray-100 dark:hover:bg-gray-600">
+                  <td *ngFor="let encabezado of encabezadosTabla" 
+                      class="py-2 px-4 border text-sm text-gray-700 dark:text-gray-300">
+                    {{ fila[encabezado] }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+      
         <!-- Botón para cerrar -->
         <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500" 
                 (click)="cerrarVista()">
           Cerrar
         </button>
       </div>
+      
 
       <!-- Estructura o apartado para JSON FOMATEADO-->
       <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600">
