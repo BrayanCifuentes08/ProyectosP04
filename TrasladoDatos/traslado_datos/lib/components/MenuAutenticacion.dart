@@ -1069,17 +1069,19 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
   }
 
   List<Widget> buildUserDisplay(List<PaBscUserDisplay2M> userDisplayList) {
-    // Filtramos solo los elementos raíz
+    // Filtramos elementos raíz (padres iniciales)
     List<PaBscUserDisplay2M> rootDisplays =
         userDisplayList.where((item) => item.userDisplayFather == 0).toList();
 
-    // Creamos la lista de widgets para los displays
-    List<Widget> displayWidgets = rootDisplays.map((rootItem) {
-      return buildExpansionTile(rootItem, userDisplayList);
-    }).toList();
+    // Creamos widgets a partir de la raíz
+    List<Widget> displayWidgets = rootDisplays
+        .map((rootItem) => buildExpansionTile(rootItem, userDisplayList))
+        .where((widget) => widget != null)
+        .cast<Widget>() // Asegura que la lista se convierta a List<Widget>
+        .toList();
 
-    // Filtramos los widgets vacíos (que devuelven Container) y mostramos mensaje si todos están vacíos
-    if (displayWidgets.every((widget) => widget is Container)) {
+    // Si no hay widgets válidos
+    if (displayWidgets.isEmpty) {
       return [
         ListTile(
           title: Text(
@@ -1094,49 +1096,38 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
     return displayWidgets;
   }
 
-  Widget buildExpansionTile(
+  Widget? buildExpansionTile(
       PaBscUserDisplay2M parentItem, List<PaBscUserDisplay2M> userDisplayList) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
-    // Filtramos los hijos del nodo actual
+    // Obtener hijos directos del nodo actual
     List<PaBscUserDisplay2M> children = userDisplayList
-        .where((item) =>
-            item.userDisplayFather == parentItem.userDisplay &&
-            (item.displayURLAlter !=
-                    null || // Condición para hijos de último nivel
-                userDisplayList.any((subItem) =>
-                    subItem.userDisplayFather ==
-                    item.userDisplay))) // Si tiene más hijos
+        .where((item) => item.userDisplayFather == parentItem.userDisplay)
         .toList();
 
-    // Si el nodo no tiene hijos válidos (ni tiene displayURLAlter ni tiene hijos válidos)
-    if (children.isEmpty && parentItem.displayURLAlter == null) {
-      return Container();
+    // Verificar si alguno de los hijos es un nodo de último nivel válido
+    bool hasValidChildren = children.any((child) {
+      return child.displayURLAlter != null ||
+          userDisplayList
+              .any((subItem) => subItem.userDisplayFather == child.userDisplay);
+    });
+
+    // Si no hay hijos válidos y el nodo no tiene URL, no mostrar nada
+    if (!hasValidChildren && parentItem.displayURLAlter == null) {
+      return null;
     }
 
-    // Si el nodo raíz no tiene hijos válidos, no lo mostramos
-    if (parentItem.userDisplayFather == 0 && children.isEmpty) {
-      return Container();
-    }
+    // Construcción recursiva
+    List<Widget> childWidgets = children
+        .map((child) {
+          return buildExpansionTile(child, userDisplayList);
+        })
+        .where((widget) => widget != null)
+        .cast<Widget>()
+        .toList();
 
-    // Función para filtrar los hijos de último nivel
-    List<PaBscUserDisplay2M> getHijosUltimoNivel(
-        List<PaBscUserDisplay2M> children) {
-      return children.where((child) {
-        // Un hijo es de último nivel si no tiene más hijos
-        bool hasNoSubChildren = !userDisplayList
-            .any((subItem) => subItem.userDisplayFather == child.userDisplay);
-        return hasNoSubChildren &&
-            child.displayURLAlter !=
-                null; // Solo mostrar si tiene displayURLAlter
-      }).toList();
-    }
-
-    // Filtrar los hijos de último nivel válidos
-    List<PaBscUserDisplay2M> validChildren = getHijosUltimoNivel(children);
-
-    // Si hay hijos de último nivel válidos, construimos el ExpansionTile
-    if (validChildren.isNotEmpty) {
+    // Si el nodo tiene hijos válidos, mostrar un ExpansionTile
+    if (childWidgets.isNotEmpty) {
       return ExpansionTile(
         backgroundColor: _isExpandedUserDisplay
             ? const Color.fromARGB(20, 23, 68, 230)
@@ -1161,13 +1152,10 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
             _isExpandedUserDisplay = expanded;
           });
         },
-        children: validChildren.map((child) {
-          // Construimos recursivamente cada nodo hijo
-          return buildExpansionTile(child, userDisplayList);
-        }).toList(),
+        children: childWidgets,
       );
     } else if (parentItem.displayURLAlter != null) {
-      // Si no tiene hijos pero tiene displayURLAlter, mostramos ListTile
+      // Si no tiene hijos pero tiene displayURLAlter, mostramos un ListTile
       return ListTile(
         title: Text(
           parentItem.name,
@@ -1186,7 +1174,6 @@ class _MenuAutenticacionState extends State<MenuAutenticacion>
       );
     }
 
-    // En caso de que no se cumpla ninguna condición, devolvemos un Container vacío
-    return Container();
+    return null; // Nodo sin hijos válidos ni displayURLAlter
   }
 }
