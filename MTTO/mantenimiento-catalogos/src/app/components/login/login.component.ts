@@ -542,10 +542,15 @@ export default class LoginComponent {
     ].every(valor => valor !== null && valor !== undefined);
   
     // Verificar si hay al menos un display válido
-    const hayDisplayValido = this.userDisplaysPadres.some(item => item.hijos && item.hijos.some((hijo: any) => hijo.display_URL_Alter !== null));
+    const hayDisplayValido = this.userDisplaysPadres.some(item => item.hijos && item.hijos
+      .some((hijo: any) => hijo.display_URL_Alter !== null)
+    );
   
     // Validar si el padre tiene al menos un hijo seleccionado
-    const seleccionDeDisplayValida = hayDisplayValido ? (displaysSeleccionados !== null && this.userDisplaysPadres.some(padre => padre.hijos.some((hijo: any) => hijo === displaysSeleccionados))) : true;
+    const seleccionDeDisplayValida = hayDisplayValido ? (
+      displaysSeleccionados !== null && this.userDisplaysPadres
+      .some(padre => padre.hijos.some((hijo: any) => hijo === displaysSeleccionados))
+    ) : true;
   
     // Validar si todos los campos requeridos están completos y la selección de display es válida
     return validaciones && seleccionDeDisplayValida;
