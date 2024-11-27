@@ -360,7 +360,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
 
     final estructuraDecodificada =
         json.decode(estructuraJSON); // Decodificar JSON
-
+    final numRegistros = estructuraDecodificada.length;
     await showDialog(
       context: context,
       builder: (context) {
@@ -393,6 +393,8 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                       });
                     },
                   ),
+                  Text("No. Registros: ${numRegistros}",
+                      style: TextStyle(fontSize: 15)),
                 ],
               ),
               content: Container(
