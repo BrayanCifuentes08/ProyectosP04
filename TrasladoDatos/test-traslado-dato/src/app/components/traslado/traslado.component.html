@@ -1,11 +1,12 @@
-<div class="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 p-8 bg-gray-50">
+<div class="flex flex-col lg:flex-row w-full min-h-screen p-8 bg-gray-50 dark:bg-gray-900 gap-8">
+
     <!-- Sección izquierda -->
-    <div class="w-full lg:w-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
-      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Sube tu archivo</h2>
+    <div class="w-full lg:w-1/2 h-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">{{'labels.subirArchivo' | translate}}</h2>
       
       <div class="mb-6">
         <label for="sheetSelect" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
-          Solo archivos <strong>.xlsx, .xls</strong>
+          {{'labels.soloArchivosExcel' | translate}} <strong>.xlsx, .xls</strong>
         </label>
         
         <!-- Solo mostrar el área de carga cuando no hay un archivo cargado -->
@@ -20,21 +21,21 @@
           />
           <div class="text-center">
             <i class="fa-solid fa-upload text-gray-500 dark:text-gray-400 text-3xl mb-2"></i> <!-- Icono -->
-            <p class="text-gray-500 dark:text-gray-400 text-lg">Haz clic o arrastra tu archivo aquí</p>
+            <p class="text-gray-500 dark:text-gray-400 text-lg">{{'labels.hacerClickOArrastrar' | translate}}</p>
           </div>
         </div>
       
         <!-- Mensaje de advertencia si ya hay un archivo cargado -->
         <div *ngIf="mostrarMensajeAdvertencia" class="mt-2 text-red-600 dark:text-red-400 text-sm">
-          <p>Ya tienes un archivo cargado. Si deseas cargar otro archivo, elimina el archivo actual primero.</p>
+          <p>{{'labels.archivoYaCargado' | translate}}</p>
         </div>
       </div>
       
       <!-- Mostrar el archivo subido con su tamaño y opción para eliminar -->
       <div *ngIf="fileSeleccionado" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg flex justify-between items-center">
         <div>
-          <p class="text-gray-600 dark:text-gray-300">Archivo seleccionado: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.name }}</span></p>
-          <p class="text-gray-600 dark:text-gray-300">Tamaño: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.size / 1024 | number: '1.2-2' }} KB</span></p>
+          <p class="text-gray-600 dark:text-gray-300">{{'labels.archivoSeleccionado' | translate}}: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.name }}</span></p>
+          <p class="text-gray-600 dark:text-gray-300">{{'labels.tamañoArchivo' | translate}}: <span class="font-semibold text-gray-800 dark:text-gray-100">{{ fileSeleccionado.size / 1024 | number: '1.2-2' }} KB</span></p>
         </div>
         
         <button 
@@ -50,13 +51,13 @@
       <!-- Selección de hojas del archivo Excel -->
       <div class="mb-6 mt-2">
         <label for="sheetSelect" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
-          Selecciona una hoja del archivo
+          {{'labels.seleccinarHoja' | translate}}
         </label>
       
         <!-- Indicador de carga -->
         <p *ngIf="cargandoHojas" class="text-sm text-blue-600 dark:text-blue-400 mt-1 flex items-center gap-2">
           <span class="w-4 h-4 border-2 border-gray-500 dark:border-gray-400 border-t-transparent rounded-full animate-spin"></span>
-          Cargando hojas, por favor espere...
+          {{'labels.cargandoHojas' | translate}}...
         </p>
       
       
@@ -66,7 +67,7 @@
             (click)="toggleDropdown()"
             class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none flex justify-between items-center"
           >
-            <span>{{ hojaSeleccionada || 'Selecciona una hoja' }}</span>
+            <span>{{ hojaSeleccionada || 'labels.seleccioneHoja'  | translate }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 transition-transform duration-300"
@@ -101,7 +102,7 @@
       
       <!-- Mostrar la hoja seleccionada -->
       <div class="mb-6">
-        <p class="text-gray-600 dark:text-gray-300">Hoja seleccionada: <span class="font-bold text-gray-800 dark:text-gray-100">{{ hojaSeleccionada }}</span></p>
+        <p class="text-gray-600 dark:text-gray-300">{{'labels.hojaSeleccionada' | translate}}: <span class="font-bold text-gray-800 dark:text-gray-100">{{ hojaSeleccionada }}</span></p>
       </div>
     
   
@@ -113,46 +114,48 @@
           [disabled]="!hojaSeleccionada || cargandoTraslado"
           (click)="mostrarModalTraslado()"
         >
-        Trasladar Datos
+        {{'buttonsLabels.btnTrasladarDatos' | translate}}
         </button>
       
       
         <!-- Spinner y texto informativo -->
         <div *ngIf="cargandoTraslado" class="flex flex-col items-center justify-center mt-4 space-y-2">
           <div class="w-8 h-8 border-4 border-gray-600 dark:border-gray-500 border-t-transparent rounded-full animate-spin"></div>
-          <p class="text-gray-600 dark:text-gray-300 text-sm">Terminando de trasladar datos...</p>
+          <p class="text-gray-600 dark:text-gray-300 text-sm">{{'labels.trasladandoDatos' | translate}}...</p>
         </div>
       </div>
     </div>
 
     <!-- Sección derecha -->
-    <div class="w-full lg:w-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
-      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Vista de los Datos registrados</h2>
+    <div class="w-full lg:w-1/2 h-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">{{'labels.vistaDatosRegistrados' | translate}}</h2>
+      <!-- Tabla de registro SQL -->
       <div class="overflow-x-auto" style="max-height: 400px;">
-        <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
+        <table class="min-w-full table-auto border-collapse">
           <thead>
             <tr class="bg-gray-100 dark:bg-gray-700">
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Consecutivo</th>
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Estructura</th>
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Usuario</th>
-              <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">Fecha y Hora</th>
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.consecutivoInterno' | translate}}</th>
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.estructura' | translate}}</th>
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.userName' | translate}}</th>
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.fechaHora' | translate}}</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let dato of datosTabla">
-              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300">{{ dato.consecutivo_Interno }}</td>
-              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600  transition-all cursor-pointer" (click)="seleccionarEstructura(dato.estructura)">
+            <tr *ngFor="let dato of datosTabla" class="bg-gray-200 dark:bg-gray-900">
+              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">{{ dato.consecutivo_Interno }}</td>
+              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all cursor-pointer" (click)="seleccionarEstructura(dato.estructura)">
                 <div class="overflow-x-auto" style="max-width: 300px; white-space: nowrap;">
                   {{ dato.estructura }}
                 </div>
-                <span class="text-xs text-blue-500">Clic para ver mas detalles</span>
+                <span class="text-xs text-blue-500">{{'fields.clicDetalles' | translate}}</span>
               </td>
-              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300">{{ dato.userName }}</td>
-              <td class="py-3 px-4 border text-sm text-gray-700 dark:text-gray-300">{{ dato.fecha_Hora | date: 'short' }}</td>
+              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">{{ dato.userName }}</td>
+              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">{{ dato.fecha_Hora | date: 'short' }}</td>
             </tr>
           </tbody>
         </table>
       </div>
+
 
       <!-- Botón de filtros (mostrar tabla o json) -->
       <div class="mt-4 flex justify-end relative">
@@ -166,7 +169,7 @@
             'bg-blue-500 text-white hover:bg-blue-600': columnaSeleccionada, 
             'bg-gray-300 text-gray-600 hover:bg-gray-400': !columnaSeleccionada && !mostrarFiltros  
           }">
-          Filtrar Datos
+          {{'buttonsLabels.btnFiltrarDatos' | translate}}
         </button>
         
         <!-- Dropdown de filtro, se muestra cuando mostrarFiltros es true -->
@@ -177,7 +180,7 @@
               <button (click)="mostrarComoTabla = true; mostrarFiltros = false; mostrarEstructura = false" 
                       class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-t-lg w-full text-left">
                 <span class="flex items-center justify-between">
-                  Tabla
+                  {{'labels.opcionTabla' | translate}}
                   <i *ngIf="mostrarComoTabla" class="fas fa-check text-green-500"></i> <!-- Ícono de check para 'Tabla' -->
                 </span>
               </button>
@@ -196,21 +199,22 @@
         </div>
       </div>
 
-      <div *ngIf="mostrarComoTabla" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600">
+      <!-- Contenedor con tabla para mostrar -->
+      <div *ngIf="mostrarComoTabla" class="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
         <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
-          Tabla Detallada
-          <span class="text-sm ml-2 text-gray-600 dark:text-gray-100">No. registros: {{ datosTablaDetalle.length }}</span>
+          {{'labels.tablaDetallada' | translate}}
+          <span class="text-sm ml-2 text-gray-600 dark:text-gray-100">{{'labels.noRegistros' | translate}}: {{ datosTablaDetalle.length }}</span>
         </h3>
-      
-        <!-- Contenedor con desplazamiento horizontal y vertical -->
+
+        <!-- Tabla del JSON -->
         <div class="overflow-x-auto">
-          <div class="max-h-80 overflow-y-auto"> <!-- Desplazamiento vertical -->
-            <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-600">
+          <div class="overflow-y-auto max-h-[400px]"> <!-- Desplazamiento vertical -->
+            <table class="min-w-full table-auto border-collapse">
               <thead>
                 <tr class="bg-gray-200 dark:bg-gray-600">
                   <!-- Mostrar los encabezados dinámicamente -->
                   <th *ngFor="let encabezado of encabezadosTabla" 
-                      class="py-2 px-4 border text-left text-sm font-medium text-gray-700 dark:text-gray-300">
+                      class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                     {{ encabezado }}
                   </th>
                 </tr>
@@ -219,7 +223,7 @@
                 <!-- Mostrar las filas dinámicamente -->
                 <tr *ngFor="let fila of datosTablaDetalle" class="hover:bg-gray-100 dark:hover:bg-gray-600">
                   <td *ngFor="let encabezado of encabezadosTabla" 
-                      class="py-2 px-4 border text-sm text-gray-700 dark:text-gray-300">
+                      class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">
                     {{ fila[encabezado] }}
                   </td>
                 </tr>
@@ -227,18 +231,18 @@
             </table>
           </div>
         </div>
-      
+
         <!-- Botón para cerrar -->
         <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500" 
                 (click)="cerrarVista()">
-          Cerrar
+                {{'buttonsLabels.btnCerrar' | translate}}
         </button>
       </div>
-      
+
 
       <!-- Estructura o apartado para JSON FOMATEADO-->
-      <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600">
-        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Detalle de la Estructura Seleccionada:</h3>
+      <div *ngIf="mostrarEstructura" class="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
+        <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">{{'labels.estructuraSeleccionada' | translate}}:</h3>
       
         <!-- Mostrar JSON formateado con colores -->
         <pre *ngIf="estructuraSeleccionada && estructuraSeleccionada.length" 
@@ -248,12 +252,12 @@
       
         <!-- Manejo de caso cuando no es JSON o no tiene contenido -->
         <div *ngIf="!estructuraSeleccionada || estructuraSeleccionada.length === 0">
-          No se pudo procesar el contenido o está vacío.
+          {{'messages.errorProcesarContenido' | translate}}
         </div>
       
         <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" 
                 (click)="cerrarVista()">
-          Cerrar
+                {{'buttonsLabels.btnCerrar' | translate}}
         </button>
       </div>
       

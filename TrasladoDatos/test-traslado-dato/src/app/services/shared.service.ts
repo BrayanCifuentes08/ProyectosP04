@@ -1,29 +1,28 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UtilidadService {
-
+export class SharedService {
   private esModoOscuro = false;
-  private loading = true;
   private catalogoSeleccionadoSource = new BehaviorSubject<string | null>(null);
-  catalogoSeleccionado$              = this.catalogoSeleccionadoSource.asObservable();
-  private sidebarOpenSubject         = new Subject<boolean>();
-  sidebarOpen$                       = this.sidebarOpenSubject.asObservable();
-  private updateListSubject          = new Subject<void>();
-  updateList$                        = this.updateListSubject.asObservable();
-  private baseUrl: string = '';
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private apiService: ApiService,) {
+  catalogoSeleccionado$ = this.catalogoSeleccionadoSource.asObservable();
+  private sidebarOpenSubject = new Subject<boolean>();
+  sidebarOpen$ = this.sidebarOpenSubject.asObservable();
+  private updateListSubject = new Subject<void>();
+  updateList$ = this.updateListSubject.asObservable();
+  private accionSubject = new BehaviorSubject<string>('');
+  accion$ = this.accionSubject.asObservable(); 
+  private loading = true;
+  
+  constructor() {
     if (typeof window !== 'undefined') {
       this.esModoOscuro = localStorage.getItem('theme') === 'dark';
       this.aplicarTema(); //Aplica el tema inicial al cargar el servicio
     }
-
-    this.baseUrl = this.apiService.getBaseUrl();
   }
+  
   //*Seccion de metodos utilizados para controlar el modo de la interfaz
   alternarTema(): void {
     this.esModoOscuro = !this.esModoOscuro;
@@ -46,7 +45,7 @@ export class UtilidadService {
       this.aplicarTema(); //Aplica el tema al cargar el servicio
     }
   }
-
+  
   private aplicarTema(): void {
     const body = document.body; //Obtiene el elemento body del documento
     if (this.esModoOscuro) {
@@ -58,16 +57,24 @@ export class UtilidadService {
     }
   }
 
+  //Metodo para controlar el sidebar
+  alternarSidebar(open: boolean) {
+    this.sidebarOpenSubject.next(open);
+  }
+
+  setCatalogoSeleccionado(catalogo: string | null) {
+    this.catalogoSeleccionadoSource.next(catalogo);
+  }
+
+  setAccion(accion: string) {
+    this.accionSubject.next(accion);
+  }
   
-
-  getUrlService(): string {
-    return this.baseUrl;
+  setLoading(value: boolean) {
+    this.loading = value;
   }
 
-  setUrlService(newUrl: string): void {
-    this.baseUrl = newUrl;
-    this.apiService.setBaseUrl(this.baseUrl);
-    console.log(`URL API actualizada a: ${this.baseUrl}`);
+  isLoading(): boolean {
+    return this.loading;
   }
-
 }

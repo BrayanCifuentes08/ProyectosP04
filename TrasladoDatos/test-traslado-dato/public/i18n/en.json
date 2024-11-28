@@ -1,0 +1,64 @@
+{
+    "labels": {
+        "subirArchivo": "Upload your file",
+        "soloArchivosExcel": "Only files",
+        "archivoYaCargado": "You already have a file uploaded. If you want to upload another file, please delete the current file first.",
+        "hacerClickOArrastrar": "Click or drag your file here",
+        "archivoSeleccionado": "Selected file",
+        "tamañoArchivo": "Size",
+        "seleccinarHoja": "Select a sheet from the file",
+        "cargandoHojas": "Loading sheets, please wait",
+        "hojaSeleccionada": "Selected sheet",
+        "trasladandoDatos": "Finishing data transfer",
+        "vistaDatosRegistrados": "View of Registered Data",
+        "opcionTabla": "Table",
+        "tablaDetallada": "Detailed Table",
+        "noRegistros": "No. of records",
+        "estructuraSeleccionada": "Details of the Selected Structure",
+        "cambiarIdioma" : "change language",
+        "URLValida" : "The URL is valid.",
+        "URLInvalida" : "The base URL is invalid.",
+        "ErrorValidarURL" : "Error verifying URL."
+    },
+    "buttonsLabels": {
+        "btnTrasladarDatos": "Transfer Data",
+        "btnFiltrarDatos": "Filter Data",
+        "btnCerrar": "Close"
+    },
+    "fields": {
+        "consecutivoInterno": "Consecutive",
+        "estructura": "Structure",
+        "userName": "User",
+        "fechaHora": "Date and Time"
+    },
+    "messages": {
+        "errorProcesarContenido": "The content could not be processed or is empty.",
+        "errorContraseña": "You must enter the password",
+        "errorUsuario": "You must enter the user",
+        "datosGuardadosSesion": "I saved your session correctly.",
+        "datosNoGuardadosSesion": "Your session will not be saved."
+    },
+    "labelsLogin": {
+        "cerrarSesion" : "Close Session",
+        "iniciarSesion": "Login",
+        "usuarioLogin": "User",
+        "contraseñaLogin": "Password",
+        "cargandoLogin": "Loading",
+        "ingresarUrlLogin": "Enter the API url",
+        "actualizarUrl": "Press 'Confirm' to update the URL.",
+        "confirmarBtns": "Confirm",
+        "verificarBtns": "Verify",
+        "verModalInfo": "View drop-down menu",
+        "menuAutenticacion": "Authentication Menu",
+        "seleccionarInformacionAdicional" : "Select the required information",
+        "estacionesTrabajoLogin": "Workstations",
+        "empresasLogin": "Companies",
+        "aplicacionesLogin": "Applications",
+        "displaysLogin": "Displays",
+        "noDisplaysDisponibles": "No diplays available",
+        "opcionesSeleccionadas": "Selected Options",
+        "guardarCambios": "Save changes",
+        "guardarDatosSesion": "Save session data"
+    }
+    
+}

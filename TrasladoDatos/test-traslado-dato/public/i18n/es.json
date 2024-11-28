@@ -1,0 +1,70 @@
+{
+    "labels": {
+        "subirArchivo" : "Sube tu archivo",
+        "soloArchivosExcel" : "Solo archivos",
+        "archivoYaCargado" : "Ya tienes un archivo cargado. Si deseas cargar otro archivo, elimina el archivo actual primero.",
+        "hacerClickOArrastrar": "Haz clic o arrastra tu archivo aquí",
+        "archivoSeleccionado" : "Archivo seleccionado",
+        "tamañoArchivo": "Tamaño",
+        "seleccinarHoja": "Selecciona una hoja del archivo",
+        "cargandoHojas": "Cargando hojas, por favor espere",
+
+        "seleccioneHoja": "Selecciona una hoja",
+
+        "hojaSeleccionada": "Hoja seleccionada",
+        "trasladandoDatos" : "Terminando de trasladar datos",
+        "vistaDatosRegistrados" : "Vista de los Datos registrados",
+        "opcionTabla" : "Tabla",
+        "tablaDetallada" : "Tabla Detallada",
+        "noRegistros" : "No. registros",
+        "estructuraSeleccionada" : "Detalle de la Estructura Seleccionada",
+        "cambiarIdioma" : "cambiar idioma",
+        "URLValida" : "La URL es válida.",
+        "URLInvalida" : "La URL base no es válida.",
+        "ErrorValidarURL" : "Error al verificar la URL."
+
+    },
+    "buttonsLabels": {
+        "btnTrasladarDatos" : "Trasladar Datos",
+        "btnFiltrarDatos" : "Filtrar Datos",
+        "btnCerrar" : "Cerrar"
+    },
+    "fields": {
+        "consecutivoInterno": "Consecutivo",
+        "estructura": "Estructura",
+        "userName": "Usuario",
+        "fechaHora": "Fecha y Hora",
+        
+        "clicDetalles": "Clic para ver más detalles"
+    },
+    "messages": {
+        "errorProcesarContenido": "No se pudo procesar el contenido o está vacío.",
+        "errorContraseña": "Debe ingresar la contraseña",
+        "errorUsuario": "Debe ingresar el usuario",
+        "datosGuardadosSesion": "Guardo su sesion correctamente.",
+        "datosNoGuardadosSesion": "No se guardará su sesión."
+    },
+    "labelsLogin": {
+        "cerrarSesion": "Cerrar Sesion",
+        "iniciarSesion": "Iniciar Sesión",        
+        "usuarioLogin": "Usuario",
+        "contraseñaLogin": "Contraseña",
+        "cargandoLogin": "Cargando",
+        "ingresarUrlLogin": "Ingrese la url del API",
+        "actualizarUrl": "Presionar 'Confirmar' para actualizar la URL.",
+        "confirmarBtns": "Confimar",
+        "verificarBtns": "Verificar",
+        "verModalInfo": "Ver menu desplegable",
+        "menuAutenticacion": "Menú de Autenticación",
+        "seleccionarInformacionAdicional" : "Selecciona la infomacion requerida",
+        "estacionesTrabajoLogin": "Estaciones de Trabajo",
+        "empresasLogin": "Empresas",
+        "aplicacionesLogin": "Aplicaciones",
+        "displaysLogin": "Displays",
+        "noDisplaysDisponibles": "No hay diplays disponibles",
+        "opcionesSeleccionadas": "Opciones Seleccionadas",
+        "guardarCambios": "Guardar cambios",
+        "guardarDatosSesion": "Guardar datos de sesión"
+    }
+}
+  

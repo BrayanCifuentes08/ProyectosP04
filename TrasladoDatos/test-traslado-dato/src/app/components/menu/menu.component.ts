@@ -3,6 +3,7 @@ import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UtilidadService } from '../../services/utilidad.service';
 import { TraduccionService } from '../../services/traduccion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -20,7 +21,7 @@ export class MenuComponent {
   esModoOscuro = false;
   isIdiomaMenuOpen = false;
   
-  constructor(private utilidadService: UtilidadService, public traduccionService: TraduccionService){
+  constructor(private utilidadService: UtilidadService, public traduccionService: TraduccionService, private router: Router){
     //Inicializar tema oscuro
     this.utilidadService.inicializacionTema();
   }
@@ -63,6 +64,10 @@ export class MenuComponent {
     }
     return 'images/default.png'; // Bandera por defecto si el idioma no es reconocido
   }
-
+  logout(): void {
+    sessionStorage.clear()
+    localStorage.clear()
+    this.router.navigate(['/login']); // Redirige al login
+  }
 
 }

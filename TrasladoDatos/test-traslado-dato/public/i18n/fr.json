@@ -1,0 +1,63 @@
+{
+    "labels": {
+        "subirArchivo": "Téléchargez votre fichier",
+        "soloArchivosExcel": "Uniquement des fichiers",
+        "archivoYaCargado": "Vous avez déjà un fichier téléchargé. Si vous souhaitez en télécharger un autre, veuillez d'abord supprimer le fichier actuel.",
+        "hacerClickOArrastrar": "Cliquez ou faites glisser votre fichier ici",
+        "archivoSeleccionado": "Fichier sélectionné",
+        "tamañoArchivo": "Taille",
+        "seleccinarHoja": "Sélectionnez une feuille du fichier",
+        "cargandoHojas": "Chargement des feuilles, veuillez patienter",
+        "hojaSeleccionada": "Feuille sélectionnée",
+        "trasladandoDatos": "Fin du transfert des données",
+        "vistaDatosRegistrados": "Vue des Données Enregistrées",
+        "opcionTabla": "Table",
+        "tablaDetallada": "Table détaillée",
+        "noRegistros": "Nombre d'enregistrements",
+        "estructuraSeleccionada": "Détails de la structure sélectionnée",
+        "cambiarIdioma": "changer de langue",
+        "URLValida" : "L'URL est valide.",
+        "URLInvalida" : "L'URL de base n'est pas valide.",
+        "ErrorValidarURL" : "Échec de la vérification de l'URL."
+    },
+    "buttonsLabels": {
+        "btnTrasladarDatos": "Transférer les données",
+        "btnFiltrarDatos": "Filtrer les données",
+        "btnCerrar": "Fermer"
+    },
+    "fields": {
+        "consecutivoInterno": "Consécutif",
+        "estructura": "Structure",
+        "userName": "Utilisateur",
+        "fechaHora": "Date et Heure"
+    },
+    "messages": {
+        "errorProcesarContenido": "Le contenu n'a pas pu être traité ou est vide.",
+        "errorContraseña": "Vous devez saisir le mot de passe",
+        "errorUsuario": "Vous devez saisir le nom de l'utilisateur",
+        "datosGuardadosSesion": "J'ai correctement sauvegardé votre session.",
+        "datosNoGuardadosSesion": "Votre session ne sera pas sauvegardée."
+    },
+    "labelsLogin": {
+        "cerrarSesion" : "Déconnexion",
+        "iniciarSesion": "Connexion",
+        "usuarioLogin": "Utilisateur",
+        "contraseñaLogin": "Mot de passe",
+        "cargandoLogin": "Chargement",
+        "ingresarUrlLogin": "Entrez l'URL de l'API",
+        "actualizarUrl": "Appuyez sur 'Confirmer' pour mettre à jour l'URL.",
+        "confirmarBtns": "Confirmer",
+        "verificarBtns": "Vérifier",
+        "verModalInfo": "Voir le menu déroulant",
+        "menuAutenticacion": "Menu d'authentification",
+        "seleccionarInformacionAdicional" : "Sélectionnez les informations requises",
+        "estacionesTrabajoLogin": "Postes de travail",
+        "empresasLogin": "Entreprises",
+        "aplicacionesLogin": "Applications",
+        "displaysLogin": "Affichages",
+        "noDisplaysDisponibles": "Aucun affichage disponible",
+        "opcionesSeleccionadas": "Options sélectionnées",
+        "guardarCambios": "Enregistrer les modifications",
+        "guardarDatosSesion": "Sauvegarder les données de la session"
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "labels": {
+        "subirArchivo": "Laden Sie Ihre Datei hoch",
+        "soloArchivosExcel": "Nur Dateien",
+        "archivoYaCargado": "Sie haben bereits eine Datei hochgeladen. Wenn Sie eine andere Datei hochladen möchten, löschen Sie bitte zuerst die aktuelle Datei.",
+        "hacerClickOArrastrar": "Klicken oder ziehen Sie Ihre Datei hierher",
+        "archivoSeleccionado": "Ausgewählte Datei",
+        "tamañoArchivo": "Größe",
+        "seleccinarHoja": "Wählen Sie ein Blatt aus der Datei",
+        "cargandoHojas": "Blätter werden geladen, bitte warten",
+        "hojaSeleccionada": "Ausgewähltes Blatt",
+        "trasladandoDatos": "Datenübertragung wird abgeschlossen",
+        "vistaDatosRegistrados": "Ansicht der registrierten Daten",
+        "opcionTabla": "Tabelle",
+        "tablaDetallada": "Detaillierte Tabelle",
+        "noRegistros": "Anzahl der Datensätze",
+        "estructuraSeleccionada": "Details der ausgewählten Struktur",
+        "cambiarIdioma": "sprache ändern",
+        "URLValida" : "Die URL ist gültig.",
+        "URLInvalida" : "Die Basis-URL ist ungültig.",
+        "ErrorValidarURL" : "Die URL konnte nicht überprüft werden."
+    },
+    "buttonsLabels": {
+        "btnTrasladarDatos": "Daten übertragen",
+        "btnFiltrarDatos": "Daten filtern",
+        "btnCerrar": "Schließen"
+    },
+    "fields": {
+        "consecutivoInterno": "Konsekutiv",
+        "estructura": "Struktur",
+        "userName": "Benutzer",
+        "fechaHora": "Datum und Uhrzeit"
+    },
+    "messages": {
+        "errorProcesarContenido": "Der Inhalt konnte nicht verarbeitet werden oder ist leer.",
+        "errorContraseña": "Sie müssen das Passwort eingeben",
+        "errorUsuario": "Sie müssen den Namen des Benutzers eingeben",
+        "datosGuardadosSesion": "Ich habe Ihre Sitzung korrekt gespeichert.",
+        "datosNoGuardadosSesion": "Ihre Sitzung wird nicht gespeichert."
+    },
+    "labelsLogin": {
+        "cerrarSesion" : "Abmelden",
+       "iniciarSesion": "Anmelden",
+        "usuarioLogin": "Benutzer",
+        "contraseñaLogin": "Passwort",
+        "cargandoLogin": "Laden",
+        "ingresarUrlLogin": "API-URL eingeben",
+        "actualizarUrl": "Drücken Sie 'Bestätigen', um die URL zu aktualisieren.",
+        "confirmarBtns": "Bestätigen",
+        "verificarBtns": "Überprüfen",
+        "verModalInfo": "Dropdown-Menü anzeigen",
+        "menuAutenticacion": "Authentifizierungsmenü",
+        "seleccionarInformacionAdicional" : "Wählen Sie die erforderlichen Informationen aus",
+        "estacionesTrabajoLogin": "Arbeitsplätze",
+        "empresasLogin": "Unternehmen",
+        "aplicacionesLogin": "Anwendungen",
+        "displaysLogin": "Bildschirme",
+        "noDisplaysDisponibles": "Keine Bildschirme verfügbar",
+        "opcionesSeleccionadas": "Ausgewählte Optionen",
+        "guardarCambios": "Änderungen speichern",
+        "guardarDatosSesion": "Sitzungsdaten speichern"
+    }
+}

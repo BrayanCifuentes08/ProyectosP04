@@ -50,30 +50,31 @@
   <div class="fixed inset-0 bg-black/30 backdrop-blur-sm"></div>
 
   <!-- Contenido del modal -->
-  <div class="relative bg-white text-gray-700 shadow-lg rounded-lg p-6 transition-transform duration-300 max-w-lg w-full mx-4 md:mx-0"
+  <div class="relative bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-lg rounded-lg p-6 transition-transform duration-300 max-w-lg w-full mx-4 md:mx-0"
        [ngClass]="{'animate-modalBounceIn': isVisibleModal, 'animate-modalBounceOut': !isVisibleModal}">
-    
+
     <!-- Icono de alerta -->
     <div class="flex items-center justify-center mb-4">
-      <i class="fa-solid fa-circle-exclamation text-4xl text-yellow-500"></i>
+      <i class="fa-solid fa-circle-exclamation text-4xl text-yellow-500 dark:text-yellow-400"></i>
     </div>
 
     <!-- Título del modal -->
-    <h2 class="text-xl font-semibold text-center mb-4">Confirmación</h2>
+    <h2 class="text-xl font-semibold text-center mb-4 text-gray-800 dark:text-gray-200">Confirmación</h2>
 
     <!-- Mensaje del modal -->
-    <p class="text-center text-sm mb-6">{{ mensajeModal }}</p>
+    <p class="text-center text-sm mb-6 text-gray-700 dark:text-gray-400">{{ mensajeModal }}</p>
     
     <!-- Botones de acción -->
     <div class="flex justify-center space-x-4">
-      <button (click)="cancelar()" class="px-6 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded hover:bg-gray-300 transition-colors duration-200">
+      <button (click)="cancelar()" class="px-6 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
         Cancelar
       </button>
-      <button (click)="confirmar()" class="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors duration-200">
+      <button (click)="confirmar()" class="px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors duration-200">
         Confirmar
       </button>
     </div>
   </div>
 </div>
+
 
 

@@ -1,19 +1,21 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, ElementRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import * as XLSX from 'xlsx';
 import { MessagesComponent } from "../messages/messages.component";
 import { DocumentoEstructura } from '../../models/documento-estructura';
+import { TranslateModule } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-traslado',
   standalone: true,
-  imports: [CommonModule, FormsModule, MessagesComponent],
+  imports: [CommonModule, FormsModule, MessagesComponent, TranslateModule],
   templateUrl: './traslado.component.html',
   styleUrl: './traslado.component.css'
 })
-export class TrasladoComponent {
+export default class TrasladoComponent {
   fileSeleccionado: File | null = null;
   hojas: string[] = [];
   hojaSeleccionada: string = '';
@@ -36,8 +38,64 @@ export class TrasladoComponent {
   datosFiltrados: any[] = [];
   columnaSeleccionada: boolean = false;
 
+  usuario: string =''
+  horaInicioSesionFormatted: string | null = null;
+  fechaVencimientoToken: string | null = null;
+  usandoHoraPerma: boolean = false;
+  tooltipVisible: boolean = false;
+  tiempoRestante: string = '';
+
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
-  constructor(private apiService: ApiService){}
+  constructor(private apiService: ApiService, @Inject(PLATFORM_ID) private platformId: Object, private router: Router,){}
+
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      // Recuperar valores del localStorage
+      this.horaInicioSesionFormatted = localStorage.getItem('horaInicioSesionFormatted');
+      this.fechaVencimientoToken = localStorage.getItem('fechaVencimientoToken');
+      this.usuario = this.apiService.getUser();
+      
+      // Determinar si se esta usando una sesion permanente o temporal
+      const horaInicioSesionLocal = localStorage.getItem('horaInicioSesion');
+      this.usandoHoraPerma = !!horaInicioSesionLocal; 
+  
+      if (this.fechaVencimientoToken) {
+        this.iniciarContador();  // Inicia el contador
+      }
+      // Obtener los datos de localStorage y sessionStorage
+      const estacionTrabajo = JSON.parse(localStorage.getItem('estacionTrabajo') || '{}');
+      const empresa = JSON.parse(localStorage.getItem('empresa') || '{}');
+      const aplicacion = JSON.parse(localStorage.getItem('aplicacion') || '{}');
+      const display = JSON.parse(localStorage.getItem('display') || '{}');
+  
+      // Verificar si los datos estan en localStorage
+      const datosEnLocalStorage = estacionTrabajo && empresa && aplicacion && display;
+  
+      // Si los datos no estan en localStorage
+      if (!datosEnLocalStorage) {
+        const datosEnSessionStorage = sessionStorage.getItem('estacionTrabajo') ||
+                                      sessionStorage.getItem('empresa') ||
+                                      sessionStorage.getItem('aplicacion') ||
+                                      sessionStorage.getItem('display');
+  
+        if (datosEnSessionStorage) {
+          // Si hay datos en sessionStorage, redirigir al login
+          this.limpiarSessionStorageYRedirigir();
+        } else {
+          // Si no hay datos en ninguno, redirigir al login
+          this.router.navigate(['/login']);
+        }
+      } else {
+        this.router.navigate(['/trasladoDatos']);
+      }
+    }
+  }
+
+  limpiarSessionStorageYRedirigir(): void {
+    sessionStorage.clear(); 
+    console.log('sessionStorage limpiado');
+    this.router.navigate(['/login']); 
+  }
 
   cargarFile(event: any): void {
     const file: File = event.target.files[0];
@@ -73,6 +131,8 @@ export class TrasladoComponent {
   }
 
   trasladarDatos(): void {
+    const user = this.apiService.getUser();
+    const empresa = this.apiService.getEmpresa();
     this.isVisibleModal = false;
     this.datosTabla = []; 
     this.datosTablaDetalle = []; 
@@ -89,7 +149,7 @@ export class TrasladoComponent {
     const model = {
       tAccion: 1,
       tOpcion: 1,
-      pUserName: 'ds',
+      pUserName: user,
       pConsecutivoInterno: 0,
       pTipoEstructura: 1,
       pEstado: 1,
@@ -175,6 +235,7 @@ export class TrasladoComponent {
     this.datosTablaDetalle = [];
     this.encabezadosTabla = []; 
     this.mostrarComoTabla = false;
+    this.columnaSeleccionada = false;
     console.log('Archivo eliminado');
   }
 
@@ -223,5 +284,44 @@ export class TrasladoComponent {
     this.columnaSeleccionada = false; // Resetear columna seleccionada
   }
   
+  iniciarContador() {
+    const partesFecha = this.fechaVencimientoToken!.split(', ');
+    const [fecha, hora] = partesFecha;
+    const [dia, mes, anio] = fecha.split('/');
+    const [horas, minutos, segundos] = hora.split(':');
+  
+    const fechaVencimiento = new Date(+anio, +mes - 1, +dia, +horas, +minutos, +segundos);
+  
+    if (isNaN(fechaVencimiento.getTime())) {
+      console.error("Fecha de vencimiento no válida: ", this.fechaVencimientoToken);
+      this.tiempoRestante = 'Fecha no válida';
+      return;
+    }
+  
+    const actualizarContador = () => {
+      const ahora = new Date().getTime();
+      const diferencia = fechaVencimiento.getTime() - ahora;
+  
+      if (diferencia <= 0) {
+        this.tiempoRestante = '00:00:00';  // Sesión expirada
+        clearInterval(intervalo);
+      } else {
+        const horas = Math.floor(diferencia / (1000 * 60 * 60));
+        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+  
+        this.tiempoRestante = 
+          `${this.pad(horas)}:${this.pad(minutos)}:${this.pad(segundos)}`;
+      }
+    };
+  
+    const intervalo = setInterval(actualizarContador, 1000);
+    actualizarContador();  // Inicializa el contador de inmediato
+  }
+  
+  // Función pad para formatear números menores a 10 con ceros a la izquierda
+  pad(n: number): string {
+    return n < 10 ? '0' + n : '' + n;
+  }
   
 }
