@@ -1,5 +1,6 @@
 ﻿using ApiTestTrasladoDatos.Models;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +23,7 @@ namespace ApiTestTrasladoDatos.Controllers
         {
             _connectionString = configuration.GetConnectionString("ConnectionString");
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult Post(
             [FromForm] ExcelData request,

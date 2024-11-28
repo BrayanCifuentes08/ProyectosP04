@@ -6,12 +6,13 @@ using System.Collections.Generic;
 
 namespace ApiSistemaCompra.Controllers
 {
-  
+
     [Route("api/[controller]")]
     [ApiController]
     public class Ctrl_ObtenerHojasExcel : ControllerBase
     {
         // POST: api/Excel/ObtenerHojas
+        [Authorize]
         [HttpPost()]
         public IActionResult Post([FromForm] Microsoft.AspNetCore.Http.IFormFile archivoExcel)
         {

@@ -36,6 +36,7 @@
   "mensajesUsuario": "Benutzername",
   "mensajesSesionGuardadaEl": "Sitzung gespeichert am",
   "mensajesSesionExpiraEl": "Sitzung läuft ab am",
+  "mensajesError":                                             "Fehler",
 
   "splashMantenimiento":                     "Wartung",
 
@@ -51,6 +52,9 @@
   "paBscTipoCanalDistribucionMEstado":                         "Staat",
   "paBscTipoCanalDistribucionMFechayHora":                     "Datum und Uhrzeit",
   "paBscTipoCanalDistribucionMUserName":                       "Nutzername",
+
+  "trasladoDatosErrorAlSeleccionar":                           "Fehler bei der Auswahl der Datei",
+  "trasladoDatosErrorEnviarArchivoServidor":                   "Fehler beim Senden der Datei an den Server",
 
   "dashboardVisualizandoCatalogo":           "Anzeige des Katalogs:",
   "dashboardVisualizandoRegistro":           "Registrierung anzeigen:",

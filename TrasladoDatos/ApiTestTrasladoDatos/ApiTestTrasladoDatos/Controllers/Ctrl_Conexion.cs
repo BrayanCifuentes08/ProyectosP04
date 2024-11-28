@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Data.SqlClient;
@@ -8,6 +9,7 @@ using System.Text.Json.Nodes;
 
 namespace ApiTestTrasladoDatos.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class Ctrl_Conexion : ControllerBase
@@ -26,7 +28,7 @@ namespace ApiTestTrasladoDatos.Controllers
             public string UserId { get; set; }
             public string Password { get; set; }
         }
-
+        [Authorize]
         [HttpPost()]
         public IActionResult UpdateConnectionString([FromBody] ConnectionSettings settings)
         {

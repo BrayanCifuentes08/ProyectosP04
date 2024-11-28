@@ -25,7 +25,7 @@ namespace ApiTestTrasladoDatos.Controllers
         {
             _connectionString = configuration.GetConnectionString("ConnectionString");
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult Post([FromForm] ExcelData request, [FromForm] string userName)
         {
