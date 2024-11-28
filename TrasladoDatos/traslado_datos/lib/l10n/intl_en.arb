@@ -35,6 +35,7 @@
   "mensajesUsuario": "UserName",
   "mensajesSesionGuardadaEl": "Session saved on",
   "mensajesSesionExpiraEl": "Session expires on",
+  "mensajesError":                                             "Error",
 
   "splashMantenimiento":                     "Maintenance",
 
@@ -50,6 +51,9 @@
   "paBscTipoCanalDistribucionMEstado":                         "State",
   "paBscTipoCanalDistribucionMFechayHora":                     "Date and Time",
   "paBscTipoCanalDistribucionMUserName":                       "UserName",
+
+  "trasladoDatosErrorAlSeleccionar":                           "Error when selecting file",
+  "trasladoDatosErrorEnviarArchivoServidor":                   "Error sending the file to the server",
 
   "dashboardVisualizandoCatalogo":           "Viewing catalog:",
   "dashboardVisualizandoRegistro":           "Viewing record:",

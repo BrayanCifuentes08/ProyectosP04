@@ -370,6 +370,16 @@ class S {
     );
   }
 
+  /// `Error`
+  String get mensajesError {
+    return Intl.message(
+      'Error',
+      name: 'mensajesError',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Maintenance`
   String get splashMantenimiento {
     return Intl.message(
@@ -485,6 +495,26 @@ class S {
     return Intl.message(
       'UserName',
       name: 'paBscTipoCanalDistribucionMUserName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error when selecting file`
+  String get trasladoDatosErrorAlSeleccionar {
+    return Intl.message(
+      'Error when selecting file',
+      name: 'trasladoDatosErrorAlSeleccionar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error sending the file to the server`
+  String get trasladoDatosErrorEnviarArchivoServidor {
+    return Intl.message(
+      'Error sending the file to the server',
+      name: 'trasladoDatosErrorEnviarArchivoServidor',
       desc: '',
       args: [],
     );

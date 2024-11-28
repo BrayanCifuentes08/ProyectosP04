@@ -35,6 +35,7 @@
   "mensajesUsuario": "Nom d'utilisateur",
   "mensajesSesionGuardadaEl": "Session enregistrée le",
   "mensajesSesionExpiraEl": "La session expire le",
+  "mensajesError":                                             "Erreur",
   
 
   "splashMantenimiento":                     "Entretien",
@@ -51,6 +52,9 @@
   "paBscTipoCanalDistribucionMEstado":                         "État",
   "paBscTipoCanalDistribucionMFechayHora":                     "Date et heure",
   "paBscTipoCanalDistribucionMUserName":                       "Nom d'utilisateur",
+
+  "trasladoDatosErrorAlSeleccionar":                           "Erreur de sélection de fichier",
+  "trasladoDatosErrorEnviarArchivoServidor":                   "Erreur lors de l'envoi du fichier au serveur",
 
   "dashboardVisualizandoCatalogo":           "Affichage du catalogue:",
   "dashboardVisualizandoRegistro":           "Visualisation de l'enregistrement:",

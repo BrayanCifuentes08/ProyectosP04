@@ -140,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mensajesConfimar": MessageLookupByLibrary.simpleMessage("Bestätigen"),
         "mensajesConfirmarCreacion":
             MessageLookupByLibrary.simpleMessage("Erstellung bestätigen:"),
+        "mensajesError": MessageLookupByLibrary.simpleMessage("Fehler"),
         "mensajesSesionExpiraEl":
             MessageLookupByLibrary.simpleMessage("Sitzung läuft ab am"),
         "mensajesSesionGuardadaEl":
@@ -167,6 +168,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Typ Vertriebskanal"),
         "paBscTipoCanalDistribucionMUserName":
             MessageLookupByLibrary.simpleMessage("Nutzername"),
-        "splashMantenimiento": MessageLookupByLibrary.simpleMessage("Wartung")
+        "splashMantenimiento": MessageLookupByLibrary.simpleMessage("Wartung"),
+        "trasladoDatosErrorAlSeleccionar": MessageLookupByLibrary.simpleMessage(
+            "Fehler bei der Auswahl der Datei"),
+        "trasladoDatosErrorEnviarArchivoServidor":
+            MessageLookupByLibrary.simpleMessage(
+                "Fehler beim Senden der Datei an den Server")
       };
 }

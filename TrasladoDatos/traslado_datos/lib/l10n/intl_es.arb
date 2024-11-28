@@ -28,15 +28,16 @@
   "layoutSubir":                                               "Subir",
   "layoutBajar":                                               "Bajar",
 
-  "mensajesAdvertencia":                                          "Advertencia",
-  "mensajesAceptar":                                              "Aceptar",
-  "mensajesConfirmarCreacion":                                    "Confirmar creación:",
-  "mensajesConfimar":                                             "Confirmar",
-  "mensajesCancelar": "Cancelar",
-  "mensajesCerrarSesion": "Cerrar sesión",
-  "mensajesUsuario": "Usuario",
-  "mensajesSesionGuardadaEl": "Sesión guardada el",
-  "mensajesSesionExpiraEl": "Sesión expira el",
+  "mensajesAdvertencia":                                       "Advertencia",
+  "mensajesAceptar":                                           "Aceptar",
+  "mensajesConfirmarCreacion":                                 "Confirmar creación:",
+  "mensajesConfimar":                                          "Confirmar",
+  "mensajesCancelar":                                          "Cancelar",
+  "mensajesCerrarSesion":                                      "Cerrar sesión",
+  "mensajesUsuario":                                           "Usuario",
+  "mensajesSesionGuardadaEl":                                  "Sesión guardada el",
+  "mensajesSesionExpiraEl":                                    "Sesión expira el",
+  "mensajesError":                                             "Error",
   
 
 
@@ -55,6 +56,8 @@
   "paBscTipoCanalDistribucionMFechayHora":                     "Fecha y Hora",
   "paBscTipoCanalDistribucionMUserName":                       "UserName",
 
+  "trasladoDatosErrorAlSeleccionar":                           "Error al seleccionar el archivo",
+  "trasladoDatosErrorEnviarArchivoServidor":                   "Error al enviar el archivo al servidor",
                   
   "dashboardVisualizandoCatalogo":                             "Visualizando catalogo:",
   "dashboardVisualizandoRegistro":                             "Visualizando registro:",

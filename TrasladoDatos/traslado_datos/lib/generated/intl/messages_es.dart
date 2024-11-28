@@ -144,6 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mensajesConfimar": MessageLookupByLibrary.simpleMessage("Confirmar"),
         "mensajesConfirmarCreacion":
             MessageLookupByLibrary.simpleMessage("Confirmar creación:"),
+        "mensajesError": MessageLookupByLibrary.simpleMessage("Error"),
         "mensajesSesionExpiraEl":
             MessageLookupByLibrary.simpleMessage("Sesión expira el"),
         "mensajesSesionGuardadaEl":
@@ -172,6 +173,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "paBscTipoCanalDistribucionMUserName":
             MessageLookupByLibrary.simpleMessage("UserName"),
         "splashMantenimiento":
-            MessageLookupByLibrary.simpleMessage("Mantenimiento")
+            MessageLookupByLibrary.simpleMessage("Mantenimiento"),
+        "trasladoDatosErrorAlSeleccionar": MessageLookupByLibrary.simpleMessage(
+            "Error al seleccionar el archivo"),
+        "trasladoDatosErrorEnviarArchivoServidor":
+            MessageLookupByLibrary.simpleMessage(
+                "Error al enviar el archivo al servidor")
       };
 }

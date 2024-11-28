@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/monokai-sublime.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/Loading.dart';
 import 'package:traslado_datos/common/Mensajes.dart';
@@ -132,6 +133,9 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
   }
 
   void _seleccionarArchivo() async {
+    setState(() {
+      _cargandoHojas = true;
+    });
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -147,13 +151,20 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
       _mostrarAlerta(
           context,
           S.of(context).mensajesConfimar,
-          'Error al seleccionar el archivo: $e',
+          '${S.of(context).trasladoDatosErrorAlSeleccionar}: $e',
           FontAwesomeIcons.circleExclamation,
           Color(0xFFFEAB308),
           1,
           S.of(context).mensajesAceptar, () async {
         Navigator.pop(context);
       }, null, null);
+    } finally {
+      setState(() {
+        _cargandoHojas = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
     }
   }
 
@@ -171,7 +182,13 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         final response = await _dio.post(
           '${widget.baseUrl}Ctrl_ObtenerHojasExcel',
           data: formData,
+          options: Options(
+            headers: {
+              "Authorization": "Bearer ${widget.token}",
+            },
+          ),
         );
+
         print('Respuesta del servidor: ${response.statusCode}');
         print('Cuerpo de la respuesta: ${response.data}');
         // Almacenar las hojas en la lista _sheetNames
@@ -180,6 +197,16 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         });
       }
     } catch (e) {
+      _mostrarAlerta(
+          context,
+          S.of(context).mensajesConfimar,
+          '${S.of(context).trasladoDatosErrorEnviarArchivoServidor}: $e',
+          FontAwesomeIcons.circleExclamation,
+          Color(0xFFFEAB308),
+          1,
+          S.of(context).mensajesAceptar, () async {
+        Navigator.pop(context);
+      }, null, null);
       print('Error al enviar el archivo al servidor: $e');
     } finally {
       setState(() {
@@ -197,7 +224,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Error',
+            S.of(context).mensajesError,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xFF154790),
@@ -213,7 +240,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                 Navigator.of(context).pop();
               },
               child: Text(
-                'OK',
+                S.of(context).mensajesAceptar,
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Color(0xFFDC9525)),
               ),
@@ -257,6 +284,11 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         final response = await _dio.post(
           '${widget.baseUrl}PaTblDocumentoEstructuraCtrl',
           data: formData,
+          options: Options(
+            headers: {
+              "Authorization": "Bearer ${widget.token}",
+            },
+          ),
         );
 
         if (response.statusCode == 200) {
@@ -691,7 +723,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                             ),
                                           ),
                                           subtitle: Text(
-                                            'Tamaño: ${(_archivoSeleccionado!.size) / 1024} KB',
+                                            'Tamaño: ${NumberFormat("#,##0.00").format((_archivoSeleccionado!.size) / 1024)} KB',
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: themeNotifier.temaClaro
