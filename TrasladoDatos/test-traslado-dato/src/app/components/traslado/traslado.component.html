@@ -129,33 +129,54 @@
     <!-- Sección derecha -->
     <div class="w-full lg:w-1/2 h-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
       <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">{{'labels.vistaDatosRegistrados' | translate}}</h2>
+      
       <!-- Tabla de registro SQL -->
       <div class="overflow-x-auto" style="max-height: 400px;">
         <table class="min-w-full table-auto border-collapse">
           <thead>
-            <tr class="bg-gray-100 dark:bg-gray-700">
-              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.consecutivoInterno' | translate}}</th>
-              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.estructura' | translate}}</th>
-              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.userName' | translate}}</th>
-              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">{{'fields.fechaHora' | translate}}</th>
+            <tr class="bg-blue-500 dark:bg-gray-800"> <!-- Encabezado azul y gris oscuro en modo oscuro -->
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-left text-sm font-medium text-white">
+                {{ 'fields.consecutivoInterno' | translate }}
+              </th>
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-left text-sm font-medium text-white">
+                {{ 'fields.estructura' | translate }}
+              </th>
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-left text-sm font-medium text-white">
+                {{ 'fields.userName' | translate }}
+              </th>
+              <th class="py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-left text-sm font-medium text-white">
+                {{ 'fields.fechaHora' | translate }}
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let dato of datosTabla" class="bg-gray-200 dark:bg-gray-900">
-              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">{{ dato.consecutivo_Interno }}</td>
-              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all cursor-pointer" (click)="seleccionarEstructura(dato.estructura)">
+            <tr 
+              *ngFor="let dato of datosTabla; let i = index" 
+              [class.bg-blue-100]="i % 2 === 0" 
+              [class.bg-blue-50]="i % 2 !== 0" 
+              [class.dark:bg-gray-700]="i % 2 === 0" 
+              [class.dark:bg-gray-600]="i % 2 !== 0">
+              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300">
+                {{ dato.consecutivo_Interno }}
+              </td>
+              <td (click)="seleccionarEstructura(dato.estructura)" class="hover:bg-blue-200 dark:hover:bg-gray-500 transition-all py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
                 <div class="overflow-x-auto" style="max-width: 300px; white-space: nowrap;">
                   {{ dato.estructura }}
                 </div>
-                <span class="text-xs text-blue-500">{{'fields.clicDetalles' | translate}}</span>
+                <span class="text-xs text-blue-500 dark:text-blue-400">
+                  {{ 'fields.clicDetalles' | translate }}
+                </span>
               </td>
-              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">{{ dato.userName }}</td>
-              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">{{ dato.fecha_Hora | date: 'short' }}</td>
+              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300">
+                {{ dato.userName }}
+              </td>
+              <td class="py-3 px-4 border-b border-gray-300 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300">
+                {{ dato.fecha_Hora | date: 'short' }}
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
-
 
       <!-- Botón de filtros (mostrar tabla o json) -->
       <div class="mt-4 flex justify-end relative">
@@ -206,24 +227,27 @@
           <span class="text-sm ml-2 text-gray-600 dark:text-gray-100">{{'labels.noRegistros' | translate}}: {{ datosTablaDetalle.length }}</span>
         </h3>
 
-        <!-- Tabla del JSON -->
         <div class="overflow-x-auto">
-          <div class="overflow-y-auto max-h-[400px]"> <!-- Desplazamiento vertical -->
+          <div class="overflow-y-auto max-h-[400px]">
             <table class="min-w-full table-auto border-collapse">
               <thead>
-                <tr class="bg-gray-200 dark:bg-gray-600">
-                  <!-- Mostrar los encabezados dinámicamente -->
+                <tr class="bg-blue-500 dark:bg-gray-800">
                   <th *ngFor="let encabezado of encabezadosTabla" 
-                      class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
+                      class="py-2 px-4 border-b border-gray-300 dark:border-gray-700 text-left text-sm font-medium text-white">
                     {{ encabezado }}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <!-- Mostrar las filas dinámicamente -->
-                <tr *ngFor="let fila of datosTablaDetalle" class="hover:bg-gray-100 dark:hover:bg-gray-600">
+                <tr 
+                  *ngFor="let fila of datosTablaDetalle; let i = index" 
+                  [class.bg-blue-100]="i % 2 === 0" 
+                  [class.bg-blue-50]="i % 2 !== 0"
+                  [class.dark:bg-gray-700]="i % 2 === 0" 
+                  [class.dark:bg-gray-600]="i % 2 !== 0"
+                  class="hover:bg-blue-200 dark:hover:bg-gray-500">
                   <td *ngFor="let encabezado of encabezadosTabla" 
-                      class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">
+                      class="py-2 px-4 border-b border-gray-300 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 min-w-[150px] max-w-[300px] overflow-x-auto whitespace-nowrap">
                     {{ fila[encabezado] }}
                   </td>
                 </tr>
@@ -231,6 +255,7 @@
             </table>
           </div>
         </div>
+        
 
         <!-- Botón para cerrar -->
         <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500" 
