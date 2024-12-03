@@ -21,7 +21,8 @@ export class ApiService {
     
     const formData = new FormData();
     formData.append('archivoExcel', archivo);
-  
+    
+    console.log(headers)
     return this.http.post<string[]>(url, formData , {headers} )
       .pipe(
         map(response => response)

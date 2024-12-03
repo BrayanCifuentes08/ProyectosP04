@@ -208,13 +208,6 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         Navigator.pop(context);
       }, null, null);
       print('Error al enviar el archivo al servidor: $e');
-    } finally {
-      setState(() {
-        _cargandoHojas = false;
-      });
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
-      });
     }
   }
 
@@ -460,7 +453,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: temaClaro ? Colors.white : Colors.grey[400]!,
+                            color: temaClaro ? Colors.white : Colors.grey[600]!,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           width: double.infinity,
@@ -472,8 +465,8 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   headingRowColor:
                                       MaterialStateColor.resolveWith(
                                     (states) => temaClaro
-                                        ? Color(0xFFDD952A)
-                                        : Colors.grey[800]!,
+                                        ? Color(0xFF3b82f6)
+                                        : Color.fromARGB(255, 43, 56, 75),
                                   ),
                                   dataRowColor: MaterialStateColor.resolveWith(
                                     (states) => temaClaro
@@ -491,12 +484,11 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                                     label: Text(
                                                       key,
                                                       style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: temaClaro
-                                                            ? Colors.black
-                                                            : Colors.white,
-                                                      ),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: temaClaro
+                                                              ? Colors.white
+                                                              : Colors.white),
                                                     ),
                                                   ))
                                               .toList()
@@ -518,19 +510,56 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                               .toList()
                                           : [],
                                   rows: estructuraDecodificada is List
-                                      ? estructuraDecodificada.map(
-                                          (item) {
+                                      ? estructuraDecodificada
+                                          .asMap()
+                                          .entries
+                                          .map(
+                                          (entry) {
+                                            int index = entry
+                                                .key; // Índice del elemento
+                                            var item = entry.value;
+
                                             if (item is Map) {
                                               return DataRow(
                                                 cells: item.values
-                                                    .map((value) => DataCell(
-                                                        Text(value.toString())))
+                                                    .map((value) =>
+                                                        DataCell(Text(
+                                                          value.toString(),
+                                                          style: TextStyle(
+                                                            color: temaClaro
+                                                                ? Colors.black
+                                                                : Colors.white,
+                                                          ),
+                                                        )))
                                                     .toList(),
+                                                color: MaterialStateColor
+                                                    .resolveWith(
+                                                  (states) => index % 2 == 0
+                                                      ? (temaClaro
+                                                          ? Colors.white
+                                                          : Colors.grey[600]!)
+                                                      : (temaClaro
+                                                          ? Colors.grey[200]!
+                                                          : Colors.grey[700]!),
+                                                ),
                                               );
                                             } else {
-                                              return DataRow(cells: [
-                                                DataCell(Text(item.toString()))
-                                              ]);
+                                              return DataRow(
+                                                cells: [
+                                                  DataCell(
+                                                      Text(item.toString()))
+                                                ],
+                                                color: MaterialStateColor
+                                                    .resolveWith(
+                                                  (states) => index % 2 == 0
+                                                      ? (temaClaro
+                                                          ? Colors.white
+                                                          : Colors.grey[600]!)
+                                                      : (temaClaro
+                                                          ? Colors.grey[200]!
+                                                          : Colors.grey[700]!),
+                                                ),
+                                              );
                                             }
                                           },
                                         ).toList()
@@ -866,12 +895,12 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                               // COLOR DE COLUMNAS TABLA CLIENTES:
                               headingRowColor: MaterialStateColor.resolveWith(
                                 (states) => themeNotifier.temaClaro
-                                    ? Color(0xFFDD952A)
-                                    : Colors.grey[800]!,
+                                    ? Color(0xFF3b82f6)
+                                    : Color.fromARGB(255, 43, 56, 75),
                               ),
                               dataRowColor: MaterialStateColor.resolveWith(
                                 (states) => themeNotifier.temaClaro
-                                    ? Colors.white
+                                    ? const Color.fromARGB(255, 235, 242, 248)
                                     : Colors.grey[600]!,
                               ),
                               columnSpacing: 20,
@@ -881,55 +910,50 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   label: Text(
                                     "Detalles",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: themeNotifier.temaClaro
-                                          ? Colors.white
-                                          : Color(0xFFDD952A),
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Colors.white),
                                   ),
                                 ),
                                 DataColumn(
                                   label: Text(
                                     "Consecutivo_Interno",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: themeNotifier.temaClaro
-                                          ? Colors.white
-                                          : Color(0xFFDD952A),
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Colors.white),
                                   ),
                                 ),
                                 DataColumn(
                                   label: Text(
                                     "Estructura",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: themeNotifier.temaClaro
-                                          ? Colors.white
-                                          : Color(0xFFDD952A),
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Colors.white),
                                   ),
                                 ),
                                 DataColumn(
                                   label: Text(
                                     "UserName",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: themeNotifier.temaClaro
-                                          ? Colors.white
-                                          : Color(0xFFDD952A),
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Colors.white),
                                   ),
                                 ),
                                 DataColumn(
                                   label: Text(
                                     "Fecha_Hora",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: themeNotifier.temaClaro
-                                          ? Colors.white
-                                          : Color(0xFFDD952A),
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        color: themeNotifier.temaClaro
+                                            ? Colors.white
+                                            : Colors.white),
                                   ),
                                 ),
                               ],
@@ -961,7 +985,10 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                     DataCell(
                                       Text(
                                         '${_documentoEstructura[index].consecutivoInterno}',
-                                        style: TextStyle(color: Colors.black87),
+                                        style: TextStyle(
+                                            color: themeNotifier.temaClaro
+                                                ? Colors.black87
+                                                : Colors.white),
                                       ),
                                     ),
                                     DataCell(GestureDetector(
@@ -981,28 +1008,36 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                           child: Text(
                                             '${_documentoEstructura[index].estructura}',
                                             style: TextStyle(
-                                                color: Colors.black87),
+                                                color: themeNotifier.temaClaro
+                                                    ? Colors.black87
+                                                    : Colors.white),
                                           ),
                                         ),
                                       ),
                                     )),
                                     DataCell(Text(
                                       '${_documentoEstructura[index].userName}',
-                                      style: TextStyle(color: Colors.black87),
+                                      style: TextStyle(
+                                          color: themeNotifier.temaClaro
+                                              ? Colors.black87
+                                              : Colors.white),
                                     )),
                                     DataCell(Text(
                                       '${_documentoEstructura[index].fechaHora}',
-                                      style: TextStyle(color: Colors.black87),
+                                      style: TextStyle(
+                                          color: themeNotifier.temaClaro
+                                              ? Colors.black87
+                                              : Colors.white),
                                     )),
                                   ],
                                   color: MaterialStateColor.resolveWith(
                                     (states) => index % 2 == 0
                                         ? (themeNotifier.temaClaro
                                             ? Colors.white
-                                            : Colors.grey[400]!)
+                                            : Colors.grey[600]!)
                                         : (themeNotifier.temaClaro
                                             ? Colors.grey[200]!
-                                            : Colors.grey[500]!),
+                                            : Colors.grey[700]!),
                                   ),
                                 ),
                               ),
