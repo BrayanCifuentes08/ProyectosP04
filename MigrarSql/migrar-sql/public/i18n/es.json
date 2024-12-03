@@ -1,0 +1,66 @@
+{
+    "labels": {
+        "pestañaMantenimiento" : "mantenimiento",
+        "horaInicioSesion" : "Hora de inicio sesion",
+        "horaCierreSesion" : "Hora de cierre de la sesion",
+        "informacionSeleccionadaCatalogo": "Información del catálogo seleccionado",
+        "totalRegistros" : "Total de registros",
+        "seleccionarDescripcion": "Selecciona una descripcion",
+        "usuario": "Usuario",
+        "estacionTrabajo": "Estacion trabajo",
+        "catalogo": "Catálogo",
+        "visualizandoCatalogo" : "Visualizando catálogo",
+        "visualizandoRegistro" : "Visualizando registro",
+        "agregandoRegistro" : "Agregando registro",
+        "cambiarIdioma" : "cambiar idioma",
+        "URLValida" : "La URL es válida.",
+        "URLInvalida" : "La URL base no es válida.",
+        "ErrorValidarURL" : "Error al verificar la URL."
+    },
+    "buttonsLabels": {
+        "btnActualizar": "Actualizar",
+        "btnAgregar": "Agregar",
+        "btnEliminar": "Eliminar",
+        "btnBuscar": "Buscar",
+        "btnLimpiarSeleccion" : "Limpiar seleccion",
+        "btnGuardar": "Guardar registro",
+        "atencionCierreSesion" : "Atención"
+    },
+    "infoTextos": {
+        "textoBtnAgregar": "Al hacer clic en este boton, se habilitaran los inputs vacíos para completar la información requerida.",
+        "textoBtnActualizar": "Al hacer clic en este botón, se actualizara el registro.",
+        "textoBtnEliminar": "Al hacer clic en este botón, se eliminara el regitro.",
+        "textoBtnLimpiar": "Al hacer clic en este botón, se eliminarán las selecciones actuales y se actualizara la lista de registros.",
+        "textoBtnGuardar": "Al hacer clic en este botón, se guardara el registro.",
+        "textoBtnCerrarSesion" : "Si presiona este botón, se cerrar la sesión y se limpiarán los datos. Sera redirigido a la página de inicio de sesión."
+    },
+    "messages": {
+        "errorContraseña": "Debe ingresar la contraseña",
+        "errorUsuario": "Debe ingresar el usuario",
+        "datosGuardadosSesion": "Guardo su sesion correctamente.",
+        "datosNoGuardadosSesion": "No se guardará su sesión."
+    },
+    "labelsLogin": {
+        "cerrarSesion": "Cerrar Sesion",
+        "iniciarSesion": "Iniciar Sesión",        
+        "usuarioLogin": "Usuario",
+        "contraseñaLogin": "Contraseña",
+        "cargandoLogin": "Cargando",
+        "ingresarUrlLogin": "Ingrese la url del API",
+        "actualizarUrl": "Presionar 'Confirmar' para actualizar la URL.",
+        "confirmarBtns": "Confimar",
+        "verificarBtns": "Verificar",
+        "verModalInfo": "Ver menu desplegable",
+        "menuAutenticacion": "Menú de Autenticación",
+        "seleccionarInformacionAdicional" : "Selecciona la infomacion requerida",
+        "estacionesTrabajoLogin": "Estaciones de Trabajo",
+        "empresasLogin": "Empresas",
+        "aplicacionesLogin": "Aplicaciones",
+        "displaysLogin": "Displays",
+        "noDisplaysDisponibles": "No hay diplays disponibles",
+        "opcionesSeleccionadas": "Opciones Seleccionadas",
+        "guardarCambios": "Guardar cambios",
+        "guardarDatosSesion": "Guardar datos de sesión"
+    }
+  }
+  

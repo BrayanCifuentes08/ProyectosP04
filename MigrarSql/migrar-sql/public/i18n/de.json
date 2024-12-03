@@ -1,0 +1,66 @@
+{
+    "labels": {
+        "pestañaMantenimiento" : "wartung",
+        "horaInicioSesion" : "Startzeit der Sitzung",
+        "horaCierreSesion" : "Ende der Sitzung",
+        "informacionSeleccionadaCatalogo": "Ausgewählte Kataloginformationen",
+        "totalRegistros" : "Gesamtzahl der Datensätze",
+        "seleccionarDescripcion": "Wählen Sie eine Beschreibung",
+        "usuario": "Benutzer",
+        "estacionTrabajo": "Arbeitsplatz",
+        "catalogo": "Katalog",
+        "visualizandoCatalogo" : "Anzeige des Katalogs",
+        "visualizandoRegistro" : "Datensatz anzeigen",
+        "agregandoRegistro" : "Hinzufügen der Registrierung",
+        "cambiarIdioma": "sprache ändern",
+        "URLValida" : "Die URL ist gültig.",
+        "URLInvalida" : "Die Basis-URL ist ungültig.",
+        "ErrorValidarURL" : "Die URL konnte nicht überprüft werden."
+    },
+    "buttonsLabels": {
+        "btnActualizar": "Update",
+        "btnAgregar": "Hinzufügen",
+        "btnEliminar": "Löschen",
+        "btnBuscar"  : "Suche",
+        "btnLimpiarSeleccion": "Eindeutige Auswahl",
+        "btnGuardar": "Datensatz speichern",
+         "atencionCierreSesion" : "Achtung"
+    },
+    "infoTextos": {
+        "textoBtnAgregar": "Wenn Sie diese Taste drücken, werden die leeren Einträge freigegeben, damit Sie die erforderlichen Informationen eingeben können.",
+        "textoBtnActualizar": "Wenn Sie auf diese Schaltfläche klicken, wird der Datensatz aktualisiert.",
+        "textoBtnEliminar": "Wenn Sie auf diese Schaltfläche klicken, wird der Datensatz gelöscht.",
+        "textoBtnLimpiar": "Wenn Sie auf diese Schaltfläche klicken, wird die aktuelle Auswahl entfernt und die Liste der Datensätze aktualisiert.",
+        "textoBtnGuardar": "Wenn Sie auf diese Schaltfläche klicken, wird der Datensatz gespeichert.",
+        "textoBtnCerrarSesion" : "Wenn Sie diese Taste drücken, werden Sie abgemeldet und Ihre Daten werden gelöscht. Sie werden zur Anmeldeseite weitergeleitet."
+    },
+    "messages": {
+        "errorContraseña": "Sie müssen das Passwort eingeben",
+        "errorUsuario": "Sie müssen den Namen des Benutzers eingeben",
+        "datosGuardadosSesion": "Ich habe Ihre Sitzung korrekt gespeichert.",
+        "datosNoGuardadosSesion": "Ihre Sitzung wird nicht gespeichert."
+    },
+    "labelsLogin": {
+        "cerrarSesion" : "Abmelden",
+       "iniciarSesion": "Anmelden",
+        "usuarioLogin": "Benutzer",
+        "contraseñaLogin": "Passwort",
+        "cargandoLogin": "Laden",
+        "ingresarUrlLogin": "API-URL eingeben",
+        "actualizarUrl": "Drücken Sie 'Bestätigen', um die URL zu aktualisieren.",
+        "confirmarBtns": "Bestätigen",
+        "verificarBtns": "Überprüfen",
+        "verModalInfo": "Dropdown-Menü anzeigen",
+        "menuAutenticacion": "Authentifizierungsmenü",
+        "seleccionarInformacionAdicional" : "Wählen Sie die erforderlichen Informationen aus",
+        "estacionesTrabajoLogin": "Arbeitsplätze",
+        "empresasLogin": "Unternehmen",
+        "aplicacionesLogin": "Anwendungen",
+        "displaysLogin": "Bildschirme",
+        "noDisplaysDisponibles": "Keine Bildschirme verfügbar",
+        "opcionesSeleccionadas": "Ausgewählte Optionen",
+        "guardarCambios": "Änderungen speichern",
+        "guardarDatosSesion": "Sitzungsdaten speichern"
+    }
+  }
+  
