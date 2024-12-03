@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { LoginService } from '../../services/login.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [TranslateModule],
+  imports: [TranslateModule, CommonModule],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
@@ -32,5 +33,4 @@ export class FooterComponent {
     });
     console.log("Usuario cargado en footer al entrar a mantenimiento: ", this.loginService.getUser())
   }
-  
 }
