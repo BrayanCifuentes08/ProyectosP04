@@ -1,125 +1,188 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:migrar_sql/common/CatalogoProvider.dart';
+import 'package:migrar_sql/common/IdiomaNotifier.dart';
+import 'package:migrar_sql/common/ThemeNotifier.dart';
+import 'package:migrar_sql/components/Login.dart';
+import 'package:migrar_sql/components/Plantillas/PlantillaImagen.dart';
+import 'package:migrar_sql/components/Plantillas/SeleccionFondo.dart';
+import 'package:migrar_sql/components/SplashScreen.dart';
+import 'package:migrar_sql/services/LoginService.dart';
+import 'package:migrar_sql/services/PreferenciasService.dart';
+import 'package:migrar_sql/services/Shared.dart';
+import 'package:provider/provider.dart';
+import 'generated/l10n.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+        ChangeNotifierProvider(create: (context) => CatalogoProvider()),
+        ChangeNotifierProvider(create: (context) => AccionService()),
+        ChangeNotifierProvider(create: (context) => IdiomaNotifier())
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale = Locale('es', 'ES');
+  String _backgroundImagePath = 'assets/Fondos/background2.jpg';
+  bool _isBackgroundSet = false;
+  bool _temaClaro = false;
+  final PreferenciasService _preferencesService = PreferenciasService();
+  final LoginService _loginService = LoginService();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSession();
   }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  void dispose() {
+    super.dispose();
+  }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  Future<void> _checkSession() async {
+    final sessionData = await _loginService.getUserSession();
+    final tokenExpirationString = sessionData['tokenExpiration'] as String?;
+    if (tokenExpirationString != null) {
+      final tokenExpiration = DateTime.parse(tokenExpirationString);
+      if (DateTime.now().isAfter(tokenExpiration)) {
+        // Si la sesión ha expirado, redirigir al usuario
+        Navigator.of(context).pushReplacementNamed('/inicio');
+      } else {
+        // Si la sesión es válida, cargar las preferencias de fondo
+        _loadPreferences();
+      }
+    } else {
+      // Si no hay datos de sesión, cargar las preferencias de fondo
+      _loadPreferences();
+    }
+  }
 
-  void _incrementCounter() {
+  void _loadPreferences() async {
+    final imagePath = await _preferencesService.getBackgroundImage();
+    final isSet = await _preferencesService.isBackgroundSet();
+    final temaClaro = await _preferencesService.getTemaClaro();
+    print(
+        'Loaded background image path: $imagePath'); // Agregado para depuración
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _backgroundImagePath = imagePath ?? _backgroundImagePath;
+      _isBackgroundSet = isSet;
+      _temaClaro = temaClaro;
+    });
+  }
+
+  void _changeBackgroundImage(String imagePath) {
+    print(
+        'Changing background image to: $imagePath'); // Agregado para depuración
+    setState(() {
+      _backgroundImagePath = imagePath;
+      _isBackgroundSet = imagePath.isNotEmpty;
+    });
+    _preferencesService.saveBackgroundImage(imagePath);
+  }
+
+  void _changeLanguage(Locale locale) {
+    setState(() {
+      _locale = locale;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return GestureDetector(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Color(0xFFDD952A),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            background: Color.fromARGB(246, 255, 255, 255),
+            primary: Color(0xFFDD952A),
+            secondary: Color(0xFFDD952A),
+          ),
+          checkboxTheme: CheckboxThemeData(
+            fillColor: MaterialStateColor.resolveWith(
+              (states) {
+                if (states.contains(MaterialState.selected)) {
+                  return Colors.teal.shade300;
+                }
+                return const Color.fromARGB(255, 255, 255, 255);
+              },
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+          ),
         ),
+        initialRoute: '/inicio',
+        routes: {
+          '/inicio': (context) => Stack(
+                children: [
+                  if (_isBackgroundSet)
+                    BackgroundImage(imagePath: _backgroundImagePath),
+                  SplashScreen(
+                    imagePath: _backgroundImagePath,
+                    isBackgroundSet: _isBackgroundSet,
+                    loadPreferences: _loadPreferences,
+                    changeBackgroundImage: _changeBackgroundImage,
+                    changeLanguage: _changeLanguage,
+                    idiomaDropDown: _locale,
+                    temaClaro: _temaClaro,
+                  ),
+                ],
+              ),
+          // '/mantenimiento': (context) => Stack(
+          //       children: [
+          //         Mantenimiento(
+          //           imagePath: _backgroundImagePath,
+          //           isBackgroundSet: _isBackgroundSet,
+          //           catalogo: null,
+          //           changeLanguage: _changeLanguage,
+          //           idiomaDropDown: _locale,
+          //           temaClaro: _temaClaro,
+          //           token: '',
+          //           pUserName: '',
+          //           pEmpresa: 1,
+          //           pEstacion_Trabajo: 1,
+          //           baseUrl: '',
+          //           fechaSesion: DateTime.now(),
+          //           fechaExpiracion: null,
+          //           despEmpresa: '',
+          //           despEstacion_Trabajo: '',
+          //           pApplication: 1,
+          //         ),
+          //       ],
+          //     ),
+          // '/login': (context) => Stack(children: [
+          //       BackgroundImage(imagePath: _backgroundImagePath),
+          //       LoginScreen(
+          //         changeLanguage: _changeLanguage,
+          //         seleccionarIdioma: _locale,
+          //         idiomaDropDown: _locale,
+          //         imagePath: _backgroundImagePath,
+          //         isBackgroundSet: _isBackgroundSet,
+          //       )
+          //     ]),
+          '/selectBackground': (context) => SeleccionFondo(
+                onSelectBackground: _changeBackgroundImage,
+              ),
+        },
+        locale: _locale,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
