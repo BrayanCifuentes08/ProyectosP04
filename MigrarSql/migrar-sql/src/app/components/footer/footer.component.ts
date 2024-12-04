@@ -16,17 +16,23 @@ export class FooterComponent {
   accionActual:         string = '';
   usuario:              string = ''
   estacionTrabajo:      string = ''
-
+  empresa:              string = ''
   constructor(private sharedService: SharedService, private loginService: LoginService) {}
 
   ngOnInit() {
     this.usuario = this.loginService.getUser();
+    
     const estacionTrabajo = this.loginService.getEstacion()
     this.estacionTrabajo = estacionTrabajo?.descripcion || '';
+
+    const empresa = this.loginService.getEmpresa();
+    this.empresa = empresa?.empresa_Nombre || '';
+
     // Suscribirse a los cambios de catalogoSeleccionado en el servicio
     this.sharedService.catalogoSeleccionado$.subscribe(option => {
       this.catalogoSeleccionado = option; 
     });
+
     
     this.sharedService.accion$.subscribe(accion => {
       this.accionActual = accion; 
