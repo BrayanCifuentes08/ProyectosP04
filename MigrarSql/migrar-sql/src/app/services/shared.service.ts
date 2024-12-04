@@ -7,6 +7,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class SharedService {
   private esModoOscuro = false;
+  private temaCambiadoSubject = new BehaviorSubject<boolean>(this.esModoOscuro);
+  temaCambiado$ = this.temaCambiadoSubject.asObservable();
   private catalogoSeleccionadoSource = new BehaviorSubject<string | null>(null);
   catalogoSeleccionado$ = this.catalogoSeleccionadoSource.asObservable();
   private sidebarOpenSubject = new Subject<boolean>();
@@ -34,6 +36,7 @@ export class SharedService {
       localStorage.setItem('theme', this.esModoOscuro ? 'dark' : 'light');
     }
     this.aplicarTema();
+    this.temaCambiadoSubject.next(this.esModoOscuro);
   }
 
   esModoOscuroHabilitado(): boolean {
@@ -77,12 +80,5 @@ export class SharedService {
 
   isLoading(): boolean {
     return this.loading;
-  }
-
-  private headerTextSource = new BehaviorSubject<string | null>(null); // Valor predeterminado
-  currentHeaderText = this.headerTextSource.asObservable();
-
-  changeHeaderText(text: string) {
-    this.headerTextSource.next(text);
   }
 }

@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,12 @@ export default class DashboardComponent {
   tooltipVisible: boolean = false;
   tiempoRestante: string = '';
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
+
+  constructor(private sharedService:SharedService){}
+
+  ngOnInit(){
+    this.sharedService.setAccion('modulo');
+  }
 
   //Función para borrar el archivo
   removerFile(): void {

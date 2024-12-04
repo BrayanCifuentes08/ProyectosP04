@@ -60,9 +60,6 @@ export default class LayoutComponent {
       } else {
         this.router.navigate(['/login']);
       }
-    this.sharedService.currentHeaderText.subscribe(text => {
-      this.headerText = text || '';
-    });
   }
 
   verificarSesion(): void {

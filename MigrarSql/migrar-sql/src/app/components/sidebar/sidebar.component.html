@@ -4,10 +4,14 @@
 
   <div class="relative border-b border-white/20">
     <a class="flex justify-center items-center gap-4 py-6 px-8">
-      <img src="images/logoDmosoftCarga.png" alt="DMOSOFT" 
+      <img *ngIf="!esModoOscuro" src="images/logoDmosoft.png" alt="DMOSOFT" 
            class="w-[64px] h-auto md:w-[90px] md:h-auto pointer-events-none select-none" 
-           draggable="false" ondragstart="return false;"/>  
+           draggable="false" ondragstart="return false;" />
+      <img *ngIf="esModoOscuro" src="images/logoDmosoftCarga.png" alt="DMOSOFT" 
+           class="w-[64px] h-auto md:w-[90px] md:h-auto pointer-events-none select-none" 
+           draggable="false" ondragstart="return false;" />
     </a>
+    
     
     <button
     class="middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-8 max-w-[32px] h-8 max-h-[32px] rounded-lg text-xs text-white hover:bg-white/10 active:bg-white/30 absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
@@ -36,35 +40,53 @@
   </button>
   </div>
 
-  <!-- Carta de usuario -->
-  <div class="p-6 flex flex-col items-center bg-white/10 rounded-xl mt-6 mx-4">
-    <!-- Avatar del usuario -->
-    <div class="relative w-24 h-24 rounded-full overflow-hidden shadow-lg mb-4">
-      <img src="https://via.placeholder.com/150" alt="Avatar Usuario" class="w-full h-full object-cover">
-      <span class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
-    </div>
+    <div class="m-4">
+      <!-- Seccion de pestañas adicionales -->
+      <ul class="mb-4 flex flex-col gap-1">
+        <li class="mx-3.5 mt-4 mb-2" >
+          <p
+          aria-disabled="true"
+            class="block antialiased font-sans text-sm leading-normal text-white font-black uppercase opacity-75"
+          >
+            acciones autenticacion
+          </p>
+        </li>
+        <li>
+          <a>
+            <div class="relative group">
+              <button
+                (click)="logout()"
+                class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg w-full flex items-center gap-4 px-4 capitalize text-white bg-transparent hover:bg-gradient-to-tr hover:from-red-600 hover:to-red-400 hover:shadow-lg hover:shadow-red-500/40"
+                type="button"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  class="w-5 h-5 text-inherit transition-colors duration-300"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+                <p
+                  class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize transition-colors duration-30"
+                >
+                {{'labelsLogin.cerrarSesion' | translate }}
+                </p>
+              </button>
+            </div>
+          </a>
+          
+          
+          
+        </li>
+      </ul>
 
-    <!-- Nombre del usuario -->
-    <h5 class="text-white text-lg font-semibold mb-2">{{user}}</h5>
-
-    <!-- Información del usuario reorganizada -->
-    <div class="text-gray-300 text-sm text-center mb-4">
-      <p>{{'labels.informacionAdicional' | translate}}:</p>
-      <p>
-        <i class="fas fa-sign-out-alt text-green-600"></i>
-        <strong> {{'labels.horaInicioSesion' | translate}}:</strong> {{horaInicioSesionFormatted}}
-      </p>
-      <p *ngIf="usandoHoraPerma">
-        <i class="fas fa-sign-in-alt text-red-600"></i>
-        <strong> {{'labels.horaCierreSesion' | translate}}:</strong> {{fechaVencimientoToken}}
-      </p>
     </div>
-
-    <!-- Botones de acción -->
-    <div class="flex justify-center space-x-4">
-      <button (click)="logout()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">{{'labelsLogin.cerrarSesion' | translate}}</button>
-    </div>
-  </div>
 
   <!-- Botón para cambiar idiomas -->
   <div class="absolute bottom-4 w-full px-2">

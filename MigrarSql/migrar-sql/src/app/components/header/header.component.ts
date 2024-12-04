@@ -16,7 +16,6 @@ export class HeaderComponent {
   esModoOscuro: boolean = false;
   usuario: string = ''
   menuColoresVisible: boolean = false; 
-  @Input() headerText: string = 'labels.componenteInicio';
   constructor(
     public traduccionService: TraduccionService, 
     private sharedService: SharedService, 
@@ -29,9 +28,6 @@ export class HeaderComponent {
     if (isPlatformBrowser(this.platformId)) {
     this.usuario = this.loginService.getUser();
     }
-    this.sharedService.currentHeaderText.subscribe((texto) => {
-      this.headerText = texto || 'labels.componenteInicio';
-    });
     //Inicializar tema oscuro
     this.sharedService.inicializacionTema();
   }

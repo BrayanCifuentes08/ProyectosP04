@@ -83,9 +83,9 @@ export class LoginService {
       const empresaFromStorage = localStorage.getItem('empresa') || sessionStorage.getItem('empresa');
       this.empresa = empresaFromStorage ? JSON.parse(empresaFromStorage) : null;
     }
-    return this.empresa ? this.empresa.empresa : null;
+    return this.empresa;
   }
-
+  
   setAplicacion(aplicacion: any): void {
     this.aplicacion = aplicacion;
     if (this.isBrowser()) {

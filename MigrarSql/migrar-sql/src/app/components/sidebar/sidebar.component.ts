@@ -28,7 +28,7 @@ export class SidebarComponent {
   @Output() sidebarToggle = new EventEmitter<boolean>();
   isSidebarVisible: boolean = false;
   sidebarAbierto: boolean = false;
-
+  esModoOscuro: boolean = false;
   
   constructor(private router: Router, private loginServices: LoginService, 
     private traduccionService: TraduccionService, 
@@ -62,6 +62,13 @@ export class SidebarComponent {
       this.sidebarAbierto = open;
     });
   }
+
+  this.esModoOscuro = this.sharedService.esModoOscuroHabilitado();
+
+  // Suscribirse a cambios en el tema
+  this.sharedService.temaCambiado$.subscribe((esOscuro) => {
+    this.esModoOscuro = esOscuro;
+  });
   }
 
   logout(): void {
