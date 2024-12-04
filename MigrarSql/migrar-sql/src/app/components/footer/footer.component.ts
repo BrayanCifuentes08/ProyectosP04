@@ -37,6 +37,6 @@ export class FooterComponent {
     this.sharedService.accion$.subscribe(accion => {
       this.accionActual = accion; 
     });
-    console.log("Usuario cargado en footer al entrar a mantenimiento: ", this.loginService.getUser())
+    console.log("Usuario cargado en footer al entrar a mantenimiento: ", this.usuario)
   }
 }
