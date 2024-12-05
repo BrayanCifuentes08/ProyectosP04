@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export default class DashboardComponent {
   fileSeleccionado: File | null = null;
   hojas: string[] = [];
-  hojaSeleccionada: string = '';
+  hojaSeleccionada: string | null = null;
   cargandoHojas: boolean = false;
   mostrarMensajeAdvertencia: boolean = false;
   isVisibleModal: boolean = false;
@@ -24,11 +24,12 @@ export default class DashboardComponent {
   mensajeAlerta: string = '';
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   rutaOrigen: string | null = null;
-  mostrarArea: boolean = false;
+  mostrarAreaSubida: boolean = true; 
+  
   constructor(private sharedService:SharedService, private migrarSqlService: MigrarSqlService){}
 
   ngOnInit(){
-    this.sharedService.setAccion('modulo');
+    this.sharedService.setAccion('vistaModulo');
   }
 
   cargarFile(event: any): void {
@@ -42,11 +43,12 @@ export default class DashboardComponent {
       }, 7000);
       return;
     }
-    this.mostrarArea = false;
+
     this.hojas = [];
     if (file) {
+      this.sharedService.setAccion('cargaHojas');
       this.fileSeleccionado = file;
-
+      this.mostrarAreaSubida = false;
       console.log("Hojas antes de solicitud: ", this.hojas)
       console.log('Archivo seleccionado:', file);
       this.cargandoHojas = true;
@@ -55,15 +57,26 @@ export default class DashboardComponent {
         next: (hojas: string[]) => {
           this.hojas = hojas; // Asigna las hojas obtenidas a la variable local
           this.cargandoHojas = false;
+          this.sharedService.setAccion('exitoHojasCargadas');
           console.log('Hojas obtenidas:', hojas);
         },
         error: (err) => {
           console.error('Error al obtener hojas:', err); // Manejo de errores
+          this.sharedService.setAccion('errorCarga');
           this.cargandoHojas = false;
         }
       });
     }
   }
+
+
+  seleccionarHoja(hoja: string): void {
+    this.hojaSeleccionada = hoja;
+    console.log('Hoja seleccionada:', hoja); // Verifica en consola
+    this.sharedService.setAccion('seleccionHojas');
+
+  }
+
 
   //Función para borrar el archivo
   removerFile(): void {
@@ -75,6 +88,9 @@ export default class DashboardComponent {
     this.hojas = [];
     this.mostrarMensajeAdvertencia = false;
     this.hojaSeleccionada = '';
+    this.mostrarAreaSubida = true;
+    this.sharedService.setAccion('vistaModulo');
+
     console.log('Archivo eliminado');
   }
 }

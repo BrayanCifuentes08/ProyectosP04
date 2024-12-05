@@ -6,11 +6,11 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MigrarSqlService {
-  private baseUrl:  string = 'http://192.168.10.39:9098/api/';
+  private baseUrl:  string = 'http://192.168.10.43:9094/api/';
   constructor(private http: HttpClient) { }
   
   obtenerHojasExcel(archivo: File): Observable<string[]> {
-    const url = `${this.baseUrl}Ctrl_ObtenerHojasExcel`;
+    const url = `${this.baseUrl}ObtenerHojasExcelCtrl`;
     
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
