@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:migrar_sql/common/Loading.dart';
@@ -59,25 +62,13 @@ class _MigrarSqlState extends State<MigrarSql> {
   bool _cargandoTraslado = false;
   bool _cargandoHojas = false;
   bool _cargandoArchivo = false;
-  bool isAsignarElemento = true;
-  bool isDesasignarElemento = true;
-  bool mostrarGridElementosUsuario = true;
-  TextEditingController searchController = TextEditingController();
-
-  bool isEmptyAsignados = false;
-  bool isRequestError = false;
-  bool _expandir = false;
 
   PlatformFile? _archivoSeleccionado;
-  String? _tablaSeleccionada;
+
   List<String> _nombresHojas = [];
-  List<String> _nombresHojasSeleccionadas = [];
   String? rutaArchivo = "";
   Dio _dio = Dio();
   String? _nombreHojaSeleccionada;
-  final TextEditingController _urlController = TextEditingController();
-  bool _isChecking = false;
-  String? _checkResult;
 
   List<PaTblDocumentoEstructuraM> _documentoEstructura = [];
 
@@ -260,70 +251,104 @@ class _MigrarSqlState extends State<MigrarSql> {
         _msgSeleccionarArchivo();
         return;
       }
-      final directory = await getApplicationDocumentsDirectory();
-      String rutaDestino = directory.path; // Ruta de almacenamiento interno
 
-      // Si quieres una carpeta específica dentro del almacenamiento de la aplicación
-      rutaDestino = "${directory.path}/Documents";
+      // Configura el FormData para cada hoja seleccionada
+      FormData formData = FormData.fromMap({
+        'ArchivoExcel': await dio.MultipartFile.fromFile(
+          selectedFile.path!,
+          filename: selectedFile.name,
+        ),
+        'NombreHojaExcel': _nombreHojaSeleccionada, // Cambia la hoja aquí
+      });
 
-      for (String hojaSeleccionada in _nombresHojasSeleccionadas) {
-        // Configura el FormData para cada hoja seleccionada
-        FormData formData = FormData.fromMap({
-          'ArchivoExcel': await dio.MultipartFile.fromFile(
-            selectedFile.path!,
-            filename: selectedFile.name,
-          ),
-          'NombreHojaExcel': hojaSeleccionada, // Cambia la hoja aquí
-          'RutaDestino': rutaDestino
-        });
+      final response = await _dio.post(
+        '${widget.baseUrl}MigrarSqlCtrl',
+        data: formData,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer ${widget.token}",
+          },
+          responseType: ResponseType.bytes,
+        ),
+      );
 
-        final response = await _dio.post(
-          '${widget.baseUrl}MigrarSqlCtrl',
-          data: formData,
-          options: Options(
-            headers: {
-              "Authorization": "Bearer ${widget.token}",
-            },
-          ),
-        );
+      if (response.statusCode == 200) {
+        print(response.data);
+        List<int> fileBytes = response.data;
+        String magicNumber = String.fromCharCodes(fileBytes.take(4).toList());
 
-        if (response.statusCode == 200) {
-          print(
-              'Datos insertados correctamente para la hoja: $hojaSeleccionada.');
-          List<dynamic> jsonResponse = response.data;
-          List<PaTblDocumentoEstructuraM> documentoEstructura = jsonResponse
-              .map((data) => PaTblDocumentoEstructuraM.fromJson(data))
-              .toList();
+        if (magicNumber == 'PK\u0003\u0004') {
+          print('Archivo válido, es un archivo comprimido tipo .xlsx');
 
-          _documentoEstructura.addAll(documentoEstructura);
+          final result = await FilePicker.platform.getDirectoryPath();
 
-          _mostrarMensajeScaffold(
-              context,
-              "Datos trasladados correctamente para la hoja $hojaSeleccionada",
-              MdiIcons.checkboxMarkedCircle,
-              Color(0xFFF15803D),
-              Color(0xFFF15803D),
-              Color(0xFFFDCFCE7),
-              Duration(seconds: 2));
-          setState(() {});
-        } else {
-          print('Error en la solicitud al servidor: ${response.statusCode}');
-          String errorMessage = 'Error desconocido';
-          if (response.data != null && response.data is Map) {
-            errorMessage = response.data['Message'] ?? 'Error desconocido';
+          if (result != null) {
+            try {
+              // Guarda el archivo en el directorio seleccionado
+              final path = '$result/archivo_actualizado.xlsx';
+
+              await FileSaver.instance.saveFile(
+                  name: "archivo_actualizado.xlsx",
+                  bytes: Uint8List.fromList(fileBytes),
+                  ext: "xlsx",
+                  mimeType: MimeType.microsoftExcel);
+
+              _mostrarMensajeScaffold(
+                context,
+                "Archivo guardado exitosamente en tu dispositivo",
+                MdiIcons.checkCircle,
+                Colors.green,
+                Colors.white,
+                Colors.green.shade200,
+                Duration(seconds: 3),
+              );
+              print('Archivo guardado exitosamente.');
+            } catch (e) {
+              _mostrarAlerta(
+                context,
+                'Error al guardar el archivo',
+                'Hubo un problema al intentar guardar el archivo: $e',
+                FontAwesomeIcons.exclamationCircle,
+                Colors.red,
+                0,
+                "",
+                null,
+                null,
+                null,
+              );
+              print('Error al guardar el archivo: $e');
+            }
+          } else {
+            print("El usuario no seleccionó un directorio.");
           }
-          _mostrarAlerta(
-              context,
-              'Error al realizar la solicitud',
-              response.data['Message'] ?? errorMessage,
-              FontAwesomeIcons.circleExclamation,
-              Color(0xFFFEAB308),
-              0,
-              "",
-              null,
-              null,
-              null);
         }
+        _mostrarMensajeScaffold(
+            context,
+            "Datos trasladados correctamente para la hoja $_nombreHojaSeleccionada",
+            MdiIcons.checkboxMarkedCircle,
+            Color(0xFFF15803D),
+            Color(0xFFF15803D),
+            Color(0xFFFDCFCE7),
+            Duration(seconds: 2));
+
+        setState(() {});
+      } else {
+        print('Error en la solicitud al servidor: ${response.statusCode}');
+        String errorMessage = 'Error desconocido';
+        if (response.data != null && response.data is Map) {
+          errorMessage = response.data['Message'] ?? 'Error desconocido';
+        }
+        _mostrarAlerta(
+            context,
+            'Error al realizar la solicitud',
+            response.data['Message'] ?? errorMessage,
+            FontAwesomeIcons.circleExclamation,
+            Color(0xFFFEAB308),
+            0,
+            "",
+            null,
+            null,
+            null);
       }
     } catch (e) {
       if (e is DioError) {
@@ -512,7 +537,7 @@ class _MigrarSqlState extends State<MigrarSql> {
                                   setState(() {
                                     _documentoEstructura.clear();
                                     _nombresHojas = [];
-                                    _nombresHojasSeleccionadas = [];
+                                    _nombreHojaSeleccionada = null;
                                     _nombreHojaSeleccionada = null;
                                     _archivoSeleccionado = null;
                                   });
@@ -544,7 +569,7 @@ class _MigrarSqlState extends State<MigrarSql> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: _nombresHojas
                           .map(
-                            (sheetName) => CheckboxListTile(
+                            (sheetName) => RadioListTile<String>(
                               controlAffinity: ListTileControlAffinity.leading,
                               title: Text(
                                 sheetName,
@@ -554,20 +579,17 @@ class _MigrarSqlState extends State<MigrarSql> {
                                       : Colors.white,
                                 ),
                               ),
-                              value: _nombresHojasSeleccionadas
-                                  .contains(sheetName),
+                              value:
+                                  sheetName, // El valor que representa este RadioListTile
+                              groupValue:
+                                  _nombreHojaSeleccionada, // El valor actualmente seleccionado
                               onChanged: (value) {
                                 setState(() {
-                                  if (value == true) {
-                                    _nombresHojasSeleccionadas.add(sheetName);
-                                  } else {
-                                    _nombresHojasSeleccionadas
-                                        .remove(sheetName);
-                                  }
+                                  // Cambia el valor seleccionado al nuevo sheetName
+                                  _nombreHojaSeleccionada = value!;
                                 });
                               },
                               activeColor: Color(0xFFDC9525),
-                              checkColor: Colors.white,
                             ),
                           )
                           .toList(),
@@ -577,7 +599,7 @@ class _MigrarSqlState extends State<MigrarSql> {
                         color: Colors.blue,
                         changeLanguage: widget.changeLanguage),
                   if (_archivoSeleccionado != null &&
-                      _nombresHojasSeleccionadas.isNotEmpty &&
+                      _nombreHojaSeleccionada != null &&
                       !_cargandoHojas)
                     Padding(
                       padding: const EdgeInsets.all(16),
@@ -586,7 +608,7 @@ class _MigrarSqlState extends State<MigrarSql> {
                           _mostrarAlerta(
                               context,
                               S.of(context).mensajesConfimar,
-                              "Confirmar el traslado de datos de las hojas seleccionadas: ${_nombresHojasSeleccionadas.join(', ')}",
+                              "Confirmar el traslado de datos de las hojas seleccionadas: ${_nombreHojaSeleccionada}",
                               FontAwesomeIcons.circleExclamation,
                               Color(0xFFFEAB308),
                               1,
