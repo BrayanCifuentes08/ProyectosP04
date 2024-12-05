@@ -26,10 +26,10 @@ export default class DashboardComponent {
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   rutaOrigen: string | null = null;
   mostrarAreaSubida: boolean = true; 
-  nombreCarpetaSeleccionada: string = 'C:/Mis Documentos'; 
-  // Controla si el input es editable
+  rutaEspecificada: string = 'C:\\Users\\dev005\\Downloads';
   puedeEditarRuta: boolean = false;
-
+  cargandoTraslado: boolean = false;
+  
   constructor(private sharedService:SharedService, private migrarSqlService: MigrarSqlService){}
 
   ngOnInit(){
@@ -74,6 +74,50 @@ export default class DashboardComponent {
   }
 
 
+  trasladarDatos(): void {
+    this.cargandoTraslado = true;
+  
+    const selectedFile = this.fileSeleccionado;
+    if (!selectedFile) {
+      this.mostrarMensajeAdvertencia = true;
+      setTimeout(() => {
+        this.mostrarMensajeAdvertencia = false;
+      }, 7000);
+      return;
+    }
+  
+    // Iteración sobre las hojas seleccionadas, pero solo para una hoja (sin ciclo)
+    const hojaSeleccionada = this.hojas[0]; // Selecciona solo la primera hoja
+    if (hojaSeleccionada) {
+      const model = {
+        archivo: selectedFile,
+        nombreHoja: hojaSeleccionada,
+        rutaDestino: this.rutaEspecificada 
+      };
+  
+      this.migrarSqlService.enviarDatos(model).subscribe({
+        next: (response: any) => {
+          if (response.statusCode === 200) {
+            console.log('Datos insertados correctamente para la hoja:', hojaSeleccionada);
+            // Aquí puedes procesar la respuesta si es necesario, como se hacía en Dart
+            //this.mostrarMensajeExito(`Datos trasladados correctamente para la hoja ${hojaSeleccionada}`);
+          } else {
+            const errorMessage = response.message || 'Error desconocido';
+            console.error('Error al realizar la solicitud al servidor:', response.statusCode);
+            //this.mostrarMensajeError('Error al realizar la solicitud', errorMessage);
+          }
+        },
+        error: (err) => {
+          console.error('Error al realizar la solicitud:', err);
+          //this.mostrarMensajeError('Error al realizar la solicitud', err.message || 'Error desconocido');
+        },
+        complete: () => {
+          this.cargandoTraslado = false;
+        }
+      });
+    }
+  }
+
   seleccionarHoja(hoja: string): void {
     this.hojaSeleccionada = hoja;
     console.log('Hoja seleccionada:', hoja); // Verifica en consola
@@ -85,9 +129,7 @@ export default class DashboardComponent {
     if (this.puedeEditarRuta) {
       // Si ya está en modo de edición, se bloquea
       this.puedeEditarRuta = false;
-      // Aquí puedes manejar la lógica para guardar la ruta si lo necesitas
     } else {
-      // Si no está en modo de edición, se habilita
       this.puedeEditarRuta = true;
     }
   }
