@@ -4,11 +4,12 @@ import { MigrarSqlService } from '../../services/migrar-sql.service';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
+import { MessagesComponent } from "../../messages/messages.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule],
+  imports: [CommonModule, TranslateModule, FormsModule, MessagesComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -27,9 +28,8 @@ export default class DashboardComponent {
   rutaOrigen: string | null = null;
   mostrarArea: boolean = false;
   mostrarAreaSubida: boolean = true;
-  rutaEspecificada: string = 'C:\\Users\\dev005\\Downloads';
-  puedeEditarRuta: boolean = false;
   cargandoTraslado: boolean = false;
+  nombreArchivo: string = '';
   constructor(private sharedService:SharedService, private migrarSqlService: MigrarSqlService){}
 
   ngOnInit(){
@@ -73,7 +73,6 @@ export default class DashboardComponent {
     }
   }
 
-
   trasladarDatos(): void {
     this.cargandoTraslado = true;
   
@@ -92,27 +91,30 @@ export default class DashboardComponent {
       const model = {
         archivo: selectedFile,
         nombreHoja: hojaSeleccionada,
-        rutaDestino: this.rutaEspecificada 
       };
   
       this.migrarSqlService.enviarDatos(model).subscribe({
-        next: (response: any) => {
-          if (response.statusCode === 200) {
-            console.log('Datos insertados correctamente para la hoja:', hojaSeleccionada);
-            // Aquí puedes procesar la respuesta si es necesario, como se hacía en Dart
-            //this.mostrarMensajeExito(`Datos trasladados correctamente para la hoja ${hojaSeleccionada}`);
-            this.cargandoTraslado = true;
-          } else {
-            const errorMessage = response.message || 'Error desconocido';
-            console.error('Error al realizar la solicitud al servidor:', response.statusCode);
-            //this.mostrarMensajeError('Error al realizar la solicitud', errorMessage);
-            this.cargandoTraslado = false;
-          }
+        next: (blob: Blob) => {
+
+          const nombreArchivoOriginal = this.fileSeleccionado
+          ? this.fileSeleccionado.name.replace(/\.[^/.]+$/, '.xlsx')
+          : 'archivo_actualizado.xlsx';
+
+          // Crear un enlace para descargar el archivo
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = nombreArchivoOriginal; // Nombre del archivo descargado
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url); // Liberar el objeto Blob
+          console.log('Archivo descargado correctamente.');
+          this.manejarMensajeExito('Archivo descargado correctamente.');
         },
         error: (err) => {
           console.error('Error al realizar la solicitud:', err);
-          this.cargandoTraslado = false;
-          //this.mostrarMensajeError('Error al realizar la solicitud', err.message || 'Error desconocido');
+          this.manejarMensajeError(`Error al realizar la solicitud: ${err.message}`);
         },
         complete: () => {
           this.cargandoTraslado = false;
@@ -121,20 +123,12 @@ export default class DashboardComponent {
     }
   }
 
+
   seleccionarHoja(hoja: string): void {
     this.hojaSeleccionada = hoja;
     console.log('Hoja seleccionada:', hoja); // Verifica en consola
     this.sharedService.setAccion('seleccionHojas');
 
-  }
-
-  alternarEdicionRuta(): void {
-    if (this.puedeEditarRuta) {
-      // Si ya está en modo de edición, se bloquea
-      this.puedeEditarRuta = false;
-    } else {
-      this.puedeEditarRuta = true;
-    }
   }
 
   //Función para borrar el archivo
@@ -152,4 +146,34 @@ export default class DashboardComponent {
 
     console.log('Archivo eliminado');
   }
+
+  manejarMensajeExito(mensaje: string): void {
+    this.mensajeExito = mensaje;
+    this.isVisibleExito = true;
+
+    setTimeout(() => {
+      this.ocultarExito();
+    }, 5000);
+  }
+
+  manejarMensajeError(mensaje: string): void {
+    this.mensajeAlerta = mensaje;
+    this.isVisibleAlerta = true;
+    setTimeout(() => {
+      this.ocultarAlerta();
+    }, 5000);
+  }
+
+  ocultarExito(){
+    this.isVisibleExito = false;
+  }
+
+  ocultarAlerta(){
+    this.isVisibleAlerta = false;
+  }
+
+  mostrarModalTraslado(): void {
+    this.isVisibleModal = true;
+  }
+
 }

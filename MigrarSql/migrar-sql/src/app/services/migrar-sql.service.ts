@@ -34,8 +34,10 @@ export class MigrarSqlService {
       formData.append('ArchivoExcel', model.archivo, model.archivo.name);
     }
     formData.append('NombreHojaExcel', model.nombreHoja);
-    formData.append('RutaDestino', model.rutaDestino); 
-    return this.http.post<any>(url, formData, {headers});
+    return this.http.post(url, formData, { 
+      headers, 
+      responseType: 'blob' // Indicamos que esperamos un archivo como respuesta
+    });
   }
 
 

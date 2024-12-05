@@ -3,38 +3,7 @@
     <!-- Sección 1: Selección de archivo Excel -->
     <div class="flex-1 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
       <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">{{'labels.seleccionArchivoExcel' | translate}}</h2>
-      <div class="mt-4 flex justify-center items-center space-x-2 w-full">
-        <!-- Input de texto con icono dentro -->
-        <div class="relative w-full max-w-xs">
-          <input
-            type="text"
-            [(ngModel)]="rutaEspecificada"
-            class="w-full pl-10 pr-4 py-2 border text-sm rounded-md focus:outline-none focus:ring-2 transition-all duration-300 "
-            placeholder="Ruta de carpeta"
-            [readonly]="!puedeEditarRuta" 
-            [class.bg-gray-300]="!puedeEditarRuta"
-            [class.bg-white]="puedeEditarRuta"
-            [class.border-gray-300]="!puedeEditarRuta"
-            [class.border-blue-500]="puedeEditarRuta" 
-            [class.text-gray-500]="!puedeEditarRuta"
-            [class.text-gray-700]="puedeEditarRuta" 
-            [class.cursor-not-allowed]="!puedeEditarRuta" 
-          />
-          <!-- Icono dentro del input -->
-          <i class="fa-solid fa-folder-tree absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"></i>
-        </div>
-      
-        <!-- Botón con icono dentro -->
-        <button
-        class="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm flex items-center justify-center"
-        (click)="alternarEdicionRuta()"
-        >
-          <i [class.fas]="true" [class.fa-pencil-alt]="!puedeEditarRuta" [class.fa-floppy-disk]="puedeEditarRuta" class="mr-2"></i>
-          {{ puedeEditarRuta ? 'Guardar' : 'Editar' }}
-        </button>
-      </div>
-      
-      
+
       <!-- Texto adicional debajo del área de subida -->
       <div *ngIf="mostrarAreaSubida" class="fade-in">
         <p class="mt-6 text-gray-600 dark:text-gray-300 text-start">
@@ -60,7 +29,6 @@
           </div>
         </div>
       </div>
-
   
       <!-- Texto adicional debajo del área de subida -->
       <p class="mt-6 text-gray-600 dark:text-gray-300 text-start">
@@ -81,7 +49,7 @@
         </div>
 
         <button 
-        *ngIf="fileSeleccionado"
+        *ngIf="!cargandoHojas"
         (click)="removerFile()"
           class="text-blue-600 dark:text-gray-300 hover:text-blue-800 dark:hover:text-gray-200 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
@@ -142,3 +110,13 @@
   
   </div>
 </div>
+<app-messages
+  [isVisibleModal]="isVisibleModal"
+  [mensajeModal]="'¿Está seguro de que desea trasladar los datos seleccionados?'"
+  (confirmarAccion)="trasladarDatos()"
+  (cancelarAccion)="isVisibleModal = false"
+  [mensajeExito]="isVisibleExito ? mensajeExito : ''" 
+  [mensajeAlerta]="isVisibleAlerta ? mensajeAlerta : ''"
+  [isVisibleExito]="isVisibleExito" 
+  [isVisibleAlerta]="isVisibleAlerta" 
+></app-messages>
