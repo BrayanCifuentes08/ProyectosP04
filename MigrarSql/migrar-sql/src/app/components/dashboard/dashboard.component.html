@@ -28,17 +28,13 @@
         <button
         class="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm flex items-center justify-center"
         (click)="alternarEdicionRuta()"
-        [class.bg-gray-300]="!puedeEditarRuta" 
-      >
-        <i [class.fas]="true" [class.fa-pencil-alt]="!puedeEditarRuta" [class.fa-floppy-disk]="puedeEditarRuta" class="mr-2"></i>
-        {{ puedeEditarRuta ? 'Guardar' : 'Editar' }}
-      </button>
+        >
+          <i [class.fas]="true" [class.fa-pencil-alt]="!puedeEditarRuta" [class.fa-floppy-disk]="puedeEditarRuta" class="mr-2"></i>
+          {{ puedeEditarRuta ? 'Guardar' : 'Editar' }}
+        </button>
       </div>
       
       
-      
-
-
       <!-- Texto adicional debajo del área de subida -->
       <div *ngIf="mostrarAreaSubida" class="fade-in">
         <p class="mt-6 text-gray-600 dark:text-gray-300 text-start">
@@ -126,18 +122,20 @@
         <span>{{'messages.cargandoHojasMensaje' | translate}}...</span>
       </div>
 
-      
-
       <!-- Botón deshabilitado -->
       <div class="mt-6 flex justify-center">
         <button 
-        (click)="trasladarDatos()"
-        class="bg-blue-400 dark:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg"
-        [class.opacity-50]="!hojaSeleccionada" 
-        [class.cursor-not-allowed]="!hojaSeleccionada"
-        [disabled]="!hojaSeleccionada">
-        {{'buttonsLabels.trasladarDatos' | translate}}
-      </button>
+          (click)="trasladarDatos()"
+          class="bg-blue-400 dark:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg"
+          [class.opacity-50]="!hojaSeleccionada" 
+          [class.cursor-not-allowed]="!hojaSeleccionada"
+          [disabled]="!hojaSeleccionada">
+          {{'buttonsLabels.trasladarDatos' | translate}}
+        </button>
+      </div>
+      <div *ngIf="cargandoTraslado" class="flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-300 mt-4">
+        <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-blue-500 dark:border-blue-400"></div>
+        <span>traslado en proceso...</span>
       </div>
     </div>
 

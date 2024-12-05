@@ -101,14 +101,17 @@ export default class DashboardComponent {
             console.log('Datos insertados correctamente para la hoja:', hojaSeleccionada);
             // Aquí puedes procesar la respuesta si es necesario, como se hacía en Dart
             //this.mostrarMensajeExito(`Datos trasladados correctamente para la hoja ${hojaSeleccionada}`);
+            this.cargandoTraslado = true;
           } else {
             const errorMessage = response.message || 'Error desconocido';
             console.error('Error al realizar la solicitud al servidor:', response.statusCode);
             //this.mostrarMensajeError('Error al realizar la solicitud', errorMessage);
+            this.cargandoTraslado = false;
           }
         },
         error: (err) => {
           console.error('Error al realizar la solicitud:', err);
+          this.cargandoTraslado = false;
           //this.mostrarMensajeError('Error al realizar la solicitud', err.message || 'Error desconocido');
         },
         complete: () => {

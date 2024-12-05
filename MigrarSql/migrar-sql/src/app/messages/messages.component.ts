@@ -41,6 +41,7 @@ export class MessagesComponent {
     this.cancelarAccion.emit();
     this.ocultarModal();
   }
+  
   ocultarExito() {
     this.isVisibleExito = false;
   }
