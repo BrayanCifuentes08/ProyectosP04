@@ -25,11 +25,11 @@ export default class DashboardComponent {
   mensajeAlerta: string = '';
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   rutaOrigen: string | null = null;
-  mostrarAreaSubida: boolean = true; 
-  rutaEspecificada: string = 'C:\\Users\\dev003\\Downloads';
+  mostrarArea: boolean = false;
+  mostrarAreaSubida: boolean = true;
+  rutaEspecificada: string = 'C:\\Users\\dev005\\Downloads';
   puedeEditarRuta: boolean = false;
   cargandoTraslado: boolean = false;
-  
   constructor(private sharedService:SharedService, private migrarSqlService: MigrarSqlService){}
 
   ngOnInit(){
@@ -101,14 +101,17 @@ export default class DashboardComponent {
             console.log('Datos insertados correctamente para la hoja:', hojaSeleccionada);
             // Aquí puedes procesar la respuesta si es necesario, como se hacía en Dart
             //this.mostrarMensajeExito(`Datos trasladados correctamente para la hoja ${hojaSeleccionada}`);
+            this.cargandoTraslado = true;
           } else {
             const errorMessage = response.message || 'Error desconocido';
             console.error('Error al realizar la solicitud al servidor:', response.statusCode);
             //this.mostrarMensajeError('Error al realizar la solicitud', errorMessage);
+            this.cargandoTraslado = false;
           }
         },
         error: (err) => {
           console.error('Error al realizar la solicitud:', err);
+          this.cargandoTraslado = false;
           //this.mostrarMensajeError('Error al realizar la solicitud', err.message || 'Error desconocido');
         },
         complete: () => {
@@ -133,7 +136,6 @@ export default class DashboardComponent {
       this.puedeEditarRuta = true;
     }
   }
-
 
   //Función para borrar el archivo
   removerFile(): void {
