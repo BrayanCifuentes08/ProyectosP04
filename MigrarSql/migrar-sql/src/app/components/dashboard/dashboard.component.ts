@@ -3,19 +3,12 @@ import { SharedService } from '../../services/shared.service';
 import { MigrarSqlService } from '../../services/migrar-sql.service';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-<<<<<<< HEAD
-=======
 import { FormsModule } from '@angular/forms';
->>>>>>> 5fa34d06506f47e3595bdaf3004c3ed40ff1daaf
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-<<<<<<< HEAD
-  imports: [CommonModule, TranslateModule],
-=======
   imports: [CommonModule, TranslateModule, FormsModule],
->>>>>>> 5fa34d06506f47e3595bdaf3004c3ed40ff1daaf
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -32,15 +25,11 @@ export default class DashboardComponent {
   mensajeAlerta: string = '';
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   rutaOrigen: string | null = null;
-<<<<<<< HEAD
-  mostrarArea: boolean = false;
-=======
   mostrarAreaSubida: boolean = true; 
-  rutaEspecificada: string = 'C:\\Users\\dev005\\Downloads';
+  rutaEspecificada: string = 'C:\\Users\\dev003\\Downloads';
   puedeEditarRuta: boolean = false;
   cargandoTraslado: boolean = false;
   
->>>>>>> 5fa34d06506f47e3595bdaf3004c3ed40ff1daaf
   constructor(private sharedService:SharedService, private migrarSqlService: MigrarSqlService){}
 
   ngOnInit(){
@@ -145,39 +134,6 @@ export default class DashboardComponent {
     }
   }
 
-  cargarFile(event: any): void {
-    const file: File = event.target.files[0];
-    // Validar si ya hay un archivo cargado
-    if (this.fileSeleccionado) {
-      this.mostrarMensajeAdvertencia = true;
-      event.target.value = '';  // Limpiar el input de archivo
-      setTimeout(() => {
-        this.mostrarMensajeAdvertencia = false;
-      }, 7000);
-      return;
-    }
-    this.mostrarArea = false;
-    this.hojas = [];
-    if (file) {
-      this.fileSeleccionado = file;
-
-      console.log("Hojas antes de solicitud: ", this.hojas)
-      console.log('Archivo seleccionado:', file);
-      this.cargandoHojas = true;
-      // Llamada al método obtenerHojasExcel
-      this.migrarSqlService.obtenerHojasExcel(file).subscribe({
-        next: (hojas: string[]) => {
-          this.hojas = hojas; // Asigna las hojas obtenidas a la variable local
-          this.cargandoHojas = false;
-          console.log('Hojas obtenidas:', hojas);
-        },
-        error: (err) => {
-          console.error('Error al obtener hojas:', err); // Manejo de errores
-          this.cargandoHojas = false;
-        }
-      });
-    }
-  }
 
   //Función para borrar el archivo
   removerFile(): void {
