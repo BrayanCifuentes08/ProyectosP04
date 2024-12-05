@@ -2,12 +2,47 @@
   <div class="flex flex-col lg:flex-row gap-4">
     <!-- Sección 1: Selección de archivo Excel -->
     <div class="flex-1 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
-      <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Selección de archivo Excel</h2>
+      <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">{{'labels.seleccionArchivoExcel' | translate}}</h2>
+      <div class="mt-4 flex justify-center items-center space-x-2 w-full">
+        <!-- Input de texto con icono dentro -->
+        <div class="relative w-full max-w-xs">
+          <input
+            type="text"
+            [(ngModel)]="nombreCarpetaSeleccionada"
+            class="w-full pl-10 pr-4 py-2 border text-sm rounded-md focus:outline-none focus:ring-2 transition-all duration-300 "
+            placeholder="Ruta de carpeta"
+            [readonly]="!puedeEditarRuta" 
+            [class.bg-gray-300]="!puedeEditarRuta"
+            [class.bg-white]="puedeEditarRuta"
+            [class.border-gray-300]="!puedeEditarRuta"
+            [class.border-blue-500]="puedeEditarRuta" 
+            [class.text-gray-500]="!puedeEditarRuta"
+            [class.text-gray-700]="puedeEditarRuta" 
+            [class.cursor-not-allowed]="!puedeEditarRuta" 
+          />
+          <!-- Icono dentro del input -->
+          <i class="fa-solid fa-folder-tree absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"></i>
+        </div>
       
+        <!-- Botón con icono dentro -->
+        <button
+        class="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm flex items-center justify-center"
+        (click)="alternarEdicionRuta()"
+        [class.bg-gray-300]="!puedeEditarRuta" 
+      >
+        <i [class.fas]="true" [class.fa-pencil-alt]="!puedeEditarRuta" [class.fa-floppy-disk]="puedeEditarRuta" class="mr-2"></i>
+        {{ puedeEditarRuta ? 'Guardar' : 'Editar' }}
+      </button>
+      </div>
+      
+      
+      
+
+
       <!-- Texto adicional debajo del área de subida -->
       <div *ngIf="mostrarAreaSubida" class="fade-in">
         <p class="mt-6 text-gray-600 dark:text-gray-300 text-start">
-          Archivos permitidos .xls y .xlsx
+          {{'labels.soloArchivosExcel' | translate}} <strong>.xls y .xlsx</strong>
         </p>
         <!-- Área para subir archivo -->
         <div
@@ -24,7 +59,7 @@
           <div class="text-center">
             <i class="fa-solid fa-upload text-gray-500 dark:text-gray-300 text-3xl mb-2"></i>
             <p class="text-gray-500 dark:text-gray-300 text-lg">
-              Haz clic o arrastra tu archivo aquí
+              {{'labels.hacerClickOArrastrar' | translate}}
             </p>
           </div>
         </div>
@@ -33,18 +68,18 @@
   
       <!-- Texto adicional debajo del área de subida -->
       <p class="mt-6 text-gray-600 dark:text-gray-300 text-start">
-        Información de archivo subido
+        {{'labels.informacionArchivoSeleccionado' | translate}}
       </p>
     
       <!-- Detalles del archivo -->
       <div *ngIf="fileSeleccionado" class="mt-3 p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-gray-700 rounded-lg flex justify-between items-center shadow-md">
         <div>
           <p class="text-gray-800 dark:text-gray-200">
-            Archivo seleccionado: 
+            {{'labels.archivoSeleccionado' | translate}}: 
             <span class="font-semibold text-gray-700 dark:text-gray-100">{{ fileSeleccionado.name }}</span>
           </p>
           <p class="text-gray-800 dark:text-gray-200 mt-2">
-            Tamaño: 
+            {{'labels.tamañoArchivo' | translate}}: 
             <span class="font-semibold text-gray-700 dark:text-gray-100">{{ (fileSeleccionado.size || 0) / 1024 | number:'1.2-2' }} KB</span>
           </p>   
         </div>
@@ -65,7 +100,7 @@
     <!-- Sección 2: Selección de hoja del archivo Excel -->
     <div class="flex-1 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
       <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-        Selección de hoja del archivo Excel
+        {{'labels.seleccionarHojaArchivo' | translate}}
       </h2>
 
       <div class="space-y-2">
@@ -88,7 +123,7 @@
       <!-- Mostrar spinner y mensaje mientras se obtienen las hojas -->
       <div *ngIf="cargandoHojas" class="flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-300">
         <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-blue-500 dark:border-blue-400"></div>
-        <span>Cargando hojas, por favor espera...</span>
+        <span>{{'messages.cargandoHojasMensaje' | translate}}...</span>
       </div>
 
       
@@ -100,7 +135,7 @@
         [class.opacity-50]="!hojaSeleccionada" 
         [class.cursor-not-allowed]="!hojaSeleccionada"
         [disabled]="!hojaSeleccionada">
-        Continuar
+        {{'buttonsLabels.trasladarDatos' | translate}}
       </button>
       </div>
     </div>

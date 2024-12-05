@@ -3,22 +3,26 @@
         "pestañaMantenimiento" : "mantenimiento",
         "horaInicioSesion" : "Hora de inicio sesion",
         "horaCierreSesion" : "Hora de cierre de la sesion",
-        "informacionSeleccionadaCatalogo": "Información del catálogo seleccionado",
         "totalRegistros" : "Total de registros",
-        "seleccionarDescripcion": "Selecciona una descripcion",
         "usuario": "Usuario",
         "estacionTrabajo": "Estacion trabajo",
         "empresa": "Empresa",
         "catalogo": "Catálogo",
         "vistaModulo" : "Vista de modulo",
         "cargaHojas" : "Cargando hojas",
+        "seleccionArchivoExcel": "Selección de archivo Excel",
+        "hacerClickOArrastrar": "Haz clic o arrastra tu archivo aquí",
+        "soloArchivosExcel" : "Solo archivos",
+        "archivoSeleccionado" : "Archivo seleccionado",
+        "tamañoArchivo": "Tamaño",
+        "seleccionarHojaArchivo": "Selecciona una hoja del archivo",
         "cargandoArchivo" : "Cargando Archivo",
         "seleccionHojas" : "Seleccionando hojas",
         "seleccionArchivo" : "Seleccionando archivo",
         "errorCarga" : "Hubo un error de carga de hojas",
         "exitoHojasCargadas" : "Hojas cargadas",
-        "trasladoDatos" : "Trasladando datos",
-        "agregandoRegistro" : "Agregando registro",
+        "informacionArchivoSeleccionado": "Información del archivo seleccionado",
+        
         "cambiarIdioma" : "cambiar idioma",
         "URLValida" : "La URL es válida.",
         "URLInvalida" : "La URL base no es válida.",
@@ -31,21 +35,18 @@
         "btnBuscar": "Buscar",
         "btnLimpiarSeleccion" : "Limpiar seleccion",
         "btnGuardar": "Guardar registro",
-        "atencionCierreSesion" : "Atención"
+        "atencionCierreSesion" : "Atención",
+       "trasladarDatos": "Trasladar datos"
     },
     "infoTextos": {
-        "textoBtnAgregar": "Al hacer clic en este boton, se habilitaran los inputs vacíos para completar la información requerida.",
-        "textoBtnActualizar": "Al hacer clic en este botón, se actualizara el registro.",
-        "textoBtnEliminar": "Al hacer clic en este botón, se eliminara el regitro.",
-        "textoBtnLimpiar": "Al hacer clic en este botón, se eliminarán las selecciones actuales y se actualizara la lista de registros.",
-        "textoBtnGuardar": "Al hacer clic en este botón, se guardara el registro.",
-        "textoBtnCerrarSesion" : "Si presiona este botón, se cerrar la sesión y se limpiarán los datos. Sera redirigido a la página de inicio de sesión."
     },
     "messages": {
         "errorContraseña": "Debe ingresar la contraseña",
         "errorUsuario": "Debe ingresar el usuario",
         "datosGuardadosSesion": "Guardo su sesion correctamente.",
-        "datosNoGuardadosSesion": "No se guardará su sesión."
+        "datosNoGuardadosSesion": "No se guardará su sesión.",
+        "cargandoHojasMensaje": "Cargando hojas, por favor espere"
+
     },
     "labelsLogin": {
         "cerrarSesion": "Cerrar Sesion",

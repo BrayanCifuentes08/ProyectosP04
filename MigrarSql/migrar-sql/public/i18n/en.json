@@ -12,10 +12,18 @@
         "catalogo": "Catalog",
         "vistaModulo": "Module view",
         "cargaHojas": "Loading sheets",
+        "seleccionArchivoExcel": "Excel file selection",
         "seleccionHojas": "Sheet selection",
         "seleccionArchivo": "Selecting file",
         "errorCarga": "There was an error loading the sheets",
+        "hacerClickOArrastrar": "Click or drag your file here",
+        "soloArchivosExcel": "Only files",
+        "archivoSeleccionado": "File selected",
+        "tamañoArchivo": "Size",
+        "seleccionarHojaArchivo": "Select a sheet from the file",
         "exitoHojasCargadas": "Sheets loaded",
+        "informacionArchivoSeleccionado": "Information of the selected file",
+
         "cambiarIdioma" : "change language",
         "URLValida" : "The URL is valid.",
         "URLInvalida" : "The base URL is invalid.",
@@ -28,21 +36,18 @@
         "btnBuscar"  : "Search",
         "btnLimpiarSeleccion" : "Clear selection",
          "btnGuardar": "Save record",
-          "atencionCierreSesion" : "Attention"
+          "atencionCierreSesion" : "Attention",
+          "trasladarDatos": "Transfer data"
     },
     "infoTextos": {
-        "textoBtnAgregar": "By clicking on this button, the empty inputs will be enabled to complete the required information.",
-        "textoBtnActualizar": "Clicking this button will update the record.",
-        "textoBtnEliminar": "Clicking this button will delete the record.",
-        "textoBtnLimpiar": "Clicking this button will remove the current selections and update the list of records.",
-        "textoBtnGuardar": "Clicking this button will save the record.",
-        "textoBtnCerrarSesion" : "If you click this button, you will be logged out and your data will be deleted. You will be redirected to the login page."
+      
     },
     "messages": {
         "errorContraseña": "You must enter the password",
         "errorUsuario": "You must enter the user",
         "datosGuardadosSesion": "I saved your session correctly.",
-        "datosNoGuardadosSesion": "Your session will not be saved."
+        "datosNoGuardadosSesion": "Your session will not be saved.",
+        "cargandoHojasMensaje": "Loading sheets, please wait"
     },
     "labelsLogin": {
         "cerrarSesion" : "Close Session",

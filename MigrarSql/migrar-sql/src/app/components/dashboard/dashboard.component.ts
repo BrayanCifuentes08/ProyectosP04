@@ -3,11 +3,12 @@ import { SharedService } from '../../services/shared.service';
 import { MigrarSqlService } from '../../services/migrar-sql.service';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -25,7 +26,10 @@ export default class DashboardComponent {
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   rutaOrigen: string | null = null;
   mostrarAreaSubida: boolean = true; 
-  
+  nombreCarpetaSeleccionada: string = 'C:/Mis Documentos'; 
+  // Controla si el input es editable
+  puedeEditarRuta: boolean = false;
+
   constructor(private sharedService:SharedService, private migrarSqlService: MigrarSqlService){}
 
   ngOnInit(){
@@ -77,6 +81,16 @@ export default class DashboardComponent {
 
   }
 
+  alternarEdicionRuta(): void {
+    if (this.puedeEditarRuta) {
+      // Si ya está en modo de edición, se bloquea
+      this.puedeEditarRuta = false;
+      // Aquí puedes manejar la lógica para guardar la ruta si lo necesitas
+    } else {
+      // Si no está en modo de edición, se habilita
+      this.puedeEditarRuta = true;
+    }
+  }
 
   //Función para borrar el archivo
   removerFile(): void {
