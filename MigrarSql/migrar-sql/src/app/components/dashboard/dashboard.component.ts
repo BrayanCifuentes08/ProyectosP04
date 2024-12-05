@@ -25,11 +25,11 @@ export default class DashboardComponent {
   mensajeAlerta: string = '';
   @ViewChild('fileInput') fileInput: ElementRef | undefined;
   rutaOrigen: string | null = null;
-  mostrarAreaSubida: boolean = true; 
+  mostrarArea: boolean = false;
+  mostrarAreaSubida: boolean = true;
   rutaEspecificada: string = 'C:\\Users\\dev005\\Downloads';
   puedeEditarRuta: boolean = false;
   cargandoTraslado: boolean = false;
-  
   constructor(private sharedService:SharedService, private migrarSqlService: MigrarSqlService){}
 
   ngOnInit(){

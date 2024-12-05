@@ -81,7 +81,7 @@
         </div>
 
         <button 
-        *ngIf="!cargandoHojas"
+        *ngIf="fileSeleccionado"
         (click)="removerFile()"
           class="text-blue-600 dark:text-gray-300 hover:text-blue-800 dark:hover:text-gray-200 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
@@ -90,7 +90,7 @@
         </button>
       </div>
 
- 
+      
     </div>
   
     <!-- Sección 2: Selección de hoja del archivo Excel -->

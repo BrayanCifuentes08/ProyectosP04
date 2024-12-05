@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/monokai-sublime.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:migrar_sql/common/Loading.dart';
@@ -12,6 +9,7 @@ import 'package:migrar_sql/common/Mensajes.dart';
 import 'package:migrar_sql/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:migrar_sql/common/ThemeNotifier.dart';
 import 'package:migrar_sql/models/PaTblDocumentoEstructuraM.dart';
@@ -181,7 +179,7 @@ class _MigrarSqlState extends State<MigrarSql> {
               await dio.MultipartFile.fromFile(file.path!, filename: file.name),
         });
         final response = await _dio.post(
-          '${widget.baseUrl}Ctrl_ObtenerHojasExcel',
+          '${widget.baseUrl}ObtenerHojasExcelCtrl',
           data: formData,
           options: Options(
             headers: {
@@ -205,10 +203,9 @@ class _MigrarSqlState extends State<MigrarSql> {
           FontAwesomeIcons.circleExclamation,
           Color(0xFFFEAB308),
           1,
-          S.of(context).mensajesAceptar,
-          null,
-          null,
-          null);
+          S.of(context).mensajesAceptar, () {
+        _obtenerHojasExcel(file);
+      }, null, null);
       print('Error al enviar el archivo al servidor: $e');
     } finally {
       setState(() {
@@ -263,6 +260,11 @@ class _MigrarSqlState extends State<MigrarSql> {
         _msgSeleccionarArchivo();
         return;
       }
+      final directory = await getApplicationDocumentsDirectory();
+      String rutaDestino = directory.path; // Ruta de almacenamiento interno
+
+      // Si quieres una carpeta específica dentro del almacenamiento de la aplicación
+      rutaDestino = "${directory.path}/Documents";
 
       for (String hojaSeleccionada in _nombresHojasSeleccionadas) {
         // Configura el FormData para cada hoja seleccionada
@@ -272,16 +274,11 @@ class _MigrarSqlState extends State<MigrarSql> {
             filename: selectedFile.name,
           ),
           'NombreHojaExcel': hojaSeleccionada, // Cambia la hoja aquí
-          'pUserName': widget.pUserName,
-          'TAccion': 1,
-          'TOpcion': 1,
-          'pConsecutivo_Interno': 0,
-          'pTipo_Estructura': 1,
-          'pEstado': 1,
+          'RutaDestino': rutaDestino
         });
 
         final response = await _dio.post(
-          '${widget.baseUrl}PaTblDocumentoEstructuraCtrl',
+          '${widget.baseUrl}MigrarSqlCtrl',
           data: formData,
           options: Options(
             headers: {
@@ -349,7 +346,7 @@ class _MigrarSqlState extends State<MigrarSql> {
           _mostrarAlerta(
               context,
               'Error de red',
-              e.message.toString(),
+              e.message ?? '',
               FontAwesomeIcons.circleExclamation,
               Color(0xFFFEAB308),
               0,
