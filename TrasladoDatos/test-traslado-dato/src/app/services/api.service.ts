@@ -6,7 +6,7 @@ import { catchError, map, Observable, of } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://192.168.10.39:9091/api/'; // URL base de la API
+  private baseUrl = 'http://192.168.10.43:9091/api/'; // URL base de la API
   private usuario: string = ''
   private estacion: any = null;
   private empresa: any = null;
