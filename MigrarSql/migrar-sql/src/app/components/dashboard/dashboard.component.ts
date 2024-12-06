@@ -75,7 +75,7 @@ export default class DashboardComponent {
 
   trasladarDatos(): void {
     this.cargandoTraslado = true;
-  
+    console.log('Ejecutando traslado datos')
     const selectedFile = this.fileSeleccionado;
     if (!selectedFile) {
       this.mostrarMensajeAdvertencia = true;
