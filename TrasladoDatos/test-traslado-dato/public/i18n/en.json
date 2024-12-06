@@ -18,7 +18,9 @@
         "cambiarIdioma" : "change language",
         "URLValida" : "The URL is valid.",
         "URLInvalida" : "The base URL is invalid.",
-        "ErrorValidarURL" : "Error verifying URL."
+        "ErrorValidarURL" : "Error verifying URL.",
+        "confirmarBtns": "Confirm",
+        "verificarBtns": "Verify"
     },
     "buttonsLabels": {
         "btnTrasladarDatos": "Transfer Data",

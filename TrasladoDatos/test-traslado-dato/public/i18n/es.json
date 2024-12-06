@@ -21,7 +21,9 @@
         "cambiarIdioma" : "cambiar idioma",
         "URLValida" : "La URL es válida.",
         "URLInvalida" : "La URL base no es válida.",
-        "ErrorValidarURL" : "Error al verificar la URL."
+        "ErrorValidarURL" : "Error al verificar la URL.",
+        "confirmarBtns": "Confimar",
+        "verificarBtns": "Verificar"
 
     },
     "buttonsLabels": {

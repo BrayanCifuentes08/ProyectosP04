@@ -51,15 +51,7 @@ export class MenuComponent {
     const empresaData = this.apiService.getEstacion();
     this.empresaUsuario = empresaData.descripcion || 'No disponible';
   }
-
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
-
-  toggleLanguageMenu() {
-    this.isLanguageMenuOpen = !this.isLanguageMenuOpen;
-  }
-
+ 
   //*Seccion de funciones para el modo de la interfaz
   toggleTheme(): void {
     this.utilidadService.alternarTema();
@@ -71,6 +63,11 @@ export class MenuComponent {
 
   toggleIdiomaMenu() {
     this.isIdiomaMenuOpen = !this.isIdiomaMenuOpen;
+    // Cerrar los otros menús o secciones si están abiertos
+    if (this.isIdiomaMenuOpen) {
+      this.isUserMenuOpen = false;
+      this.isSectionVisible = false;
+    }
   }
 
   onCambioIdioma(idioma: string) {
@@ -98,12 +95,20 @@ export class MenuComponent {
   }
 
 
-  toggleUserMenu(): void {
+  toggleUserMenu(event: MouseEvent): void {
+    event.stopPropagation();
     this.isUserMenuOpen = !this.isUserMenuOpen;
+    if (this.isUserMenuOpen) {
+      this.isIdiomaMenuOpen = false;
+      this.isSectionVisible = false;
+    }
   }
 
   toggleSection(): void {
     this.isSectionVisible = !this.isSectionVisible;
+    if (this.isSectionVisible) {
+      this.isIdiomaMenuOpen = false;
+    }
   }
 
 

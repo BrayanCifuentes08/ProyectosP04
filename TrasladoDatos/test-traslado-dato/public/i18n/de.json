@@ -18,7 +18,9 @@
         "cambiarIdioma": "sprache ändern",
         "URLValida" : "Die URL ist gültig.",
         "URLInvalida" : "Die Basis-URL ist ungültig.",
-        "ErrorValidarURL" : "Die URL konnte nicht überprüft werden."
+        "ErrorValidarURL" : "Die URL konnte nicht überprüft werden.",
+        "confirmarBtns": "Bestätigen",
+        "verificarBtns": "Überprüfen"
     },
     "buttonsLabels": {
         "btnTrasladarDatos": "Daten übertragen",
