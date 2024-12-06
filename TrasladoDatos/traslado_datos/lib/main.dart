@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:traslado_datos/common/CatalogoProvider.dart';
 import 'package:traslado_datos/common/IdiomaNotifier.dart';
 import 'package:traslado_datos/common/ThemeNotifier.dart';
+import 'package:traslado_datos/common/UrlNotifier.dart';
 import 'package:traslado_datos/components/Login.dart';
 import 'package:traslado_datos/components/Plantillas/PlantillaImagen.dart';
 import 'package:traslado_datos/components/Plantillas/SeleccionFondo.dart';
@@ -20,7 +21,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => CatalogoProvider()),
         ChangeNotifierProvider(create: (context) => AccionService()),
-        ChangeNotifierProvider(create: (context) => IdiomaNotifier())
+        ChangeNotifierProvider(create: (context) => IdiomaNotifier()),
+        ChangeNotifierProvider(create: (_) => UrlProvider()),
       ],
       child: MyApp(),
     ),
