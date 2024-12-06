@@ -74,6 +74,9 @@ export default class DashboardComponent {
   }
 
   trasladarDatos(): void {
+    if (this.cargandoTraslado) {
+      return; // Evitar múltiples solicitudes si ya está en curso
+    }
     this.cargandoTraslado = true;
     console.log('Ejecutando traslado datos')
     const selectedFile = this.fileSeleccionado;
@@ -82,6 +85,7 @@ export default class DashboardComponent {
       setTimeout(() => {
         this.mostrarMensajeAdvertencia = false;
       }, 7000);
+      this.cargandoTraslado = false;
       return;
     }
   
@@ -109,8 +113,10 @@ export default class DashboardComponent {
           a.click();
           document.body.removeChild(a);
           window.URL.revokeObjectURL(url); // Liberar el objeto Blob
-          console.log('Archivo descargado correctamente.');
           this.manejarMensajeExito('Archivo descargado correctamente.');
+          setTimeout(() => {
+            this.actualizarInterfaz();
+          }, 5000);
         },
         error: (err) => {
           console.error('Error al realizar la solicitud:', err);
@@ -123,6 +129,20 @@ export default class DashboardComponent {
     }
   }
 
+
+  private actualizarInterfaz(): void {
+    console.log('Actualizando la interfaz...');
+    
+    // Reiniciar variables relacionadas con el proceso
+    this.fileSeleccionado = null;
+    this.hojas = [];
+    this.hojaSeleccionada = '';
+    this.mostrarAreaSubida = true;
+  
+    // Si es necesario recargar datos o vistas
+    this.sharedService.setAccion('vistaModulo'); // Notificar cambio de vista
+  }
+  
 
   seleccionarHoja(hoja: string): void {
     this.hojaSeleccionada = hoja;
