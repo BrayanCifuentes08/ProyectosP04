@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/Loading.dart';
 import 'package:traslado_datos/common/Mensajes.dart';
+import 'package:traslado_datos/common/UrlNotifier.dart';
 import 'package:traslado_datos/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -60,6 +61,7 @@ class TrasladoDatos extends StatefulWidget {
 class _TrasladoDatosState extends State<TrasladoDatos> {
   bool _cargandoTraslado = false;
   bool _cargandoHojas = false;
+  bool _cargandoArchivo = false;
   bool isAsignarElemento = true;
   bool isDesasignarElemento = true;
   bool mostrarGridElementosUsuario = true;
@@ -134,7 +136,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
 
   void _seleccionarArchivo() async {
     setState(() {
-      _cargandoHojas = true;
+      _cargandoArchivo = true;
     });
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -155,12 +157,13 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
           FontAwesomeIcons.circleExclamation,
           Color(0xFFFEAB308),
           1,
-          S.of(context).mensajesAceptar, () async {
-        Navigator.pop(context);
-      }, null, null);
+          S.of(context).mensajesAceptar,
+          null,
+          null,
+          null);
     } finally {
       setState(() {
-        _cargandoHojas = false;
+        _cargandoArchivo = false;
       });
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {});
@@ -173,6 +176,8 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
       _cargandoHojas = true;
     });
     try {
+      final baseUrl = Provider.of<UrlProvider>(context, listen: false);
+      setState(() {});
       // ignore: unnecessary_null_comparison
       if (file != null) {
         dio.FormData formData = dio.FormData.fromMap({
@@ -180,7 +185,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
               await dio.MultipartFile.fromFile(file.path!, filename: file.name),
         });
         final response = await _dio.post(
-          '${widget.baseUrl}Ctrl_ObtenerHojasExcel',
+          '${baseUrl.baseUrl}ObtenerHojasExcelCtrl',
           data: formData,
           options: Options(
             headers: {
@@ -205,9 +210,16 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
           Color(0xFFFEAB308),
           1,
           S.of(context).mensajesAceptar, () async {
-        Navigator.pop(context);
+        _obtenerHojasExcel(file);
       }, null, null);
       print('Error al enviar el archivo al servidor: $e');
+    } finally {
+      setState(() {
+        _cargandoHojas = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
     }
   }
 
@@ -251,6 +263,8 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
     });
 
     try {
+      final baseUrl = Provider.of<UrlProvider>(context, listen: false);
+      setState(() {});
       PlatformFile? selectedFile = _archivoSeleccionado;
 
       if (selectedFile == null) {
@@ -275,7 +289,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
         });
 
         final response = await _dio.post(
-          '${widget.baseUrl}PaTblDocumentoEstructuraCtrl',
+          '${baseUrl.baseUrl}PaTblDocumentoEstructuraCtrl',
           data: formData,
           options: Options(
             headers: {
@@ -790,7 +804,7 @@ class _TrasladoDatosState extends State<TrasladoDatos> {
                                   textAlign: TextAlign.start,
                                 ),
                               SizedBox(height: 10),
-                              if (_cargandoHojas)
+                              if (_cargandoHojas || _cargandoArchivo)
                                 LoadingComponent(
                                     color: Colors.blue,
                                     changeLanguage: widget.changeLanguage),

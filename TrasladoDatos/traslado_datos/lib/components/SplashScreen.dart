@@ -183,10 +183,9 @@ class _SplashScreenState extends State<SplashScreen>
                         SizedBox(
                             height: screenSize.height *
                                 0.05), // Ajustar el espaciado
-
                         // Título responsive
                         Text(
-                          S.of(context).splashMantenimiento,
+                          "Migrar excel",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -195,7 +194,6 @@ class _SplashScreenState extends State<SplashScreen>
                                 textSize.clamp(18.0, 36.0), // Limitar tamaño
                           ),
                         ),
-
                         SizedBox(
                             height:
                                 screenSize.height * 0.1), // Ajustar espaciado

@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:http/http.dart' as http;
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:traslado_datos/common/FloatingActionButtonNotifier.dart';
 import 'package:traslado_datos/common/ThemeNotifier.dart';
+import 'package:traslado_datos/common/UrlNotifier.dart';
 import 'package:traslado_datos/components/Drawer.dart';
 import 'package:traslado_datos/components/trasladoDatos.dart';
 import 'package:traslado_datos/generated/l10n.dart';
@@ -52,7 +58,6 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
-  String baseUrl = 'http://192.168.10.39:9091/api/';
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
@@ -61,10 +66,19 @@ class _LayoutState extends State<Layout> {
   int _backGestureCount = 0;
   bool _isFabVisible = true;
   late AccionService accionService;
+  TextEditingController _serverController = TextEditingController();
+  TextEditingController _databaseController = TextEditingController();
+  final TextEditingController _urlController = TextEditingController();
+  bool _isChecking = false;
+  String? _checkResult;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final urlProvider = Provider.of<UrlProvider>(context, listen: false);
+      urlProvider.setBaseUrl(widget.baseUrl);
+    });
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -140,6 +154,210 @@ class _LayoutState extends State<Layout> {
       SystemNavigator.pop();
       return true;
     }
+  }
+
+  void _msgConexion() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Conexión a Base de Datos"),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _serverController,
+                  decoration: InputDecoration(labelText: "Server"),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _databaseController,
+                  decoration: InputDecoration(labelText: "Database"),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _conectarBaseDeDatos();
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: Text("Conectar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _conectarBaseDeDatos() async {
+    final url = Uri.parse('${widget.baseUrl}ConexionCtrl');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${widget.token}'
+      },
+      body: jsonEncode({
+        'serverName': _serverController.text,
+        'databaseName': _databaseController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // La conexión fue exitosa
+      final data = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(data['message'])),
+      );
+    } else {
+      // Hubo un error al conectar
+      final data = jsonDecode(response.body);
+      print('Error: ${data['message']}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${data['message']}')),
+      );
+    }
+  }
+
+  Future<bool> verificarBaseUrl(String baseUrl) async {
+    String testEndpoint = 'VerificarUrlCtrl/estado';
+    final url = '${baseUrl}$testEndpoint';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return true; // La URL base responde correctamente
+      } else {
+        return false; // La URL base no responde como se esperaba
+      }
+    } catch (e) {
+      print('Error: $e'); // Error al intentar hacer la solicitud
+      return false; // Error al intentar hacer la solicitud
+    }
+  }
+
+  void mostrarDialogoBaseUrl() async {
+    final urlProvider = Provider.of<UrlProvider>(context, listen: false);
+    _urlController.text = urlProvider.baseUrl;
+    widget.baseUrl = urlProvider.baseUrl;
+    showDialog(
+      barrierColor: Color.fromARGB(193, 0, 0, 0),
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _urlController.selection = TextSelection(
+                baseOffset: 0,
+                extentOffset: _urlController.text.length,
+              );
+            });
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text(
+                'URL:',
+                style: TextStyle(color: Colors.black),
+              ),
+              content: Container(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _urlController,
+                      decoration: InputDecoration(
+                        labelText: 'Ingresar Url',
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.link,
+                            color: Color.fromARGB(255, 56, 125, 253)),
+                        suffixIcon: IconButton(
+                          highlightColor:
+                              const Color.fromARGB(255, 97, 168, 201),
+                          icon: Icon(Icons.paste, color: Colors.black),
+                          onPressed: () async {
+                            Clipboard.setData(
+                                ClipboardData(text: _urlController.text));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                              "Url copiada",
+                            )));
+                          },
+                        ),
+                      ),
+                      cursorColor: Color(0xFFDD952A),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      keyboardType: TextInputType.url,
+                      textInputAction: TextInputAction.done,
+                    ),
+                    if (_isChecking) CircularProgressIndicator(),
+                    if (_checkResult != null)
+                      Text(
+                        _checkResult!,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: _checkResult == 'URL válida'
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              actions: [
+                Wrap(
+                  spacing: 10,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isChecking = true;
+                        });
+
+                        final isValid =
+                            await verificarBaseUrl(_urlController.text);
+                        setState(() {
+                          _isChecking = false;
+                          _checkResult =
+                              isValid ? 'Url válida' : 'Url no válida';
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue.shade900,
+                      ),
+                      child: Text(
+                        'Verificar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        urlProvider.setBaseUrl(_urlController.text);
+                        widget.baseUrl = urlProvider.baseUrl;
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade700,
+                      ),
+                      child: Text(
+                        'Confirmar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   //WIDGET PRINCIPAL
@@ -274,35 +492,32 @@ class _LayoutState extends State<Layout> {
               fechaExpiracion: widget.fechaExpiracion,
             ),
           ]),
-          //BOTÓN FLOTANTE PARA SUBIR O BAJAR
-          // floatingActionButton: fabNotifier.buttonState == 0
-          //     ? null // No mostrar el botón
-          //     : FloatingActionButton(
-          //         onPressed: () {
-          //           if (fabNotifier.buttonState == 1) {
-          //             desplazarScroll();
-          //             fabNotifier.setButtonState(2);
-          //           } else if (fabNotifier.buttonState == 2) {
-          //             desplazarScrollArriba();
-          //             fabNotifier.setButtonState(1);
-          //           }
-          //         },
-          //         backgroundColor: Color(0xFF004964),
-          //         child: Icon(
-          //           fabNotifier.buttonState == 1
-          //               ? Icons.keyboard_arrow_down
-          //               : Icons.keyboard_arrow_up,
-          //           size: 25,
-          //           color: Colors.white,
-          //         ),
-          //         tooltip: fabNotifier.buttonState == 1
-          //             ? S.of(context).layoutSubir
-          //             : S.of(context).layoutBajar,
-          //         mini: true,
-          //         shape: RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.circular(10),
-          //         ),
-          //       ),
+          floatingActionButton: SpeedDial(
+            animatedIcon: AnimatedIcons.menu_close,
+            backgroundColor: Colors.cyan,
+            overlayColor: Colors.black,
+            overlayOpacity: 0.5,
+            children: [
+              SpeedDialChild(
+                child: Icon(MdiIcons.database, color: Colors.white),
+                backgroundColor: Colors.blue,
+                label: 'Base de Datos',
+                labelStyle: TextStyle(fontSize: 16.0),
+                onTap: () {
+                  _msgConexion();
+                },
+              ),
+              SpeedDialChild(
+                child: Icon(MdiIcons.earthPlus, color: Colors.white),
+                backgroundColor: Colors.green,
+                label: 'Configurar URL',
+                labelStyle: TextStyle(fontSize: 16.0),
+                onTap: () {
+                  mostrarDialogoBaseUrl();
+                },
+              ),
+            ],
+          ),
         ),
       ]),
     );
