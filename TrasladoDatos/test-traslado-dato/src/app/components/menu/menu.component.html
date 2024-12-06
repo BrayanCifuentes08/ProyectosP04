@@ -1,18 +1,8 @@
 <nav class="bg-gray-200 dark:bg-gray-800 p-4 flex items-center justify-end">
-
   <!-- Botones principales -->
   <div class="flex items-center space-x-4">
-    <!-- Botón para desplegar menú -->
+    <!-- Botón de idiomas -->
     <div class="relative">
-      <button 
-        (click)="logout()" 
-        class=" bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-400">
-        Cerrar Sesion
-      </button>
-    </div>
-
-    <div class="relative">
-      <!-- Botón de idiomas -->
       <button
         (click)="toggleIdiomaMenu()"
         class="flex items-center justify-between w-full rounded-md p-2 text-black dark:text-white bg-gray-100 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 transition duration-150 ease-in-out"
@@ -38,7 +28,7 @@
         </svg>
       </button>
     
-      <!-- Menú desplegable -->
+      <!-- Menú idiomas desplegable -->
       <div
         *ngIf="isIdiomaMenuOpen"
         class="absolute z-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md mt-2 shadow-lg w-full"
@@ -89,20 +79,247 @@
         </div>
       </div>
     </div>
-    
-    
+
     <!-- Switch de tema -->
-    <button 
-      (click)="toggleTheme()" 
-      class="relative w-14 h-8 bg-gray-300 dark:bg-indigo-500 rounded-full shadow-inner flex items-center p-1 transition-all duration-200 ease-in-out ml-4">
-      <span class="w-6 h-6 bg-white rounded-full flex items-center justify-center 
-                transform transition-transform duration-200 ease-in-out 
-                hover:shadow-[0_0_10px_rgba(255,221,51,0.7)] hover:bg-opacity-80 
-                hover:scale-105" 
-          [ngClass]="{ 'translate-x-0': !isDarkMode, 'translate-x-6': isDarkMode }">
-        <i *ngIf="!isDarkMode" class="fas fa-sun w-4 h-4 text-yellow-400 transition-colors duration-200 ease-in-out"></i>
-        <i *ngIf="isDarkMode" class="fas fa-moon w-4 h-4 text-indigo-600 transition-colors duration-200 ease-in-out"></i>
+    <button
+      (click)="toggleTheme()"
+      class="relative w-14 h-8 bg-gray-300 dark:bg-indigo-500 rounded-full shadow-inner flex items-center p-1 transition-all duration-200 ease-in-out ml-4"
+    >
+      <span
+        class="w-6 h-6 bg-white rounded-full flex items-center justify-center transform transition-transform duration-200 ease-in-out hover:shadow-[0_0_10px_rgba(255,221,51,0.7)] hover:bg-opacity-80 hover:scale-105"
+        [ngClass]="{ 'translate-x-0': !isDarkMode, 'translate-x-6': isDarkMode }"
+      >
+        <i
+          *ngIf="!isDarkMode"
+          class="fas fa-sun w-4 h-4 text-yellow-400 transition-colors duration-200 ease-in-out"
+        ></i>
+        <i
+          *ngIf="isDarkMode"
+          class="fas fa-moon w-4 h-4 text-indigo-600 transition-colors duration-200 ease-in-out"
+        ></i>
       </span>
     </button>
+
+    <!-- Avatar con menú -->
+    <div class="relative">
+      <button
+        (click)="toggleUserMenu()"
+        class="relative w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-700 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-gray-500 ease-in-out"
+        title="Menú de Usuario"
+      >
+        <i
+          [ngClass]="{
+            'fa-user': !isUserMenuOpen,
+            'fa-xmark': isUserMenuOpen
+          }"
+          class="fa-solid text-xl transition-transform duration-300 ease-in-out"
+        ></i>
+        <div class="absolute inset-0 rounded-full bg-gray-300 dark:bg-gray-800 opacity-20 transform scale-0 hover:scale-100 transition-transform duration-300 ease-in-out"></div>
+      </button>
+
+      <!-- Menú desplegable del avatar -->
+      <div
+        *ngIf="isUserMenuOpen"
+        class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-md overflow-hidden border border-gray-200 dark:border-gray-700 z-50"
+      >
+        <div class="mt-2 px-4 py-2 text-gray-800 dark:text-gray-200 text-sm">
+          <p>
+            User:
+            <b>{{ nombreUsuario || 'No disponible' }}</b>
+          </p>
+          <p>
+            Empresa:
+            <b>{{ empresaUsuario || 'No disponible' }}</b>
+          </p>
+        </div>
+
+        <!-- Contenedor de botón y sección -->
+        <div class="flex items-center justify-between px-4 py-2 border-t border-gray-300 dark:border-gray-600">
+          <!-- Botón para mostrar/ocultar -->
+          <button
+            (click)="toggleSection()"
+            class="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-transform transform hover:scale-110 active:scale-100 duration-300"
+            title="Mostrar/Ocultar Sección"
+          >
+            <i
+              [ngClass]="{
+                'fa-earth-americas': !isSectionVisible,
+                'fa-xmark': isSectionVisible
+              }"
+              class="fa-solid text-lg"
+            ></i>
+          </button>
+        </div>
+
+        <!-- Sección oculta -->
+        <div
+          [ngClass]="{
+            'max-h-0 opacity-0 overflow-hidden': !isSectionVisible,
+            'max-h-96 opacity-100 overflow-visible': isSectionVisible
+          }"
+          class="transition-all duration-500 ease-in-out px-4"
+        >
+          <!-- Input y botón para copiar URL -->
+          <div class="relative flex items-center w-full max-w-sm mt-4">
+            <input
+              type="text"
+              [(ngModel)]="urlApi"
+              (ngModelChange)="mostrarMensajeUrlConfirmacion = true"
+              placeholder="{{ 'labels.ingresarUrlLogin' | translate }}"
+              class="w-full px-4 py-2 bg-gray-200 border rounded-lg focus:outline-none text-sm focus:bg-gray-100 focus:ring-1 focus:ring-indigo-700 dark:focus:bg-gray-600 dark:text-white dark:bg-gray-700 dark:focus:ring-1 dark:focus:ring-indigo-700 dark:border-none"
+            />
+          </div>
+
+          <!-- Mensaje de confirmación de URL actualizada -->
+          <p
+            *ngIf="mostrarMensajeUrlConfirmacion"
+            class="mt-1 ml-1 text-red-500 text-xs whitespace-nowrap text-ellipsis transition-all duration-500 ease-in-out"
+          >
+            {{ "labels.actualizarUrl" | translate }}
+          </p>
+
+          <!-- Mensaje de verificación de URL -->
+          <p
+            *ngIf="mostrarMensajeUrlVerificacion"
+            class="mt-2 text-xs overflow-hidden whitespace-nowrap text-ellipsis"
+            [ngClass]="{ 'text-red-500': esError, 'text-green-500': esValido }"
+          >
+            {{ mensajeErrorUrl | translate }}
+          </p>
+
+          <!-- Botones de Confirmar y Verificar -->
+          <div class="mt-4 flex space-x-2">
+            <!-- Botón Confirmar -->
+            <button
+              (click)="confirmarUrl()"
+              class="p-2 bg-gray-700 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
+            >
+              {{ "labels.confirmarBtns" | translate }}
+            </button>
+
+            <!-- Botón Verificar -->
+            <button
+              (click)="verificarUrl(urlApi)"
+              class="p-2 bg-blue-900 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
+              [disabled]="isVerificando"
+            >
+              <ng-container *ngIf="!isVerificando; else spinner">
+                {{ "labels.verificarBtns" | translate }}
+              </ng-container>
+              <ng-template #spinner>
+                <svg
+                  class="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+              </ng-template>
+            </button>
+          </div>
+        </div>
+
+        <!-- Menú de opciones -->
+        <div class="mt-4 mb-4 space-y-2 px-4">
+          <!-- Opción Configuración de servidor -->
+          <button
+            class="w-full px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 bg-transparent border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300"
+            (click)="openServerConfigDialog()"
+          >
+            Configuración de servidor
+          </button>
+
+          <!-- Opción Cerrar sesión -->
+          <button
+            class="w-full px-3 py-1.5 text-sm text-red-600 bg-transparent border border-red-600 rounded-md hover:bg-red-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-300"
+            (click)="logout()"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+
+
+
+
+      </div>
+
+    </div>
   </div>
 </nav>
+
+
+<div
+  *ngIf="isServerConfigOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+>
+  <div class="bg-white dark:bg-gray-800 rounded-lg w-96 p-6">
+    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
+      Configuración de Servidor
+    </h3>
+
+    <div class="mb-4">
+      <label for="database" class="block text-sm text-gray-700 dark:text-gray-300 mb-2">
+        Base de Datos
+      </label>
+      <input
+        id="database"
+        type="text"
+        [(ngModel)]="database"
+        class="w-full px-4 py-2 bg-gray-200 border rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-700 dark:focus:bg-gray-600 dark:text-white dark:bg-gray-700 dark:focus:ring-1 dark:focus:ring-indigo-700 dark:border-none"
+        placeholder="Ingrese nombre de la base de datos"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="server" class="block text-sm text-gray-700 dark:text-gray-300 mb-2">
+        Servidor
+      </label>
+      <input
+        id="server"
+        type="text"
+        [(ngModel)]="server"
+        class="w-full px-4 py-2 bg-gray-200 border rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-700 dark:focus:bg-gray-600 dark:text-white dark:bg-gray-700 dark:focus:ring-1 dark:focus:ring-indigo-700 dark:border-none"
+        placeholder="Ingrese dirección del servidor"
+      />
+    </div>
+
+    <!-- Mensajes de éxito o error -->
+    <div *ngIf="isSuccess" class="text-green-600 font-semibold mb-4">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="isError" class="text-red-600 font-semibold mb-4">
+      {{ errorMessage }}
+    </div>
+
+    <div class="flex justify-end space-x-2">
+      <button
+        (click)="conectarBaseDeDatos()"
+        [disabled]="cargandoConexion"
+        class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 flex items-center justify-center"
+      >
+        <!-- Spinner visible mientras se está cargando -->
+        <i *ngIf="cargandoConexion" class="fa fa-spinner fa-spin"></i>
+        <span *ngIf="!cargandoConexion">Conectar</span>
+      </button>
+      <button
+        (click)="closeServerConfigDialog()"
+        class="px-4 py-2 bg-gray-300 text-black rounded-md text-sm font-medium hover:bg-gray-400"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

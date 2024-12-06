@@ -14,7 +14,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   obtenerHojasExcel(archivo: File): Observable<string[]> {
-    const url = `${this.baseUrl}Ctrl_ObtenerHojasExcel`;
+    const url = `${this.baseUrl}ObtenerHojasExcelCtrl`;
     
     const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -47,6 +47,17 @@ export class ApiService {
   
     return this.http.post<any>(url, formData, {headers});
   }
+
+  conectarBaseDeDatos(model: any): Observable<any> {
+    const url = `${this.baseUrl}ConexionCtrl`;
+  
+    // Obtener el token de autenticación
+    const token = sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Content-Type', 'application/json');
+  
+    return this.http.post<any>(url, model, { headers });
+  }
+  
 
   setBaseUrl(url: string): void {
     this.baseUrl = url;
