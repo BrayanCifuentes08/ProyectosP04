@@ -56,6 +56,7 @@
         </button>
       </div>
     </div>
+
     <!-- Sección 2: Selección de hoja del archivo Excel -->
     <div class="flex-1 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
       <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
@@ -77,21 +78,30 @@
           </span>
         </label>
       </div>
+      
       <!-- Mostrar spinner y mensaje mientras se obtienen las hojas -->
       <div *ngIf="cargandoHojas" class="flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-300">
         <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-blue-500 dark:border-blue-400"></div>
         <span>{{'messages.cargandoHojasMensaje' | translate}}...</span>
       </div>
+
       <!-- Botón deshabilitado -->
       <div class="mt-6 flex justify-center">
         <button
-        (click)="trasladarDatos()"
-        class="bg-blue-400 dark:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg"
-        [class.opacity-50]="!hojaSeleccionada"
-        [class.cursor-not-allowed]="!hojaSeleccionada"
-        [disabled]="!hojaSeleccionada">
-        {{'buttonsLabels.trasladarDatos' | translate}}
-      </button>
+          (click)="trasladarDatos()"
+          class="bg-blue-400 dark:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg"
+          [class.opacity-50]="!hojaSeleccionada || cargandoTraslado"
+          [class.cursor-not-allowed]="!hojaSeleccionada || cargandoTraslado"
+          [disabled]="!hojaSeleccionada || cargandoTraslado">
+          {{ 'buttonsLabels.trasladarDatos' | translate }}
+        </button>
+      </div>
+      
+
+      <!-- Mostrar spinner y mensaje mientras se obtienen las hojas -->
+      <div *ngIf="cargandoTraslado" class="mt-4 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-300">
+        <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-blue-500 dark:border-blue-400"></div>
+        <span>Traslado de datos...</span>
       </div>
     </div>
   </div>

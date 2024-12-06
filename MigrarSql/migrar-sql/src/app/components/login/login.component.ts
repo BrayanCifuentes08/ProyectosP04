@@ -385,6 +385,7 @@ export default class LoginComponent {
           this.buscarApplication();
           this.abrirModal();
           this.seleccionados = {};
+          this.aplicacionSeleccionada = null;
           this.mostrarBotonModal = false;
         } else {
           this.errores.general = data.mensaje || 'Error de autenticación';
@@ -469,76 +470,45 @@ export default class LoginComponent {
 
     this.loginService.buscarUserDisplay2(parametros).subscribe(
       (data: PaBscUserDisplay2M[]) => {
-        console.log('Datos recibidos:', data);
-
-        this.userDisplaysPadres = [];
-        this.userDisplaysHijos = [];
-
-        //Separacion de padres e hijos
-        data.forEach(item => {
-          //Es padre si user_Display_Father es null o 0
-          if (item.user_Display_Father === null || item.user_Display_Father === 0) {
-            console.log('Este es un padre:', item);
-            this.userDisplaysPadres.push(item);
-          } else {
-            //Aca es un hijo, solo si tiene display_URL_Alter valido
-            if (item.display_URL_Alter !== null && item.display_URL_Alter !== undefined) {
-              console.log('Este es un hijo válido con display_URL_Alter:', item);
-              this.userDisplaysHijos.push(item);
-            } else {
-              console.log('Este hijo no tiene display_URL_Alter, no se procesará:', item);
-            }
-          }
-        });
-
-        console.log('Padres encontrados:', this.userDisplaysPadres);
-        console.log('Hijos encontrados:', this.userDisplaysHijos);
-
-        //Se relaciona o asocia cada hijo con su padre
-        this.userDisplaysHijos.forEach((hijo: any) => {
-          console.log("Procesando hijo:", hijo);
-
-          //se verifica si el valor de user_Display_Father esta presente y es valido
-          if (hijo.user_Display_Father === undefined || hijo.user_Display_Father === null) {
-            console.log("El hijo no tiene un user_Display_Father válido");
-            return; 
-          }
-
-          const padre = this.userDisplaysPadres.find((p: any) => {
-            const padreDisplay = p.user_Display;
-            const hijoDisplayFather = hijo.user_Display_Father;
-            
-            //Verifica la comparación entre el padre y el hijo
-            return padreDisplay === hijoDisplayFather;
+        const userDisplayMap = new Map<number, any>();
+  
+        // Construir un mapa para acceso rápido por ID
+        data.forEach((item) => {
+          userDisplayMap.set(item.user_Display, {
+            ...item,
+            hijos: [],
           });
-
-          if (padre) {
-            console.log('Hijo encontrado con su padre:', padre, hijo);
-            hijo.padre = padre;
+        });
+  
+        // Construir el árbol jerárquico
+        const raiz: any = [];
+        data.forEach((item) => {
+          if (item.user_Display_Father === 0 || item.user_Display_Father === null) {
+            // Nodo raíz
+            raiz.push(userDisplayMap.get(item.user_Display));
           } else {
-            console.log('No se encontró el padre para el hijo:', hijo);
+            // Nodo hijo
+            const padre = userDisplayMap.get(item.user_Display_Father);
+            if (padre) {
+              padre.hijos.push(userDisplayMap.get(item.user_Display));
+            }
           }
         });
-
-        this.userDisplaysPadres = data
-          .filter(item => item.user_Display_Father === null || item.user_Display_Father === 0) //Solo dislplays padres
-          .map(padre => {
-            //Filtra los hijos validos (con el display_URL_Alter no nulo)
-            const hijosValidos = data.filter(hijo =>
-              hijo.user_Display_Father === padre.user_Display && hijo.display_URL_Alter !== null
-            );
-
-            //Solo se agrega los padres con al menos un hijo válido
-            if (hijosValidos.length > 0) {
-              return {
-                ...padre,
-                hijos: hijosValidos
-              };
-            } else {
-              return null;
-            }
-          })
-          .filter(padre => padre !== null)
+  
+        // Filtrar nodos no válidos recursivamente
+        const filtrarNodos = (nodo: any): boolean => {
+          if (nodo.hijos.length > 0) {
+            // Filtrar hijos válidos
+            nodo.hijos = nodo.hijos.filter(filtrarNodos);
+            return nodo.hijos.length > 0;
+          } else {
+            // Validar nodo de último nivel
+            return nodo.display_URL_Alter !== null;
+          }
+        };
+  
+        // Aplicar el filtro a la raíz
+        this.userDisplaysPadres = raiz.filter(filtrarNodos);
         this.cargando = false;
       },
       (error) => {
@@ -546,6 +516,7 @@ export default class LoginComponent {
         this.cargando = false;
       }
     );
+
   }
 
   onAplicacionSeleccionada(application: any): void {
@@ -646,12 +617,12 @@ export default class LoginComponent {
       case 'empresas':
         this.seleccionados['empresas'] = null;
         break;
-      case 'aplicaciones':
+       case 'aplicaciones':
         this.aplicacionSeleccionada = null;
         this.seleccionados['aplicaciones'] = null;
         this.seleccionados['displays'] = null;
-        this.userDisplaysHijos = [];
-        this.userDisplaysPadres = [];
+        this.userDisplaysHijos = []
+        this.userDisplaysPadres = []
         this.sectionOpen = null;
         break;
       case 'displays':
