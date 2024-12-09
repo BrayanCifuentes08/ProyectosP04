@@ -512,6 +512,7 @@ export default class LoginComponent {
         // Aplicar el filtro a la raíz
         this.userDisplaysPadres = raiz.filter(filtrarNodos);
         this.cargando = false;
+        this.validarSeleccion(); 
       },
       (error) => {
         console.error('Error al buscar user display 2', error);
@@ -522,17 +523,23 @@ export default class LoginComponent {
   }
 
   onAplicacionSeleccionada(application: any): void {
+    console.log('Aplicación seleccionada:', application);
+    
     if (this.aplicacionSeleccionada !== application) {
       this.seleccionados['displays'] = null;
     }
     this.aplicacionSeleccionada = application;
     this.seleccionados['aplicaciones'] = application;
     this.sectionOpen = null;
+  
     this.buscarUserDisplay2(application.application);
+  
+    console.log('Estado de seleccionados:', this.seleccionados);
   }
+  
 
   validarSeleccion(): boolean {
-    this.validacionErrores = {}; //Resetear errores
+    this.validacionErrores = {}; // Resetear errores
   
     // Verificar si todas las selecciones están completas
     const estacionesSeleccionadas = this.seleccionados['estaciones'];
@@ -544,23 +551,27 @@ export default class LoginComponent {
     const validaciones = [
       estacionesSeleccionadas,
       empresasSeleccionadas,
-      aplicacionesSeleccionadas
+      aplicacionesSeleccionadas,
     ].every(valor => valor !== null && valor !== undefined);
   
-    // Verificar si hay al menos un display válido
-    const hayDisplayValido = this.userDisplaysPadres.some(item => item.hijos && item.hijos
-      .some((hijo: any) => hijo.display_URL_Alter !== null)
+    // Verificar si hay displays válidos disponibles
+    const hayDisplaysDisponibles = this.userDisplaysPadres.length > 0;
+  
+    // Validar si hay un display seleccionado y es válido
+    const displaySeleccionadoValido = displaysSeleccionados !== null && this.userDisplaysPadres.some(padre =>
+      padre.hijos.some((hijo: any) =>
+        hijo === displaysSeleccionados ||
+        (hijo.hijos && hijo.hijos.some((nieto: any) => nieto === displaysSeleccionados))
+      )
     );
   
-    // Validar si el padre tiene al menos un hijo seleccionado
-    const seleccionDeDisplayValida = hayDisplayValido ? (
-      displaysSeleccionados !== null && this.userDisplaysPadres
-      .some(padre => padre.hijos.some((hijo: any) => hijo === displaysSeleccionados))
-    ) : true;
+    // Si hay displays disponibles, se requiere una selección válida
+    const seleccionDeDisplayValida = hayDisplaysDisponibles ? displaySeleccionadoValido : true;
   
     // Validar si todos los campos requeridos están completos y la selección de display es válida
     return validaciones && seleccionDeDisplayValida;
   }
+  
   
   seleccionarItem(section: string, item: any) {
     this.seleccionados[section] = item;
