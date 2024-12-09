@@ -16,6 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:migrar_sql/common/ThemeNotifier.dart';
 import 'package:migrar_sql/models/PaTblDocumentoEstructuraM.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class MigrarSql extends StatefulWidget {
@@ -280,56 +281,48 @@ class _MigrarSqlState extends State<MigrarSql> {
         if (magicNumber == 'PK\u0003\u0004') {
           print('Archivo válido, es un archivo comprimido tipo .xlsx');
 
-          final result = await FilePicker.platform.getDirectoryPath();
+          try {
+            await FileSaver.instance.saveFile(
+                name: "archivo_actualizado.xlsx",
+                bytes: Uint8List.fromList(fileBytes),
+                ext: "xlsx",
+                mimeType: MimeType.microsoftExcel);
 
-          if (result != null) {
-            try {
-              // Guarda el archivo en el directorio seleccionado
-              final path = '$result/archivo_actualizado.xlsx';
-
-              await FileSaver.instance.saveFile(
-                  name: "archivo_actualizado.xlsx",
-                  bytes: Uint8List.fromList(fileBytes),
-                  ext: "xlsx",
-                  mimeType: MimeType.microsoftExcel);
-
-              _mostrarMensajeScaffold(
-                context,
-                "Archivo guardado exitosamente en tu dispositivo",
-                MdiIcons.checkCircle,
-                Colors.green,
-                Colors.white,
-                Colors.green.shade200,
-                Duration(seconds: 3),
-              );
-              print('Archivo guardado exitosamente.');
-            } catch (e) {
-              _mostrarAlerta(
-                context,
-                'Error al guardar el archivo',
-                'Hubo un problema al intentar guardar el archivo: $e',
-                FontAwesomeIcons.exclamationCircle,
-                Colors.red,
-                0,
-                "",
-                null,
-                null,
-                null,
-              );
-              print('Error al guardar el archivo: $e');
-            }
-          } else {
-            print("El usuario no seleccionó un directorio.");
+            _mostrarMensajeScaffold(
+              context,
+              "Archivo guardado exitosamente en tu dispositivo",
+              MdiIcons.checkCircle,
+              Colors.green,
+              Colors.white,
+              Colors.green.shade200,
+              Duration(seconds: 3),
+            );
+            print('Archivo guardado exitosamente.');
+          } catch (e) {
+            _mostrarAlerta(
+              context,
+              'Error al guardar el archivo',
+              'Hubo un problema al intentar guardar el archivo: $e',
+              FontAwesomeIcons.exclamationCircle,
+              Colors.red,
+              0,
+              "",
+              null,
+              null,
+              null,
+            );
+            print('Error al guardar el archivo: $e');
           }
         }
         _mostrarMensajeScaffold(
-            context,
-            "Datos trasladados correctamente para la hoja $_nombreHojaSeleccionada",
-            MdiIcons.checkboxMarkedCircle,
-            Color(0xFFF15803D),
-            Color(0xFFF15803D),
-            Color(0xFFFDCFCE7),
-            Duration(seconds: 2));
+          context,
+          "Datos trasladados correctamente para la hoja $_nombreHojaSeleccionada",
+          MdiIcons.checkboxMarkedCircle,
+          Color(0xFFF15803D),
+          Color(0xFFF15803D),
+          Color(0xFFFDCFCE7),
+          Duration(seconds: 2),
+        );
 
         setState(() {});
       } else {
