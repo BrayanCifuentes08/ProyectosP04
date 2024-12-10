@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:migrar_sql/common/Loading.dart';
 import 'package:migrar_sql/common/Mensajes.dart';
+import 'package:migrar_sql/common/SubirDrive.dart';
 import 'package:migrar_sql/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -283,7 +284,7 @@ class _MigrarSqlState extends State<MigrarSql> {
 
           try {
             await FileSaver.instance.saveFile(
-                name: "archivo_actualizado.xlsx",
+                name: selectedFile.name,
                 bytes: Uint8List.fromList(fileBytes),
                 ext: "xlsx",
                 mimeType: MimeType.microsoftExcel);
@@ -297,6 +298,8 @@ class _MigrarSqlState extends State<MigrarSql> {
               Colors.green.shade200,
               Duration(seconds: 3),
             );
+            await uploadToDrive(
+                fileBytes, "${selectedFile.name}.xlsx", context);
             print('Archivo guardado exitosamente.');
           } catch (e) {
             _mostrarAlerta(
