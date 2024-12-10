@@ -23,21 +23,16 @@
         "seleccionarHojaArchivo": "Select a sheet from the file",
         "exitoHojasCargadas": "Sheets loaded",
         "informacionArchivoSeleccionado": "Information of the selected file",
-
         "cambiarIdioma" : "change language",
         "URLValida" : "The URL is valid.",
         "URLInvalida" : "The base URL is invalid.",
-        "ErrorValidarURL" : "Error verifying URL."
+        "ErrorValidarURL" : "Error verifying URL.",
+        "confirmacionRequerida": "Confirmation required"
     },
     "buttonsLabels": {
-        "btnActualizar": "Update",
-        "btnAgregar": "Add",
-        "btnEliminar": "Delete",
-        "btnBuscar"  : "Search",
-        "btnLimpiarSeleccion" : "Clear selection",
-         "btnGuardar": "Save record",
-          "atencionCierreSesion" : "Attention",
-          "trasladarDatos": "Transfer data"
+        "btnConfirmar": "Confirm",
+        "btnCancelar": "Cancel",
+        "trasladarDatos": "Transfer data"
     },
     "infoTextos": {
       

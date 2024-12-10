@@ -23,21 +23,16 @@
         "seleccionarHojaArchivo": "Wählen Sie ein Blatt aus der Datei",
         "exitoHojasCargadas": "Blätter geladen",
         "informacionArchivoSeleccionado": "Informationen der ausgewählten Datei",
-
         "cambiarIdioma": "sprache ändern",
         "URLValida" : "Die URL ist gültig.",
         "URLInvalida" : "Die Basis-URL ist ungültig.",
-        "ErrorValidarURL" : "Die URL konnte nicht überprüft werden."
+        "ErrorValidarURL" : "Die URL konnte nicht überprüft werden.",
+        "confirmacionRequerida": "Bestätigung erforderlich"
     },
     "buttonsLabels": {
-        "btnActualizar": "Update",
-        "btnAgregar": "Hinzufügen",
-        "btnEliminar": "Löschen",
-        "btnBuscar"  : "Suche",
-        "btnLimpiarSeleccion": "Eindeutige Auswahl",
-        "btnGuardar": "Datensatz speichern",
-         "atencionCierreSesion" : "Achtung",
-         "trasladarDatos": "Daten übertragen"
+        "btnConfirmar": "Bestätigen",
+        "btnCancelar": "Abbrechen",
+        "trasladarDatos": "Daten übertragen"
     },
     "infoTextos": {
        

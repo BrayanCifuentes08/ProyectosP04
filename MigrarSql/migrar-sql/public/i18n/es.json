@@ -22,21 +22,18 @@
         "errorCarga" : "Hubo un error de carga de hojas",
         "exitoHojasCargadas" : "Hojas cargadas",
         "informacionArchivoSeleccionado": "Información del archivo seleccionado",
-        
         "cambiarIdioma" : "cambiar idioma",
         "URLValida" : "La URL es válida.",
         "URLInvalida" : "La URL base no es válida.",
-        "ErrorValidarURL" : "Error al verificar la URL."
+        "ErrorValidarURL" : "Error al verificar la URL.",
+        
+        "confirmacionRequerida": "Confirmacion requerida"
     },
     "buttonsLabels": {
-        "btnActualizar": "Actualizar",
-        "btnAgregar": "Agregar",
-        "btnEliminar": "Eliminar",
-        "btnBuscar": "Buscar",
-        "btnLimpiarSeleccion" : "Limpiar seleccion",
-        "btnGuardar": "Guardar registro",
-        "atencionCierreSesion" : "Atención",
-       "trasladarDatos": "Trasladar datos"
+        "btnConfirmar": "Confirmar",
+        "btnCancelar": "Cancelar",
+
+        "trasladarDatos": "Trasladar datos"
     },
     "infoTextos": {
     },
