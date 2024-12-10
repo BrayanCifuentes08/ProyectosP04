@@ -21,24 +21,18 @@
         "archivoSeleccionado": "Fichier sélectionné",
         "tamañoArchivo": "Taille",
         "seleccionarHojaArchivo": "Sélectionnez une feuille du fichier",
-
         "exitoHojasCargadas": "Feuilles chargées",
         "informacionArchivoSeleccionado": "Informations du fichier sélectionné",
-
         "cambiarIdioma": "changer de langue",
         "URLValida" : "L'URL est valide.",
         "URLInvalida" : "L'URL de base n'est pas valide.",
-        "ErrorValidarURL" : "Échec de la vérification de l'URL."
+        "ErrorValidarURL" : "Échec de la vérification de l'URL.",
+        "confirmacionRequerida": "Confirmation requise"
     },
     "buttonsLabels": {
-        "btnActualizar": "Mise à jour",
-        "btnAgregar": "Ajouter",
-        "btnEliminar": "Supprimer",
-        "btnBuscar"  : "Recherche",
-        "btnLimpiarSeleccion" : "Effacer la sélection",
-        "btnGuardar": "Sauvegarder l'enregistrement",
-         "atencionCierreSesion" : "Attention",
-         "trasladarDatos": "Transférer les données" 
+        "btnConfirmar": "Confirmer",
+        "btnCancelar": "Annuler",
+        "trasladarDatos": "Transférer les données" 
     },
     "infoTextos": {
        

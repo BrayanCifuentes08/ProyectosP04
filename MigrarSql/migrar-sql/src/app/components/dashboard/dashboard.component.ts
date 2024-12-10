@@ -84,7 +84,7 @@ export default class DashboardComponent {
       this.mostrarMensajeAdvertencia = true;
       setTimeout(() => {
         this.mostrarMensajeAdvertencia = false;
-      }, 7000);
+      }, 5000);
       this.cargandoTraslado = false;
       return;
     }
@@ -173,7 +173,7 @@ export default class DashboardComponent {
 
     setTimeout(() => {
       this.ocultarExito();
-    }, 5000);
+    }, 4000);
   }
 
   manejarMensajeError(mensaje: string): void {
@@ -181,7 +181,7 @@ export default class DashboardComponent {
     this.isVisibleAlerta = true;
     setTimeout(() => {
       this.ocultarAlerta();
-    }, 5000);
+    }, 4000);
   }
 
   ocultarExito(){
