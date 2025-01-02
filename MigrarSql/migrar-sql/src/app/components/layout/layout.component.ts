@@ -75,10 +75,10 @@ export default class LayoutComponent {
         }
 
         // Verificar datos en localStorage
-        const aplicacionGuardada = localStorage.getItem('aplicacion');
-        const usuarioGuardado = localStorage.getItem('usuario');
-        const estacionTrabajoGuardada = localStorage.getItem('estacionTrabajo');
-        const empresaGuardada = localStorage.getItem('empresa');
+        const aplicacionGuardada = localStorage.getItem('aplicacion') || sessionStorage.getItem('aplicacion');
+        const usuarioGuardado = localStorage.getItem('usuario') || sessionStorage.getItem('usuario'); ;
+        const estacionTrabajoGuardada = localStorage.getItem('estacionTrabajo') || sessionStorage.getItem('estacionTrabajo');
+        const empresaGuardada = localStorage.getItem('empresa') || sessionStorage.getItem('empresa');
 
         if (!aplicacionGuardada || !usuarioGuardado || !estacionTrabajoGuardada || !empresaGuardada) {
             //this.sharedService.hideLoading();
