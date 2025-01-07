@@ -58,6 +58,11 @@ dependencies:
   path_provider: ^2.1.5
   file_saver: ^0.2.14
   url_launcher: ^6.3.1
+  google_sign_in: ^6.2.2
+  googleapis: ^13.2.0
+  googleapis_auth: ^1.6.0
+  open_file: ^3.5.10
+  permission_handler: ^11.3.1
   
 dev_dependencies:
   flutter_test:

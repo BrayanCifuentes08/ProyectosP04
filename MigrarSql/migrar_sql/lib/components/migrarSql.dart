@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart' as dio;
@@ -9,10 +10,13 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:migrar_sql/common/Loading.dart';
 import 'package:migrar_sql/common/Mensajes.dart';
+import 'package:migrar_sql/common/SubirDrive.dart';
 import 'package:migrar_sql/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:migrar_sql/common/ThemeNotifier.dart';
 import 'package:migrar_sql/models/PaTblDocumentoEstructuraM.dart';
@@ -69,7 +73,8 @@ class _MigrarSqlState extends State<MigrarSql> {
   List<String> _nombresHojas = [];
   String? rutaArchivo = "";
   Dio _dio = Dio();
-  String? _nombreHojaSeleccionada;
+
+  List<String> _hojasSeleccionadas = [];
 
   List<PaTblDocumentoEstructuraM> _documentoEstructura = [];
 
@@ -239,6 +244,67 @@ class _MigrarSqlState extends State<MigrarSql> {
     );
   }
 
+  void saveAndOpenFile(Uint8List fileBytes, String fileName) async {
+    try {
+      // Guardar el archivo
+      String? savedFilePath = await FileSaver.instance.saveFile(
+        name: fileName,
+        bytes: Uint8List.fromList(fileBytes),
+        ext: "xlsx",
+        mimeType: MimeType.microsoftExcel,
+      );
+
+      if (savedFilePath == null) {
+        _mostrarAlerta(
+          context,
+          'Error al guardar el archivo',
+          'Hubo un problema al intentar guardar el archivo.',
+          Icons.error_outline,
+          Colors.red,
+          0,
+          "",
+          null,
+          null,
+          null,
+        );
+        return;
+      }
+
+      // Mostrar mensaje de éxito
+      _mostrarMensajeScaffold(
+        context,
+        "Archivo guardado exitosamente en tu dispositivo",
+        Icons.check_circle,
+        Colors.green,
+        Colors.white,
+        Colors.green.shade200,
+        Duration(seconds: 3),
+      );
+
+      // Abrir el archivo guardado usando la ruta completa
+      final result = await OpenFile.open(savedFilePath);
+
+      if (result.type == ResultType.done) {
+        print('El archivo se abrió correctamente');
+      } else {
+        _mostrarAlerta(
+          context,
+          'Error al abrir el archivo',
+          'Hubo un problema al intentar abrir el archivo: ${result.message}',
+          Icons.error_outline,
+          Colors.red,
+          0,
+          "",
+          null,
+          null,
+          null,
+        );
+      }
+    } catch (e) {
+      print('Error al guardar o abrir el archivo: $e');
+    }
+  }
+
   Future<void> _trasladarDatos() async {
     setState(() {
       _cargandoTraslado =
@@ -254,16 +320,24 @@ class _MigrarSqlState extends State<MigrarSql> {
       }
 
       // Configura el FormData para cada hoja seleccionada
-      FormData formData = FormData.fromMap({
-        'ArchivoExcel': await dio.MultipartFile.fromFile(
+      FormData formData = FormData();
+
+      // Agrega el archivo Excel al FormData
+      formData.files.add(MapEntry(
+        'ArchivoExcel',
+        await dio.MultipartFile.fromFile(
           selectedFile.path!,
           filename: selectedFile.name,
         ),
-        'NombreHojaExcel': _nombreHojaSeleccionada, // Cambia la hoja aquí
-      });
+      ));
+
+      // Itera sobre las hojas seleccionadas y agrega cada una de ellas
+      for (var hoja in _hojasSeleccionadas) {
+        formData.fields.add(MapEntry('NombresHojasExcel', hoja));
+      }
 
       final response = await _dio.post(
-        '${widget.baseUrl}MigrarSqlCtrl',
+        '${widget.baseUrl}SqlAExcelCtrl',
         data: formData,
         options: Options(
           headers: {
@@ -282,22 +356,10 @@ class _MigrarSqlState extends State<MigrarSql> {
           print('Archivo válido, es un archivo comprimido tipo .xlsx');
 
           try {
-            await FileSaver.instance.saveFile(
-                name: "archivo_actualizado.xlsx",
-                bytes: Uint8List.fromList(fileBytes),
-                ext: "xlsx",
-                mimeType: MimeType.microsoftExcel);
+            saveAndOpenFile(Uint8List.fromList(fileBytes), selectedFile.name);
 
-            _mostrarMensajeScaffold(
-              context,
-              "Archivo guardado exitosamente en tu dispositivo",
-              MdiIcons.checkCircle,
-              Colors.green,
-              Colors.white,
-              Colors.green.shade200,
-              Duration(seconds: 3),
-            );
-            print('Archivo guardado exitosamente.');
+            // await uploadToDrive(
+            //     fileBytes, "${selectedFile.name}.xlsx", context);
           } catch (e) {
             _mostrarAlerta(
               context,
@@ -316,7 +378,7 @@ class _MigrarSqlState extends State<MigrarSql> {
         }
         _mostrarMensajeScaffold(
           context,
-          "Datos trasladados correctamente para la hoja $_nombreHojaSeleccionada",
+          "Datos trasladados correctamente",
           MdiIcons.checkboxMarkedCircle,
           Color(0xFFF15803D),
           Color(0xFFF15803D),
@@ -328,64 +390,105 @@ class _MigrarSqlState extends State<MigrarSql> {
       } else {
         print('Error en la solicitud al servidor: ${response.statusCode}');
         String errorMessage = 'Error desconocido';
-        if (response.data != null && response.data is Map) {
-          errorMessage = response.data['Message'] ?? 'Error desconocido';
-        }
-        _mostrarAlerta(
+
+        if (response.statusCode == 400) {
+          try {
+            // Intentar decodificar el mensaje del servidor
+            String decodedMessage = utf8.decode(response.data);
+            print('Mensaje del servidor: $decodedMessage');
+            _mostrarAlerta(
+              context,
+              'Error al realizar la solicitud',
+              decodedMessage, // Mostrar el mensaje del servidor
+              FontAwesomeIcons.circleExclamation,
+              Colors.red,
+              0,
+              "",
+              null,
+              null,
+              null,
+            );
+          } catch (e) {
+            print('Error al procesar el mensaje de error del servidor: $e');
+            _mostrarAlerta(
+              context,
+              'Error al realizar la solicitud',
+              'No se pudo procesar el mensaje de error del servidor.',
+              FontAwesomeIcons.circleExclamation,
+              Colors.red,
+              0,
+              "",
+              null,
+              null,
+              null,
+            );
+          }
+        } else {
+          // Mostrar mensaje de error
+          _mostrarAlerta(
             context,
             'Error al realizar la solicitud',
-            response.data['Message'] ?? errorMessage,
+            errorMessage,
             FontAwesomeIcons.circleExclamation,
             Color(0xFFFEAB308),
             0,
             "",
             null,
             null,
-            null);
+            null,
+          );
+        }
       }
     } catch (e) {
       if (e is DioError) {
         if (e.response != null) {
-          print(
-              "Error al insertar los datos: ${e.response?.statusCode} - ${e.response?.data}");
-          _mostrarAlerta(
+          try {
+            // Decodificar el error del servidor si es posible
+            String decodedMessage = utf8.decode(e.response!.data);
+            print("Error del servidor decodificado: $decodedMessage");
+
+            _mostrarAlerta(
               context,
               'Error al realizar la solicitud',
-              '${e.response?.data}',
+              decodedMessage,
               FontAwesomeIcons.circleExclamation,
-              Color(0xFFFEAB308),
+              Colors.red,
               0,
               "",
               null,
               null,
-              null);
-        } else {
-          print("Error de red: ${e.message}");
-          _mostrarAlerta(
+              null,
+            );
+          } catch (decodeError) {
+            print("Error al decodificar el mensaje del servidor: $decodeError");
+            _mostrarAlerta(
               context,
-              'Error de red',
-              e.message ?? '',
+              'Error al realizar la solicitud',
+              'No se pudo procesar el mensaje del servidor.',
               FontAwesomeIcons.circleExclamation,
-              Color(0xFFFEAB308),
+              Colors.red,
               0,
               "",
               null,
               null,
-              null);
-        }
+              null,
+            );
+          }
+        } else {}
       } else {
         print('Error inesperado: $e');
         _mostrarAlerta(
-            context,
-            'Error inesperado',
-            'Ocurrió un error inesperado: $e',
-            FontAwesomeIcons.circleExclamation,
-            Color(0xFFFEAB308),
-            0,
-            "",
-            null,
-            null,
-            null);
+          context,
+          'Error inesperado',
+          'Ocurrió un error inesperado: $e',
+          FontAwesomeIcons.circleExclamation,
+          Color(0xFFFEAB308),
+          0,
+          "",
+          null,
+          null,
+          null,
+        );
       }
     } finally {
       setState(() {
@@ -530,8 +633,8 @@ class _MigrarSqlState extends State<MigrarSql> {
                                   setState(() {
                                     _documentoEstructura.clear();
                                     _nombresHojas = [];
-                                    _nombreHojaSeleccionada = null;
-                                    _nombreHojaSeleccionada = null;
+                                    _hojasSeleccionadas = [];
+
                                     _archivoSeleccionado = null;
                                   });
                                 },
@@ -562,7 +665,7 @@ class _MigrarSqlState extends State<MigrarSql> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: _nombresHojas
                           .map(
-                            (sheetName) => RadioListTile<String>(
+                            (sheetName) => CheckboxListTile(
                               controlAffinity: ListTileControlAffinity.leading,
                               title: Text(
                                 sheetName,
@@ -572,14 +675,17 @@ class _MigrarSqlState extends State<MigrarSql> {
                                       : Colors.white,
                                 ),
                               ),
-                              value:
-                                  sheetName, // El valor que representa este RadioListTile
-                              groupValue:
-                                  _nombreHojaSeleccionada, // El valor actualmente seleccionado
-                              onChanged: (value) {
+                              value: _hojasSeleccionadas.contains(
+                                  sheetName), // Verifica si está seleccionado
+                              onChanged: (bool? value) {
                                 setState(() {
-                                  // Cambia el valor seleccionado al nuevo sheetName
-                                  _nombreHojaSeleccionada = value!;
+                                  if (value == true) {
+                                    // Agrega la hoja seleccionada a la lista
+                                    _hojasSeleccionadas.add(sheetName);
+                                  } else {
+                                    // Remueve la hoja si se deselecciona
+                                    _hojasSeleccionadas.remove(sheetName);
+                                  }
                                 });
                               },
                               activeColor: Color(0xFFDC9525),
@@ -592,23 +698,29 @@ class _MigrarSqlState extends State<MigrarSql> {
                         color: Colors.blue,
                         changeLanguage: widget.changeLanguage),
                   if (_archivoSeleccionado != null &&
-                      _nombreHojaSeleccionada != null &&
+                      _hojasSeleccionadas != [] &&
                       !_cargandoHojas)
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: ElevatedButton.icon(
                         onPressed: () {
+                          String hojasSeleccionadas = _hojasSeleccionadas.join(
+                              ", "); // Convierte la lista a un string legible
                           _mostrarAlerta(
-                              context,
-                              S.of(context).mensajesConfimar,
-                              "Confirmar el traslado de datos de las hojas seleccionadas: ${_nombreHojaSeleccionada}",
-                              FontAwesomeIcons.circleExclamation,
-                              Color(0xFFFEAB308),
-                              1,
-                              S.of(context).mensajesConfimar, () async {
-                            await _trasladarDatos();
-                            await widget.onScrollToDown();
-                          }, null, null);
+                            context,
+                            S.of(context).mensajesConfimar,
+                            "Confirmar el traslado de datos de las hojas seleccionadas:\n$hojasSeleccionadas",
+                            FontAwesomeIcons.circleExclamation,
+                            Color(0xFFFEAB308),
+                            1,
+                            S.of(context).mensajesConfimar,
+                            () async {
+                              await _trasladarDatos();
+                              await widget.onScrollToDown();
+                            },
+                            null,
+                            null,
+                          );
                         },
                         icon: Icon(
                           Icons.add_task_sharp,
