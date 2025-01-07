@@ -1,15 +1,12 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, EventEmitter, Inject, Output, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { LoginService } from '../../services/login.service';
 import { TraduccionService } from '../../services/traduccion.service';
 import { SharedService } from '../../services/shared.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
-  standalone: true,
-  imports: [CommonModule, TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })

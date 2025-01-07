@@ -1,25 +1,22 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router';
-import { TraduccionService } from '../../services/traduccion.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
-import { UtilidadService } from '../../services/utilidad.service';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, ElementRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { PaBscEstacionTrabajo2M, ParametrosEstacionTrabajo } from '../../models/estacion-trabajo';
 import { PaBscEmpresa1M, ParametrosEmpresa } from '../../models/empresa';
 import { PaBscApplication1M, ParametrosApplication } from '../../models/application';
 import { PaBscUserDisplay2M, ParametrosUserDisplay } from '../../models/user-display';
-import { isPlatformBrowser } from '@angular/common';
-import { SharedService } from '../../services/shared.service';
+import { Router } from '@angular/router';
+import { TraduccionService } from '../../services/traduccion.service';
+import { TranslateService } from '@ngx-translate/core';
 import { LoginService } from '../../services/login.service';
+import { UtilidadService } from '../../services/utilidad.service';
+import { SharedService } from '../../services/shared.service';
+
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: './login.component.css'
 })
-export default class LoginComponent {
+export class LoginComponent {
   mostrarMensaje:             boolean = false;
   isIdiomaMenuOpen:           boolean = false;
   mostrarMensajeUrl:          boolean = false;
@@ -73,7 +70,7 @@ export default class LoginComponent {
     private sharedService:SharedService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.urlApi = this.utilidadService.getUrlService();
+    
     //this.esModoOscuro = this.utilidadService.isDarkMode(); // Obtener el estado inicial del modo oscuro
     this.updateColor();
   }
@@ -140,16 +137,42 @@ export default class LoginComponent {
   }
   
   confirmarUrl() {
-    this.utilidadService.setUrlService(this.urlApi); //Servicio para actualizar la URL
+    if (!this.urlApi || !this.esValido) {
+      return;
+    }
+    this.utilidadService.setUrlService(this.urlApi);
+    localStorage.setItem('urlApi', this.urlApi)
     console.log(`URL API actualizada a: ${this.urlApi}`);
-    this.mostrarMensaje = false;
     this.mostrarMensajeUrlConfirmacion = false;
+    this.mostrarMensaje = false;
+    this.mostrarMensajeUrl = false;
+    this.errores.general = '';
+
   }
 
   verificarUrl(urlApi: string) {
-    this.mostrarMensajeUrlConfirmacion = false;
-    this.isVerificando = true;
+    if (!urlApi) {
+      // Evitar verificar si la URL está vacía
+      this.mostrarMensajeUrlVerificacion = true;
+      this.esValido = false;
+      this.esError = true;
+      this.mensajeErrorUrl = 'labels.URLVacia';
+      return;
+    }
   
+    // Validación básica del formato de la URL
+    const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+)(:\d+)?(\/\S*)?$/;
+    if (!urlPattern.test(urlApi)) {
+      // Si la URL no tiene el formato correcto
+      this.mostrarMensajeUrlVerificacion = true;
+      this.esValido = false;
+      this.esError = true;
+      this.mensajeErrorUrl = 'labels.URLInvalidaFormato';
+      return;
+    }
+  
+    // Si la URL tiene un formato válido
+    this.isVerificando = true;
     this.loginService.verificarBaseUrl(urlApi).subscribe(
       (isValid: boolean) => {
         this.isVerificando = false;
@@ -158,12 +181,12 @@ export default class LoginComponent {
           this.mostrarMensajeUrlVerificacion = true;
           this.esValido = true;
           this.esError = false;
-          this.mensajeErrorUrl = 'labels.URLValida'; // Asigna la clave
+          this.mensajeErrorUrl = 'labels.URLValida'; // La URL es válida
         } else {
           this.mostrarMensajeUrlVerificacion = true;
           this.esValido = false;
           this.esError = true;
-          this.mensajeErrorUrl = 'labels.URLInvalida';
+          this.mensajeErrorUrl = 'labels.URLInvalida'; // La URL es inválida
         }
       },
       (error) => {
@@ -171,10 +194,20 @@ export default class LoginComponent {
         this.mostrarMensajeUrlVerificacion = true;
         this.esValido = false;
         this.esError = true;
-        this.mensajeErrorUrl = 'labels.ErrorValidarURL'; 
+  
+        if (error.status === 0) {
+          // Esto indica un error de conexión, por ejemplo, falta de Internet
+          this.mensajeErrorUrl = 'labels.ErrorConexionAPI';
+          this.mostrarMensaje = true
+
+        } else {
+          // Otro tipo de error de la API (por ejemplo, 404, 500)
+          this.mensajeErrorUrl = 'labels.ErrorValidarURL'; // Error al verificar la URL
+        }
       }
     );
   }
+  
   
   onUsuarioChange(): void {
     //this.onInputChange()
@@ -248,6 +281,7 @@ export default class LoginComponent {
       localStorage.removeItem('aplicacion');
       localStorage.removeItem('display');
       localStorage.removeItem('jwtToken');
+      localStorage.removeItem('urlApi');
       localStorage.removeItem('horaInicioSesion');
     }
   }
@@ -263,6 +297,7 @@ export default class LoginComponent {
       sessionStorage.removeItem('aplicacion');
       sessionStorage.removeItem('display');
       sessionStorage.removeItem('jwtToken');
+      sessionStorage.removeItem('urlApi');
       sessionStorage.removeItem('horaInicioSesionTemp');
     }
   }
@@ -270,8 +305,15 @@ export default class LoginComponent {
   ngOnInit(): void {
     if(isPlatformBrowser(this.platformId)){
       //Recupera y muestra la hora de inicio de sesión y la fecha de ingreso
+      const savedUrl = localStorage.getItem('urlApi');
       const horaInicioSesion = localStorage.getItem('horaInicioSesion');
       const fechaIngreso = localStorage.getItem('fechaIngreso');
+
+
+      if (savedUrl) {
+        this.urlApi = savedUrl;
+        this.esValido = true; 
+      }
 
       if (horaInicioSesion) {
         console.log(`Hora de inicio de sesión: ${horaInicioSesion}`);
@@ -368,6 +410,13 @@ export default class LoginComponent {
 
   buscarUsuario(): void {
     this.cargando = true;
+    // Validar si la URL no está configurada o no ha sido verificada correctamente
+    if (!this.urlApi || !this.esValido) {
+      this.errores.general = 'labels.ErrorConexionAPI';
+      this.mostrarMensaje = true;
+      this.cargando = false;
+      return;
+    }
     const parametros = {
       pOpcion: 1,
       pUserName: this.usuario,
@@ -390,14 +439,22 @@ export default class LoginComponent {
           this.userDisplaysPadres = [];
           this.userDisplaysHijos = []
         } else {
-          this.errores.general = data.mensaje || 'Error de autenticación';
+          this.errores.general = data.mensaje || 'labels.ErrorAutenticacion';
+          this.mostrarMensaje = true
         }
         this.cargando = false;
       },
       (error) => {
         console.error('Error al buscar usuario', error);
-        this.errores.general = error.error?.mensaje || 'Error al autenticar el usuario';
+        if (!this.urlApi || !this.esValido) {
+          // Si la URL no ha sido verificada o está vacía
+          this.errores.general = 'labels.ErrorConexionAPI'; 
+          this.mostrarMensaje = true
+        } else {
+          this.errores.general = error.error?.mensaje || 'labels.ErrorAutenticacion';
+        }
         this.cargando = false;
+      
       }
     );
   }
@@ -536,7 +593,6 @@ export default class LoginComponent {
   
     console.log('Estado de seleccionados:', this.seleccionados);
   }
-  
 
   validarSeleccion(): boolean {
     this.validacionErrores = {}; // Resetear errores
@@ -572,7 +628,6 @@ export default class LoginComponent {
     return validaciones && seleccionDeDisplayValida;
   }
   
-  
   seleccionarItem(section: string, item: any) {
     this.seleccionados[section] = item;
     this.sectionOpen = null;
@@ -600,16 +655,17 @@ export default class LoginComponent {
     }
   }
 
-  copiarAPortapapeles() {
-    navigator.clipboard
-      .writeText(this.urlApi)
-      .then(() => {
-        console.log('URL copiada al portapapeles');
-      })
-      .catch((err) => {
-        console.error('Error al copiar la URL: ', err);
-      });
-  }
+pegarDelPortapapeles() {
+  navigator.clipboard.readText()
+    .then((text) => {
+      this.urlApi = text;  // Asigna el texto del portapapeles al campo de URL
+      console.log('Texto pegado desde el portapapeles: ', this.urlApi);
+    })
+    .catch((err) => {
+      console.error('Error al pegar desde el portapapeles: ', err);
+    });
+}
+
   
   cerrarModal() {
     this.isExiting = true; // Activamos la clase de salida

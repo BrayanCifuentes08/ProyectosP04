@@ -1,0 +1,70 @@
+{
+    "labels": {
+        "pestañaMantenimiento" : "maintenance",
+        "horaInicioSesion" : "Session start time",
+        "horaCierreSesion" : "Closing time of the sessione",
+        "informacionSeleccionadaCatalogo": "Selected catalog information",
+        "totalRegistros" : "Total number of records",
+        "seleccionarDescripcion": "Select a description",
+        "usuario": "User",
+        "estacionTrabajo": "Work station",
+        "empresa": "Company",
+        "catalogo": "Catalog",
+        "vistaModulo": "Module view",
+        "cargaHojas": "Loading sheets",
+        "seleccionArchivoExcel": "Excel file selection",
+        "seleccionHojas": "Sheet selection",
+        "seleccionArchivo": "Selecting file",
+        "errorCarga": "There was an error loading the sheets",
+        "hacerClickOArrastrar": "Click or drag your file here",
+        "soloArchivosExcel": "Only files",
+        "archivoSeleccionado": "File selected",
+        "tamañoArchivo": "Size",
+        "seleccionarHojaArchivo": "Select a sheet from the file",
+        "exitoHojasCargadas": "Sheets loaded",
+        "informacionArchivoSeleccionado": "Information of the selected file",
+        "cambiarIdioma" : "change language",
+        "URLValida" : "The URL is valid.",
+        "URLInvalida" : "The base URL is invalid.",
+        "ErrorValidarURL" : "Error verifying URL.",
+        "confirmacionRequerida": "Confirmation required"
+    },
+    "buttonsLabels": {
+        "btnConfirmar": "Confirm",
+        "btnCancelar": "Cancel",
+        "trasladarDatos": "Transfer data"
+    },
+    "infoTextos": {
+      
+    },
+    "messages": {
+        "errorContraseña": "You must enter the password",
+        "errorUsuario": "You must enter the user",
+        "datosGuardadosSesion": "I saved your session correctly.",
+        "datosNoGuardadosSesion": "Your session will not be saved.",
+        "cargandoHojasMensaje": "Loading sheets, please wait"
+    },
+    "labelsLogin": {
+        "cerrarSesion" : "Close Session",
+        "iniciarSesion": "Login",
+        "usuarioLogin": "User",
+        "contraseñaLogin": "Password",
+        "cargandoLogin": "Loading",
+        "ingresarUrlLogin": "Enter the API url",
+        "actualizarUrl": "Press 'Confirm' to update the URL.",
+        "confirmarBtns": "Confirm",
+        "verificarBtns": "Verify",
+        "verModalInfo": "View drop-down menu",
+        "menuAutenticacion": "Authentication Menu",
+        "seleccionarInformacionAdicional" : "Select the required information",
+        "estacionesTrabajoLogin": "Workstations",
+        "empresasLogin": "Companies",
+        "aplicacionesLogin": "Applications",
+        "displaysLogin": "Displays",
+        "noDisplaysDisponibles": "No diplays available",
+        "opcionesSeleccionadas": "Selected Options",
+        "guardarCambios": "Save changes",
+        "guardarDatosSesion": "Save session data"
+    }
+  }
+  

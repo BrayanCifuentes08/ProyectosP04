@@ -1,0 +1,118 @@
+<div class="container mx-auto p-4">
+    <div class="flex flex-col lg:flex-row gap-4">
+      <!-- Sección 1: Selección de archivo Excel -->
+      <div class="flex-1 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">{{'labels.seleccionArchivoExcel' | translate}}</h2>
+        <!-- Texto adicional debajo del área de subida -->
+        <div *ngIf="mostrarAreaSubida" class="fade-in">
+          <p class="mt-6 text-gray-600 dark:text-gray-300 text-start">
+            {{'labels.soloArchivosExcel' | translate}} <strong>.xls y .xlsx</strong>
+          </p>
+          <!-- Área para subir archivo -->
+          <div
+            class="relative flex items-center justify-center w-full h-32 mt-3 bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:border-blue-500 dark:hover:border-blue-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+          >
+            <input
+              id="fileInput"
+              type="file"
+              accept=".xlsx, .xls"
+              class="absolute inset-0 opacity-0 cursor-pointer"
+              (change)="cargarFile($event)"
+              #fileInput
+            />
+            <div class="text-center">
+              <i class="fa-solid fa-upload text-gray-500 dark:text-gray-300 text-3xl mb-2"></i>
+              <p class="text-gray-500 dark:text-gray-300 text-lg">
+                {{'labels.hacerClickOArrastrar' | translate}}
+              </p>
+            </div>
+          </div>
+        </div>
+    
+        <!-- Texto adicional debajo del área de subida -->
+        <p class="mt-6 text-gray-600 dark:text-gray-300 text-start">
+          {{'labels.informacionArchivoSeleccionado' | translate}}
+        </p>
+        <!-- Detalles del archivo -->
+        <div *ngIf="fileSeleccionado" class="mt-3 p-4 bg-blue-50 dark:bg-gray-800 border border-blue-300 dark:border-gray-700 rounded-lg flex justify-between items-center shadow-md">
+          <div>
+            <p class="text-gray-800 dark:text-gray-200">
+              {{'labels.archivoSeleccionado' | translate}}: 
+              <span class="font-semibold text-gray-700 dark:text-gray-100">{{ fileSeleccionado.name }}</span>
+            </p>
+            <p class="text-gray-800 dark:text-gray-200 mt-2">
+              {{'labels.tamañoArchivo' | translate}}: 
+              <span class="font-semibold text-gray-700 dark:text-gray-100">{{ (fileSeleccionado.size || 0) / 1024 | number:'1.2-2' }} KB</span>
+            </p>
+          </div>
+  
+          <button 
+          *ngIf="!cargandoHojas"
+          (click)="removerFile()"
+            class="text-blue-600 dark:text-gray-300 hover:text-blue-800 dark:hover:text-gray-200 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+  
+      <!-- Sección 2: Selección de hoja del archivo Excel -->
+      <div class="flex-1 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+          {{'labels.seleccionarHojaArchivo' | translate}}
+        </h2>
+        <div class="space-y-2">
+          <label
+            *ngFor="let hoja of hojas"
+            class="flex items-center px-2 py-1 rounded-md transition duration-200 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-700">
+            <input
+              (change)="seleccionarHoja(hoja, $event)"
+              type="checkbox"
+              [value]="hoja"
+              class="w-4 h-4 text-blue-500 dark:text-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 focus:ring-2 border-gray-300 dark:border-gray-600">
+            <span
+              class="ml-2 text-gray-700 dark:text-gray-300 text-md group-hover:text-blue-500 dark:group-hover:text-blue-300">
+              {{ hoja }}
+            </span>
+          </label>
+        </div>
+        
+        <!-- Mostrar spinner y mensaje mientras se obtienen las hojas -->
+        <div *ngIf="cargandoHojas" class="flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-300">
+          <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-blue-500 dark:border-blue-400"></div>
+          <span>{{'messages.cargandoHojasMensaje' | translate}}...</span>
+        </div>
+  
+        <!-- Botón deshabilitado -->
+        <div class="mt-6 flex justify-center">
+          <button
+            (click)="mostrarModalTraslado()"
+            class="bg-blue-500 dark:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg"
+            [class.opacity-50]="hojasSeleccionadas.length === 0 || cargandoTraslado"
+            [class.cursor-not-allowed]="hojasSeleccionadas.length === 0 || cargandoTraslado"
+            [disabled]="hojasSeleccionadas.length === 0 || cargandoTraslado">
+            {{ 'buttonsLabels.trasladarDatos' | translate }}
+          </button>
+        </div>
+        
+  
+        <!-- Mostrar spinner y mensaje mientras se obtienen las hojas -->
+        <div *ngIf="cargandoTraslado" class="mt-4 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-300">
+          <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-blue-500 dark:border-blue-400"></div>
+          <span>Traslado de datos...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-messages
+  [isVisibleModal]="isVisibleModal"
+  [mensajeModal]="'¿Está seguro de que desea trasladar los datos seleccionados?'"
+  (confirmarAccion)="trasladarDatos()"
+  (cancelarAccion)="isVisibleModal = false"
+  [mensajeExito]="isVisibleExito ? mensajeExito : ''" 
+  [mensajeAlerta]="isVisibleAlerta ? mensajeAlerta : ''"
+  [isVisibleExito]="isVisibleExito" 
+  [isVisibleAlerta]="isVisibleAlerta" 
+></app-messages>
+  

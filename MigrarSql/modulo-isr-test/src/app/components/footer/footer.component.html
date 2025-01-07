@@ -1,0 +1,42 @@
+<footer class="py-4">
+    <!-- Barra de Estado -->
+    <div class="bg-gradient-to-br from-gray-800 to-gray-900 text-white p-4 mt-2 rounded-md select-none flex flex-wrap justify-between items-center transition-all duration-300 ">
+      <div class="flex items-center flex-shrink-0 w-full sm:w-auto mb-2 sm:mb-0">
+        <span class="inline-flex items-center px-2 py-1 text-xs font-semibold text-white bg-gray-600 rounded-full max-w-full overflow-hidden">
+          <i class="fa-solid fa-check mr-1"></i>
+          <span class="text-sm truncate">{{ 'labels.' + accionActual || 'Esperando acción...' | translate }}</span>
+        </span>
+      </div>
+  
+      <div class="flex gap-2 flex-wrap justify-end w-full sm:w-auto">
+        <div class="flex items-center flex-shrink-0 mb-2 sm:mb-0">
+          <i class="fa-solid fa-user mr-1 text-sm"></i>
+          <span class="text-sm truncate max-w-full overflow-hidden">{{ 'labels.usuario' | translate }}: <strong class="truncate">{{ usuario }}</strong></span>
+        </div>
+        <div class="flex items-center flex-shrink-0 mb-2 sm:mb-0">
+          <i class="fa-solid fa-city mr-1 text-sm"></i>
+          <span class="text-sm truncate max-w-full overflow-hidden">{{ 'labels.estacionTrabajo' | translate }}: <strong class="truncate">{{ estacionTrabajo }}</strong></span>
+        </div>
+        <div class="flex items-center flex-shrink-0 mb-2 sm:mb-0">
+          <!-- <i class="fa-solid fa-city mr-1 text-sm"></i> -->
+          <span class="text-sm truncate max-w-full overflow-hidden">{{ 'labels.empresa' | translate }}: <strong class="truncate">{{ empresa }}</strong></span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="flex w-full flex-wrap items-center justify-center gap-6 px-4 md:justify-between mt-4">
+      <p class="block antialiased font-sans text-sm leading-normal font-normal text-gray-700 dark:text-gray-400 truncate">
+        © 2024, Hecho por
+        <a target="_blank" class="transition-colors hover:text-gray-900 dark:hover:text-gray-200">Desarrollo Moderno de Software</a>
+      </p>
+      <ul class="flex items-center gap-4">
+        <li>
+          <a target="_blank" class="block antialiased font-sans text-sm leading-normal py-0.5 px-1 font-normal text-gray-700 dark:text-gray-400 transition-colors hover:text-gray-900 dark:hover:text-gray-200">Desarrollo Moderno de Software</a>
+        </li>
+        <li>
+          <a  target="_blank" class="block antialiased font-sans text-sm leading-normal py-0.5 px-1 font-normal text-gray-700 dark:text-gray-400 transition-colors hover:text-gray-900 dark:hover:text-gray-200">Acerca de</a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+  

@@ -31,7 +31,7 @@
 
   <div class="flex items-center space-x-4 rtl:space-x-reverse mb-8 animate-slideIn sm:mb-4 sm:mr-0 sm:ml-8 sm:justify-start">
     <!-- Logo de la empresa -->
-    <img src="/assets/images/logoDmosoftCarga.png" alt="Dmosoft Logo" class="h-20 w-auto sm:h-24 lg:h-28" />
+    <img src="assets/images/logoDmosoftCarga.png" alt="Dmosoft Logo" class="h-20 w-auto sm:h-24 lg:h-28" />
   </div>
 
   <!-- Login Form -->
@@ -128,6 +128,7 @@
         <div class="relative">
           <button
             (click)="verificarCampos()"
+            
             [disabled]="cargando"
             type="submit"
             class="shine-button w-full flex items-center justify-center bg-indigo-700 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 text-white p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
@@ -150,7 +151,7 @@
           *ngIf="errores.general"
           class="text-red-500 text-center text-sm mt-4"
         >
-          {{ errores.general }}
+          {{ errores.general | translate}}
         </div>
 
         <div class="border-t border-gray-200 dark:border-gray-700 my-4"></div>
@@ -169,32 +170,21 @@
             <div class="relative flex items-center mt-2 pl-2 pr-2">
               <!-- Input para modificacion de URL -->
               <input 
-              type="text"
-              [(ngModel)]="urlApi"
-              (ngModelChange)="mostrarMensajeUrlConfirmacion = true"
-              placeholder="{{ 'labelsLogin.ingresarUrlLogin' | translate }}"
-              class="w-full px-4 py-2 bg-gray-200 border rounded-lg focus:outline-none pr-10 focus:bg-gray-100 focus:ring-1 focus:ring-indigo-700 dark:text-white dark:bg-gray-700 dark:focus:ring-1 dark:focus:ring-indigo-500 dark:border-none dark:focus:bg-gray-600"
-            />
+                type="text"
+                [(ngModel)]="urlApi"
+                (ngModelChange)="mostrarMensajeUrlConfirmacion = true"
+                placeholder="Ejemplo: https://api/ejemplo/"
+                class="w-full px-4 py-2 bg-gray-200 border rounded-lg focus:outline-none pr-10 focus:bg-gray-100 focus:ring-1 focus:ring-indigo-700 dark:text-white dark:bg-gray-700 dark:focus:ring-1 dark:focus:ring-indigo-500 dark:border-none dark:focus:bg-gray-600"
+              />
+
               <button
-                (click)="copiarAPortapapeles()"
-                class="absolute right-6 top-1/2 transform -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-black p-1 rounded-full text-xs font-medium shadow-sm transition duration-300 ease-in-out"
-                title="Copiar al portapapeles"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="h-4 w-4"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5A3.375 3.375 0 0 0 6.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-1.5a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 0 0-9-9Z"
-                  />
-                </svg>
-              </button>
+              (click)="pegarDelPortapapeles()"
+              class="absolute right-6 top-1/2 transform -translate-y-1/2 bg-gray-300 hover:bg-gray-400 text-black p-1 rounded-full text-xs font-medium shadow-sm transition duration-300 ease-in-out"
+              title="Pegar desde el portapapeles"
+            >
+              <i class="fa-regular fa-paste"></i>
+            </button>
+            
             </div>
             <p
               *ngIf="mostrarMensajeUrlConfirmacion"
@@ -215,6 +205,7 @@
           <div class="flex justify-center space-x-4 mt-4">
             <button
               (click)="confirmarUrl()"
+              [disabled]="!urlApi || !esValido || isVerificando"
               class="p-2 bg-gray-700 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
             >
               {{ "labelsLogin.confirmarBtns" | translate }}
@@ -222,7 +213,7 @@
             <button
             (click)="verificarUrl(urlApi)"
             class="p-2 bg-blue-900 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
-            [disabled]="isVerificando"
+            [disabled]="isVerificando || !urlApi" 
           >
             <ng-container *ngIf="!isVerificando; else spinner">
               {{ "labelsLogin.verificarBtns" | translate }}

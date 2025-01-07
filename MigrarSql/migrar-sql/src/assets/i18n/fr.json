@@ -1,0 +1,70 @@
+{
+    "labels": {
+        "pestañaMantenimiento" : "entretien",
+        "horaInicioSesion" : "Heure de début de la session",
+        "horaCierreSesion" : "Cl estate is is estate",
+        "informacionSeleccionadaCatalogo": "Informations sélectionnées dans le catalogue",
+        "totalRegistros" : "Nombre total d'enregistrements",
+        "seleccionarDescripcion": "Sélectionnez une description",
+        "usuario": "Utilisateur",
+        "estacionTrabajo": "Poste de travail",
+        "empresa": "Entreprise",
+        "catalogo": "Catalogue",
+        "vistaModulo": "Vue du module",
+        "cargaHojas": "Chargement des feuilles",
+        "seleccionArchivoExcel": "Sélection du fichier Excel",
+        "seleccionHojas": "Sélection de la feuille",
+        "seleccionArchivo": "Sélection du fichier",
+        "errorCarga": "Il y a eu une erreur de chargement des feuilles",
+        "hacerClickOArrastrar": "Cliquez ou faites glisser votre fichier ici",
+        "soloArchivosExcel": "Seulement des fichiers",
+        "archivoSeleccionado": "Fichier sélectionné",
+        "tamañoArchivo": "Taille",
+        "seleccionarHojaArchivo": "Sélectionnez une feuille du fichier",
+        "exitoHojasCargadas": "Feuilles chargées",
+        "informacionArchivoSeleccionado": "Informations du fichier sélectionné",
+        "cambiarIdioma": "changer de langue",
+        "URLValida" : "L'URL est valide.",
+        "URLInvalida" : "L'URL de base n'est pas valide.",
+        "ErrorValidarURL" : "Échec de la vérification de l'URL.",
+        "confirmacionRequerida": "Confirmation requise"
+    },
+    "buttonsLabels": {
+        "btnConfirmar": "Confirmer",
+        "btnCancelar": "Annuler",
+        "trasladarDatos": "Transférer les données" 
+    },
+    "infoTextos": {
+       
+    },
+    "messages": {
+        "errorContraseña": "Vous devez saisir le mot de passe",
+        "errorUsuario": "Vous devez saisir le nom de l'utilisateur",
+        "datosGuardadosSesion": "J'ai correctement sauvegardé votre session.",
+        "datosNoGuardadosSesion": "Votre session ne sera pas sauvegardée.",
+        "cargandoHojasMensaje": "Chargement des feuilles, veuillez patienter"
+    },
+    "labelsLogin": {
+        "cerrarSesion" : "Déconnexion",
+        "iniciarSesion": "Connexion",
+        "usuarioLogin": "Utilisateur",
+        "contraseñaLogin": "Mot de passe",
+        "cargandoLogin": "Chargement",
+        "ingresarUrlLogin": "Entrez l'URL de l'API",
+        "actualizarUrl": "Appuyez sur 'Confirmer' pour mettre à jour l'URL.",
+        "confirmarBtns": "Confirmer",
+        "verificarBtns": "Vérifier",
+        "verModalInfo": "Voir le menu déroulant",
+        "menuAutenticacion": "Menu d'authentification",
+        "seleccionarInformacionAdicional" : "Sélectionnez les informations requises",
+        "estacionesTrabajoLogin": "Postes de travail",
+        "empresasLogin": "Entreprises",
+        "aplicacionesLogin": "Applications",
+        "displaysLogin": "Affichages",
+        "noDisplaysDisponibles": "Aucun affichage disponible",
+        "opcionesSeleccionadas": "Options sélectionnées",
+        "guardarCambios": "Enregistrer les modifications",
+        "guardarDatosSesion": "Sauvegarder les données de la session"
+    }
+  }
+  

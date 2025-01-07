@@ -3,9 +3,19 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "migrar-sql": {
+    "prueba-standalone": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -13,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/migrar-sql",
+            "outputPath": "dist/prueba-standalone",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -26,12 +36,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -39,12 +44,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "2MB"
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "2MB"
+                  "maximumWarning": "8kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -61,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "migrar-sql:build:production"
+              "buildTarget": "prueba-standalone:build:production"
             },
             "development": {
-              "buildTarget": "migrar-sql:build:development"
+              "buildTarget": "prueba-standalone:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -81,7 +86,10 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-               "src/assets"
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ],
             "styles": [
               "src/styles.css"
