@@ -68,7 +68,8 @@
         "noDisplaysDisponibles": "Keine Bildschirme verfügbar",
         "opcionesSeleccionadas": "Ausgewählte Optionen",
         "guardarCambios": "Änderungen speichern",
-        "guardarDatosSesion": "Sitzungsdaten speichern"
+        "guardarDatosSesion": "Sitzungsdaten speichern",
+        "procesarBtnsLogin": "URL validieren und bestätigen"
     }
   }
   

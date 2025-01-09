@@ -20,7 +20,7 @@ export class LoginService {
            if (storedUrl) {
              this.baseUrl = storedUrl;
            }
-           console.log("URL en servicio de migrar: ", this.baseUrl);
+      //console.log("URL en servicio de migrar: ", this.baseUrl);
    }
 
   private isBrowser(): boolean {

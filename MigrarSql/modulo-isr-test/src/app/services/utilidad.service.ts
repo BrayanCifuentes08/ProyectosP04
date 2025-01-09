@@ -38,7 +38,7 @@ export class UtilidadService {
       // Actualizar la URL en el API
       this.loginService.setBaseUrl(this.baseUrl);
       this.migrarSqlService.setBaseUrl(this.baseUrl);
-      console.log(`URL API actualizada a: ${this.baseUrl}`);
+      //console.log(`URL API actualizada a: ${this.baseUrl}`);
   }
 
   formatearFecha(fechaString: string): string {

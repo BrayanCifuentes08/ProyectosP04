@@ -57,47 +57,8 @@ export class LayoutComponent {
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      // Calcular la fecha de vencimiento del token solo si hay hora de inicio de sesión real
-      if (localStorage.getItem('horaInicioSesion')) {
-        this.calcularFechaVencimientoToken();
-        this.verificarExpiracionToken();
-      }
-    
-        window.addEventListener('beforeunload', this.limpiarSessionStorage.bind(this));
-        this.verificarSesion();
-      } else {
-        this.router.navigate(['/login']);
-      }
   }
 
-  verificarSesion(): void {
-    if (isPlatformBrowser(this.platformId)) {
-        const jwtTokenLocal = localStorage.getItem('jwtToken');
-        const jwtTokenSession = sessionStorage.getItem('jwtToken');
-
-        // Verificar si hay un token
-        if (!jwtTokenLocal && !jwtTokenSession) {
-          //this.sharedService.hideLoading();
-            this.router.navigate(['/login']);
-            return;
-        }
-
-        // Verificar datos en localStorage
-        const aplicacionGuardada = localStorage.getItem('aplicacion') || sessionStorage.getItem('aplicacion');
-        const usuarioGuardado = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
-        const estacionTrabajoGuardada = localStorage.getItem('estacionTrabajo') || sessionStorage.getItem('estacionTrabajo');
-        const empresaGuardada = localStorage.getItem('empresa') || sessionStorage.getItem('empresa');
-
-        if (!aplicacionGuardada || !usuarioGuardado || !estacionTrabajoGuardada || !empresaGuardada) {
-            //this.sharedService.hideLoading();
-            this.router.navigate(['/login']);
-        } else {
-
-            console.log('Sesión activa con datos en localStorage.');
-        }
-    }
-  }
 
   limpiarSessionStorage(): void {
       sessionStorage.clear();

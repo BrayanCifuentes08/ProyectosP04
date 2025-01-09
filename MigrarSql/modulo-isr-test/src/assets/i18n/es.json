@@ -69,7 +69,9 @@
         "noDisplaysDisponibles": "No hay diplays disponibles",
         "opcionesSeleccionadas": "Opciones Seleccionadas",
         "guardarCambios": "Guardar cambios",
-        "guardarDatosSesion": "Guardar datos de sesión"
+        "guardarDatosSesion": "Guardar datos de sesión",
+       "procesarBtnsLogin": "Validar y confirmar URL"
+
     }
   }
   

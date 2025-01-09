@@ -13,7 +13,7 @@ export class MigrarSqlService {
        if (storedUrl) {
          this.baseUrl = storedUrl;
        }
-       console.log("URL en servicio de migrar: ", this.baseUrl);
+      //console.log("URL en servicio de migrar: ", this.baseUrl);
   }
 
   getBaseUrl(): string {
@@ -23,7 +23,7 @@ export class MigrarSqlService {
   // Método para actualizar la URL
   setBaseUrl(url: string): void {
     this.baseUrl = url;
-    console.log(`URL de MigrarSqlService actualizada a: ${this.baseUrl}`);
+    //console.log(`URL de MigrarSqlService actualizada a: ${this.baseUrl}`);
     localStorage.setItem('urlApi', this.baseUrl);  // Persistente en todas las sesiones
     sessionStorage.setItem('urlApi', this.baseUrl);  // Persistente solo durante la sesión actual
   }

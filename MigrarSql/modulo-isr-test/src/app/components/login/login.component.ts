@@ -31,6 +31,8 @@ export class LoginComponent {
   isVerificando:              boolean = false; 
   esError:                    boolean = false;
   esValido:                   boolean = false;
+  mostrarInicioSesion: boolean = false;
+
   userLogo:                   string | null = null;
   token:                      string | null = null; 
   mensajeEstadoDatosSesion:   string | null = null;
@@ -136,23 +138,8 @@ export class LoginComponent {
     return 'assets/images/default.png'; // Bandera por defecto si el idioma no es reconocido
   }
   
-  confirmarUrl() {
-    if (!this.urlApi || !this.esValido) {
-      return;
-    }
-    this.utilidadService.setUrlService(this.urlApi);
-    localStorage.setItem('urlApi', this.urlApi)
-    console.log(`URL API actualizada a: ${this.urlApi}`);
-    this.mostrarMensajeUrlConfirmacion = false;
-    this.mostrarMensaje = false;
-    this.mostrarMensajeUrl = false;
-    this.errores.general = '';
-
-  }
-
-  verificarUrl(urlApi: string) {
-    if (!urlApi) {
-      // Evitar verificar si la URL está vacía
+  procesarUrl() {
+    if (!this.urlApi) {
       this.mostrarMensajeUrlVerificacion = true;
       this.esValido = false;
       this.esError = true;
@@ -160,10 +147,9 @@ export class LoginComponent {
       return;
     }
   
-    // Validación básica del formato de la URL
+    // Validación del formato de la URL
     const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+)(:\d+)?(\/\S*)?$/;
-    if (!urlPattern.test(urlApi)) {
-      // Si la URL no tiene el formato correcto
+    if (!urlPattern.test(this.urlApi)) {
       this.mostrarMensajeUrlVerificacion = true;
       this.esValido = false;
       this.esError = true;
@@ -171,22 +157,25 @@ export class LoginComponent {
       return;
     }
   
-    // Si la URL tiene un formato válido
+    // Empezar la verificación de la URL
     this.isVerificando = true;
-    this.loginService.verificarBaseUrl(urlApi).subscribe(
+    this.loginService.verificarBaseUrl(this.urlApi).subscribe(
       (isValid: boolean) => {
         this.isVerificando = false;
-  
         if (isValid) {
           this.mostrarMensajeUrlVerificacion = true;
           this.esValido = true;
           this.esError = false;
-          this.mensajeErrorUrl = 'labels.URLValida'; // La URL es válida
+          this.mensajeErrorUrl = 'labels.URLValida';
+          this.mostrarInicioSesion = true;
+          // Si la URL es válida, procedemos a confirmarla
+          this.confirmarUrl();
         } else {
           this.mostrarMensajeUrlVerificacion = true;
           this.esValido = false;
+          this.mostrarInicioSesion = false;
           this.esError = true;
-          this.mensajeErrorUrl = 'labels.URLInvalida'; // La URL es inválida
+          this.mensajeErrorUrl = 'labels.URLInvalida';
         }
       },
       (error) => {
@@ -194,20 +183,31 @@ export class LoginComponent {
         this.mostrarMensajeUrlVerificacion = true;
         this.esValido = false;
         this.esError = true;
+        this.mostrarInicioSesion = false;
   
         if (error.status === 0) {
-          // Esto indica un error de conexión, por ejemplo, falta de Internet
           this.mensajeErrorUrl = 'labels.ErrorConexionAPI';
-          this.mostrarMensaje = true
-
+          this.mostrarMensaje = true;
+          this.mostrarInicioSesion = false;
         } else {
-          // Otro tipo de error de la API (por ejemplo, 404, 500)
-          this.mensajeErrorUrl = 'labels.ErrorValidarURL'; // Error al verificar la URL
+          this.mensajeErrorUrl = 'labels.ErrorValidarURL';
         }
       }
     );
   }
   
+  confirmarUrl() {
+    if (!this.urlApi || !this.esValido) {
+      return;
+    }
+    this.utilidadService.setUrlService(this.urlApi);
+    console.log(`URL API actualizada a: ${this.urlApi}`);
+    this.mostrarMensajeUrlConfirmacion = false;
+    this.mostrarMensaje = false;
+    this.mostrarMensajeUrl = false;
+    this.errores.general = '';
+    this.mostrarInicioSesion = true;
+  }
   
   onUsuarioChange(): void {
     //this.onInputChange()
@@ -303,6 +303,17 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
+    this.urlApi = this.utilidadService.getUrlService(); 
+    this.procesarUrl()
+    //Validar si hay url 
+    if (!this.urlApi || !this.esValido) {
+      this.mostrarMensaje = true;  // Mostrar mensaje de URL vacía o inválida
+      this.mostrarInicioSesion = false;
+    } else {
+      this.mostrarMensaje = false;  // No mostrar mensaje de error
+      this.mostrarInicioSesion = true;
+    }
+
     if(isPlatformBrowser(this.platformId)){
       //Recupera y muestra la hora de inicio de sesión y la fecha de ingreso
       const savedUrl = localStorage.getItem('urlApi');

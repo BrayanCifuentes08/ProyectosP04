@@ -81,7 +81,7 @@
       
       <div class="space-y-6">
         <!-- Usuario Input -->
-        <div class="relative group">
+        <div *ngIf="mostrarInicioSesion" class="relative group">
           <input
             #usuarioInput
             class="w-full text-sm px-4 py-3 pl-12 bg-gray-200 dark:text-white dark:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 focus:shadow-xl"
@@ -103,7 +103,7 @@
         </div>
 
         <!-- Contraseña Input -->
-        <div class="relative group">
+        <div *ngIf="mostrarInicioSesion" class="relative group">
           <input
             #passInput
             placeholder="{{ 'labelsLogin.contraseñaLogin' | translate }}"
@@ -125,7 +125,7 @@
         </div>
 
         <!-- Boton para iniciar sesion -->
-        <div class="relative">
+        <div *ngIf="mostrarInicioSesion" class="relative">
           <button
             (click)="verificarCampos()"
             
@@ -145,10 +145,11 @@
             </kbd>
           </button>
         </div>
+
         
         <!-- Mensaje de error al autenticarse -->
         <div
-          *ngIf="errores.general"
+          *ngIf="errores.general && (!mostrarInicioSesion || mostrarInicioSesion)"
           class="text-red-500 text-center text-sm mt-4"
         >
           {{ errores.general | translate}}
@@ -204,43 +205,36 @@
           <!-- Botones para confirmar y verificar URL -->
           <div class="flex justify-center space-x-4 mt-4">
             <button
-              (click)="confirmarUrl()"
-              [disabled]="!urlApi || !esValido || isVerificando"
-              class="p-2 bg-gray-700 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
-            >
-              {{ "labelsLogin.confirmarBtns" | translate }}
-            </button>
-            <button
-            (click)="verificarUrl(urlApi)"
-            class="p-2 bg-blue-900 rounded-md text-white font-semibold w-24 h-8 flex items-center justify-center text-xs transition-transform transform hover:scale-95"
-            [disabled]="isVerificando || !urlApi" 
+            (click)="procesarUrl()"
+            [disabled]="!urlApi || isVerificando"
+            class="p-2 bg-blue-900 rounded-md text-white font-semibold flex items-center justify-center text-xs transition-transform transform hover:scale-95 min-w-max"
           >
-            <ng-container *ngIf="!isVerificando; else spinner">
-              {{ "labelsLogin.verificarBtns" | translate }}
-            </ng-container>
-            <ng-template #spinner>
-              <svg
-                class="animate-spin h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                ></path>
-              </svg>
-            </ng-template>
-          </button>
+              <ng-container *ngIf="!isVerificando; else spinner">
+                {{ "labelsLogin.procesarBtnsLogin" | translate }}
+              </ng-container>
+              <ng-template #spinner>
+                <svg
+                  class="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+              </ng-template>
+            </button>
           </div>
         </div>
 
@@ -466,6 +460,53 @@
       <div class="mt-6 h-[calc(100%-120px)] overflow-y-auto p-2 dark:text-gray-200">
         <!-- Acordeónes para mostrar la informacion -->
         <div class="space-y-4">
+
+            <!-- Acordeon Empresas -->
+            <div class="accordion-item border-b border-gray-200 dark:border-gray-600">
+              <div
+                (click)="sectionOpen = sectionOpen === 'empresas' ? null : 'empresas'"
+                class="flex items-center text-gray-600 w-full border-b cursor-pointer 
+                      hover:bg-gradient-to-r from-blue-200 to-indigo-300 
+                      dark:text-gray-400 dark:hover:bg-gradient-to-r dark:hover:text-gray-200 dark:from-indigo-500 dark:to-blue-600 
+                      rounded-md transition-all duration-300 ease-in-out"
+                [ngClass]="{
+                  'bg-blue-100 text-gray-400 dark:bg-indigo-400 dark:text-white': sectionOpen === 'empresas'
+                }"
+              >
+                <div
+                  class="w-8 border-r px-2 transform transition-transform duration-300 ease-in-out"
+                  [ngClass]="{
+                    'rotate-90': sectionOpen === 'empresas',
+                    'rotate-0': sectionOpen !== 'empresas'
+                  }"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </div>
+                <div class="flex-1 px-2 py-2">
+                  <span class="text-base font-medium">{{ "labelsLogin.empresasLogin" | translate }}</span>
+                </div>
+              </div>
+
+              <div class="accordion-content" [ngClass]="{ open: sectionOpen === 'empresas' }">
+                <div class="max-h-56 overflow-y-auto">
+                  <ul class="list-none p-0">
+                    <li
+                      *ngFor="let empresa of empresa"
+                      (click)="seleccionarItem('empresas', empresa)"
+                      [ngClass]="{
+                        'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': seleccionados['empresas'] === empresa
+                      }"
+                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300  dark:hover:text-gray-600 text-sm rounded-md transition-colors duration-200"
+                    >
+                      {{ empresa.empresa_Nombre }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
             <!-- Acordeon Estaciones -->
             <div class="accordion-item border-b border-gray-200 dark:border-gray-600">
               <div
@@ -514,51 +555,6 @@
               </div>
             </div>
 
-            <!-- Acordeon Empresas -->
-            <div class="accordion-item border-b border-gray-200 dark:border-gray-600">
-              <div
-                (click)="sectionOpen = sectionOpen === 'empresas' ? null : 'empresas'"
-                class="flex items-center text-gray-600 w-full border-b cursor-pointer 
-                      hover:bg-gradient-to-r from-blue-200 to-indigo-300 
-                      dark:text-gray-400 dark:hover:bg-gradient-to-r dark:hover:text-gray-200 dark:from-indigo-500 dark:to-blue-600 
-                      rounded-md transition-all duration-300 ease-in-out"
-                [ngClass]="{
-                  'bg-blue-100 text-gray-400 dark:bg-indigo-400 dark:text-white': sectionOpen === 'empresas'
-                }"
-              >
-                <div
-                  class="w-8 border-r px-2 transform transition-transform duration-300 ease-in-out"
-                  [ngClass]="{
-                    'rotate-90': sectionOpen === 'empresas',
-                    'rotate-0': sectionOpen !== 'empresas'
-                  }"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </div>
-                <div class="flex-1 px-2 py-2">
-                  <span class="text-base font-medium">{{ "labelsLogin.empresasLogin" | translate }}</span>
-                </div>
-              </div>
-
-              <div class="accordion-content" [ngClass]="{ open: sectionOpen === 'empresas' }">
-                <div class="max-h-56 overflow-y-auto">
-                  <ul class="list-none p-0">
-                    <li
-                      *ngFor="let empresa of empresa"
-                      (click)="seleccionarItem('empresas', empresa)"
-                      [ngClass]="{
-                        'bg-blue-400 text-white dark:bg-indigo-500 dark:text-white': seleccionados['empresas'] === empresa
-                      }"
-                      class="cursor-pointer py-2 px-3 hover:bg-blue-200 dark:hover:bg-indigo-300  dark:hover:text-gray-600 text-sm rounded-md transition-colors duration-200"
-                    >
-                      {{ empresa.empresa_Nombre }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
 
             <!-- Acordeon Aplicaciones -->
             <div class="accordion-item border-b border-gray-200 dark:border-gray-600">
@@ -741,17 +737,6 @@
                 {{ "labelsLogin.opcionesSeleccionadas" | translate }}
               </h3>
               <div class="flex flex-wrap justify-center gap-2">
-                <ng-container *ngIf="seleccionados['estaciones']">
-                  <div class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full shadow-md flex items-center opacity-0 animate-in" 
-                      [ngClass]="{'animate-in': seleccionados['estaciones'], 'animate-out': !seleccionados['estaciones']}">
-                    {{ seleccionados["estaciones"].descripcion }}
-                    <button (click)="limpiarSeleccion('estaciones')" class="ml-2 text-red-500 hover:text-red-700">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </ng-container>
 
                 <!-- Empresas -->
                 <ng-container *ngIf="seleccionados['empresas']">
@@ -759,6 +744,18 @@
                       [ngClass]="{'animate-in': seleccionados['empresas'], 'animate-out': !seleccionados['empresas']}">
                     {{ seleccionados["empresas"].empresa_Nombre }}
                     <button (click)="limpiarSeleccion('empresas')" class="ml-2 text-red-500 hover:text-red-700">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </ng-container>
+                
+                <ng-container *ngIf="seleccionados['estaciones']">
+                  <div class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full shadow-md flex items-center opacity-0 animate-in" 
+                      [ngClass]="{'animate-in': seleccionados['estaciones'], 'animate-out': !seleccionados['estaciones']}">
+                    {{ seleccionados["estaciones"].descripcion }}
+                    <button (click)="limpiarSeleccion('estaciones')" class="ml-2 text-red-500 hover:text-red-700">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                       </svg>

@@ -70,7 +70,8 @@
         "noDisplaysDisponibles": "Aucun affichage disponible",
         "opcionesSeleccionadas": "Options sélectionnées",
         "guardarCambios": "Enregistrer les modifications",
-        "guardarDatosSesion": "Sauvegarder les données de la session"
+        "guardarDatosSesion": "Sauvegarder les données de la session",
+        "procesarBtnsLogin": "Valider et confirmer l'URL"
     }
   }
   
