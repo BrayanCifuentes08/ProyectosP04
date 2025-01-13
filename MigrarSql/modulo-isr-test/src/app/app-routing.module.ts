@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: '**', redirectTo: 'login' }, // Redirigir al login si la ruta no existe
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

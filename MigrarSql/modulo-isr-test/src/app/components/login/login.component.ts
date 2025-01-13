@@ -32,7 +32,7 @@ export class LoginComponent {
   esError:                    boolean = false;
   esValido:                   boolean = false;
   mostrarInicioSesion: boolean = false;
-
+  mensajeEstadoDisplays:   string | null = null;
   userLogo:                   string | null = null;
   token:                      string | null = null; 
   mensajeEstadoDatosSesion:   string | null = null;
@@ -281,7 +281,6 @@ export class LoginComponent {
       localStorage.removeItem('aplicacion');
       localStorage.removeItem('display');
       localStorage.removeItem('jwtToken');
-      localStorage.removeItem('urlApi');
       localStorage.removeItem('horaInicioSesion');
     }
   }
@@ -297,7 +296,6 @@ export class LoginComponent {
       sessionStorage.removeItem('aplicacion');
       sessionStorage.removeItem('display');
       sessionStorage.removeItem('jwtToken');
-      sessionStorage.removeItem('urlApi');
       sessionStorage.removeItem('horaInicioSesionTemp');
     }
   }
@@ -387,6 +385,16 @@ export class LoginComponent {
   }
   
   guardarCambios(): void {
+    const display = this.seleccionados['displays'];
+    if (!display) {
+      // Si no hay displays seleccionados, muestra el mensaje y detiene el flujo
+      console.log('No hay displays disponibles.');
+      this.mensajeEstadoDisplays = "No hay displays disponibles.";
+      this.mensajeTipo = 'noGuardado';
+      this.mostrarMensajeEstadoDatos();
+      return; // Detener ejecución aquí
+    }
+    
     if (this.validarSeleccion()) {
       if (this.guardarDatosSesion) {
         // Guardar en localStorage y limpiar sessionStorage
@@ -401,6 +409,9 @@ export class LoginComponent {
       this.router.navigate(['/dashboard']);
     } else {
       console.log('Faltan selecciones. Verifique todos los campos.');
+      this.mensajeEstadoDisplays = "Faltan selecciones. Verifique todos los campos.";
+      this.mensajeTipo = 'noGuardado';
+      this.mostrarMensajeEstadoDatos();
     }
   }
   
@@ -415,6 +426,7 @@ export class LoginComponent {
 
     setTimeout(() => {
       this.mensajeEstadoDatosSesion = null;
+      this.mensajeEstadoDisplays = null;
       this.mensajeTipo = null;
     }, 3000);
   }
@@ -666,16 +678,16 @@ export class LoginComponent {
     }
   }
 
-pegarDelPortapapeles() {
-  navigator.clipboard.readText()
-    .then((text) => {
-      this.urlApi = text;  // Asigna el texto del portapapeles al campo de URL
-      console.log('Texto pegado desde el portapapeles: ', this.urlApi);
-    })
-    .catch((err) => {
-      console.error('Error al pegar desde el portapapeles: ', err);
-    });
-}
+  pegarDelPortapapeles() {
+    navigator.clipboard.readText()
+      .then((text) => {
+        this.urlApi = text;  // Asigna el texto del portapapeles al campo de URL
+        console.log('Texto pegado desde el portapapeles: ', this.urlApi);
+      })
+      .catch((err) => {
+        console.error('Error al pegar desde el portapapeles: ', err);
+      });
+  }
 
   
   cerrarModal() {
@@ -695,6 +707,7 @@ pegarDelPortapapeles() {
   }
 
   limpiarSeleccion(tipo: 'estaciones' | 'empresas' | 'aplicaciones' | 'displays'): void {
+    this.guardarDatosSesion = false;
     switch (tipo) {
       case 'estaciones':
         this.seleccionados['estaciones'] = null;

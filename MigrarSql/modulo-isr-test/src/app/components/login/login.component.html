@@ -413,12 +413,12 @@
   [ngClass]="{
     'overlay-enter-active': mostrarModal,
     'overlay-exit-active': !mostrarModal && !isExiting
-  }" (click)="cerrarModal()">
+  }">
   
   
   <div class="w-full max-w-lg sm:max-w-2xl md:max-w-4xl h-[75vh] sm:h-[85vh] md:h-[65vh] px-8 py-10 mx-auto bg-white dark:bg-gray-800 rounded-3xl shadow-2xl relative overflow-hidden 
     border border-white dark:border-gray-800 m-4 sm:m-8 md:m-12" 
-    [ngClass]="{'modal-enter': mostrarModal && !isExiting, 'modal-exit': isExiting}" (click)="$event.stopPropagation()">
+    [ngClass]="{'modal-enter': mostrarModal && !isExiting, 'modal-exit': isExiting}">
     
     <div class="relative">
       <!-- Botón Cerrar Modal -->
@@ -810,7 +810,7 @@
                 </button>
 
                 <!-- Checkbox para Guardar Datos de Sesión -->
-                <label class="inline-flex items-center cursor-pointer">
+                <label *ngIf="validarSeleccion()" class="inline-flex items-center cursor-pointer">
                   <input type="checkbox" 
                          class="sr-only peer" 
                          *ngIf="validarSeleccion()" 
@@ -845,6 +845,21 @@
         <p class="text-center text-sm font-medium">
           {{ mensajeEstadoDatosSesion | translate }}
           </p>
+      </div>
+    </div>
+    
+    <!-- Mensaje de error para displays -->
+    <div *ngIf="mensajeEstadoDisplays" class="fixed inset-0 flex items-center justify-center z-50">
+      <div 
+        [ngClass]="{
+          'text-red-600 bg-red-100 border-red-300 dark:text-red-400 dark:bg-red-800 dark:border-red-700': mensajeTipo === 'noGuardado',
+          'text-gray-800 bg-gray-100 border-gray-300 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600': mensajeTipo !== 'noGuardado'
+        }"
+        class="max-w-sm w-full p-4 border rounded-lg shadow-lg transition-transform transform scale-100 animate-slideIn"
+      >
+        <p class="text-center text-sm font-medium">
+          {{ mensajeEstadoDisplays }}
+        </p>
       </div>
     </div>
   </div>
